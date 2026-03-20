@@ -1,8 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import api from '../api/axios';
-import { ArrowLeft, Share2, Facebook, Twitter, Linkedin, BookOpen } from 'lucide-react';
+import {
+    ArrowLeft,
+    Share2,
+    Facebook,
+    Twitter,
+    Linkedin,
+    BookOpen,
+    Heart,
+    MessageCircle,
+    Eye,
+    Send,
+    Clock
+} from 'lucide-react';
 import { format } from 'date-fns';
 import SEO from '../components/SEO';
 import ErrorState from '../components/ErrorState';
@@ -14,6 +25,11 @@ const ArticlePage = () => {
     const [article, setArticle] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [likes, setLikes] = useState(0);
+    const [isLiked, setIsLiked] = useState(false);
+    const [comments, setComments] = useState([]);
+    const [commentData, setCommentData] = useState({ userName: '', email: '', comment: '' });
+    const [submittingComment, setSubmittingComment] = useState(false);
 
     const fetchArticle = async () => {
         setLoading(true);
@@ -22,6 +38,8 @@ const ArticlePage = () => {
             const { data } = await api.get(`/api/articles/${slug}`);
             if (data) {
                 setArticle(data);
+                setLikes(data.engagement?.likes || 0);
+                fetchComments(data._id);
             } else {
                 setError('not_found');
             }
@@ -37,6 +55,42 @@ const ArticlePage = () => {
         }
     };
 
+    const fetchComments = async (articleId) => {
+        try {
+            const { data } = await api.get(`/api/comments/article/${articleId}`);
+            setComments(data);
+        } catch (err) {
+            console.error('Error fetching comments:', err);
+        }
+    };
+
+    const handleLike = async () => {
+        if (isLiked) return;
+        try {
+            const { data } = await api.post(`/api/articles/${article._id}/like`);
+            setLikes(data.likes);
+            setIsLiked(true);
+        } catch (err) {
+            console.error('Error liking article:', err);
+        }
+    };
+
+    const handleCommentSubmit = async (e) => {
+        e.preventDefault();
+        setSubmittingComment(true);
+        try {
+            await api.post('/api/comments', { ...commentData, articleId: article._id });
+            setCommentData({ userName: '', email: '', comment: '' });
+            fetchComments(article._id);
+            alert('Comment posted successfully!');
+        } catch (err) {
+            console.error('Error posting comment:', err);
+            alert('Failed to post comment.');
+        } finally {
+            setSubmittingComment(false);
+        }
+    };
+
     useEffect(() => {
         fetchArticle();
     }, [slug]);
@@ -47,7 +101,7 @@ const ArticlePage = () => {
 
     if (error === 'not_found' || (!article && !loading)) {
         return (
-            <EmptyState 
+            <EmptyState
                 icon={BookOpen}
                 title="Article Not Found"
                 description="The story you are looking for does not exist or has been removed from our archives."
@@ -59,7 +113,7 @@ const ArticlePage = () => {
 
     if (error === 'fetch_error') {
         return (
-            <ErrorState 
+            <ErrorState
                 title="Failed to load article"
                 description="There was a problem communicating with our servers. Please check your connection and try again."
                 onRetry={fetchArticle}
@@ -124,7 +178,12 @@ const ArticlePage = () => {
                             {article.category.name}
                         </span>
                     )}
-                    <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>{readingTime} min read</span>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <Clock size={14} /> {readingTime} min read
+                    </span>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <Eye size={14} /> {article.engagement?.views || 0} views
+                    </span>
                 </div>
                 <h1 className="article-title" style={{ fontSize: '2.5rem', marginBottom: 'var(--spacing-md)' }}>
                     {article.title}
@@ -149,7 +208,19 @@ const ArticlePage = () => {
                     </div>
 
                     <div className="flex items-center gap-sm">
-                        <span style={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--color-text-muted)', display: 'none' }}>Share</span>
+                        <button
+                            onClick={handleLike}
+                            className={`icon-btn flex items-center gap-xs ${isLiked ? 'text-accent' : ''}`}
+                            style={{ width: 'auto', padding: '0 12px', borderRadius: '20px' }}
+                        >
+                            <Heart size={18} fill={isLiked ? "currentColor" : "none"} />
+                            <span style={{ fontSize: '0.85rem', fontWeight: 'bold' }}>{likes}</span>
+                        </button>
+                        <div className="flex items-center gap-xs px-md border-l" style={{ height: '24px', borderColor: 'var(--color-border)' }}>
+                            <MessageCircle size={18} className="text-muted" />
+                            <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--color-text-muted)' }}>{comments.length}</span>
+                        </div>
+                        <div className="w-px h-6 bg-gray-200 mx-sm lg:block hidden"></div>
                         <button onClick={() => shareOnSocial('facebook')} className="icon-btn" title="Share on Facebook"><Facebook size={18} /></button>
                         <button onClick={() => shareOnSocial('twitter')} className="icon-btn" title="Share on Twitter"><Twitter size={18} /></button>
                         <button onClick={() => shareOnSocial('linkedin')} className="icon-btn" title="Share on LinkedIn"><Linkedin size={18} /></button>
@@ -200,6 +271,82 @@ const ArticlePage = () => {
                     </div>
                 </div>
             )}
+
+            {/* Comments Section */}
+            <div style={{ maxWidth: '800px', margin: 'var(--spacing-3xl) auto 0' }}>
+                <div className="flex items-center justify-between mb-xl pb-sm border-b" style={{ borderColor: 'var(--color-border)' }}>
+                    <h3 style={{ fontSize: '1.5rem', fontWeight: '800' }}>Comments ({comments.length})</h3>
+                    <div className="flex items-center gap-xs text-sm font-semibold text-accent">
+                        <MessageCircle size={18} /> Community Discussion
+                    </div>
+                </div>
+
+                {/* Comment Form */}
+                <form onSubmit={handleCommentSubmit} className="glass p-xl mb-3xl" style={{ borderRadius: 'var(--radius-xl)' }}>
+                    <div className="grid md:grid-cols-2 gap-md mb-md">
+                        <div className="flex flex-col gap-xs">
+                            <label style={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>Name</label>
+                            <input
+                                type="text"
+                                required
+                                value={commentData.userName}
+                                onChange={(e) => setCommentData({ ...commentData, userName: e.target.value })}
+                                style={{ padding: '12px', borderRadius: '8px', border: '1px solid var(--color-border)' }}
+                                placeholder="Your full name"
+                            />
+                        </div>
+                        <div className="flex flex-col gap-xs">
+                            <label style={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>Email</label>
+                            <input
+                                type="email"
+                                required
+                                value={commentData.email}
+                                onChange={(e) => setCommentData({ ...commentData, email: e.target.value })}
+                                style={{ padding: '12px', borderRadius: '8px', border: '1px solid var(--color-border)' }}
+                                placeholder="name@example.com"
+                            />
+                        </div>
+                    </div>
+                    <div className="flex flex-col gap-xs mb-lg">
+                        <label style={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>Your Comment</label>
+                        <textarea
+                            required
+                            value={commentData.comment}
+                            onChange={(e) => setCommentData({ ...commentData, comment: e.target.value })}
+                            rows={4}
+                            style={{ padding: '12px', borderRadius: '8px', border: '1px solid var(--color-border)', resize: 'vertical' }}
+                            placeholder="Share your thoughts on this story..."
+                        />
+                    </div>
+                    <button type="submit" disabled={submittingComment} className="btn btn-primary w-full flex items-center justify-center gap-sm">
+                        {submittingComment ? 'Posting...' : <><Send size={18} /> Post Comment</>}
+                    </button>
+                </form>
+
+                {/* Comments List */}
+                <div className="flex flex-col gap-xl">
+                    {comments.length > 0 ? (
+                        comments.map((c) => (
+                            <div key={c._id} className="flex gap-md">
+                                <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'var(--color-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', flexShrink: 0, fontWeight: 'bold' }}>
+                                    {c.userName.charAt(0).toUpperCase()}
+                                </div>
+                                <div className="flex flex-col gap-xs">
+                                    <div className="flex items-center gap-md">
+                                        <span style={{ fontWeight: '700' }}>{c.userName}</span>
+                                        <span style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>{format(new Date(c.createdAt), 'MMM d, yyyy')}</span>
+                                    </div>
+                                    <p style={{ fontSize: '0.95rem', color: 'var(--color-text-main)', lineHeight: '1.5' }}>{c.comment}</p>
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <div className="text-center py-xl bg-gray-50 rounded-lg border border-dashed border-gray-300">
+                            <p className="text-muted">No comments yet. Be the first to share your thoughts!</p>
+                        </div>
+                    )}
+                </div>
+            </div>
         </article>
     );
 };

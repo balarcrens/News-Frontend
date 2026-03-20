@@ -9,7 +9,8 @@ import {
     CheckCircle,
     AlertCircle,
     ArrowUpRight,
-    Settings
+    Settings,
+    MessageCircle
 } from 'lucide-react';
 import LoadingState from '../../components/LoadingState';
 
@@ -38,6 +39,7 @@ const AdminDashboard = () => {
         { label: 'Total Views', value: stats.totalViews, icon: <Eye className="text-accent" />, trend: '+5.4%', color: '#f0fdf4' },
         { label: 'Published', value: stats.publishedArticles, icon: <CheckCircle className="text-accent" />, trend: 'Stable', color: '#fefce8' },
         { label: 'Drafts', value: stats.draftArticles, icon: <AlertCircle className="text-accent" />, trend: '-2', color: '#fef2f2' },
+        { label: 'Total Comments', value: stats.totalComments || 0, icon: <MessageCircle className="text-accent" />, trend: 'New', color: '#f5f3ff' },
     ];
 
     return (
@@ -51,7 +53,7 @@ const AdminDashboard = () => {
             </div>
 
             {/* Stats Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-lg mb-2xl">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-lg mb-2xl">
                 {cards.map((card, i) => (
                     <div key={i} style={{ backgroundColor: 'white', padding: 'var(--spacing-xl)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)', display: 'flex', justifyContent: 'space-between' }}>
                         <div>
