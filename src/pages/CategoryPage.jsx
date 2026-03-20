@@ -3,7 +3,9 @@ import { useParams, Link } from 'react-router-dom';
 import api from '../api/axios';
 import ArticleCard from '../components/ArticleCard';
 import SEO from '../components/SEO';
-import { Loader2, Filter } from 'lucide-react';
+import EmptyState from '../components/EmptyState';
+import { Newspaper, Layers, Layout } from 'lucide-react';
+import LoadingState from '../components/LoadingState';
 
 const CategoryPage = () => {
     const { slug } = useParams();
@@ -29,6 +31,8 @@ const CategoryPage = () => {
 
                     const { data: articlesData } = await api.get('/api/articles', { params });
                     setArticles(articlesData);
+                } else {
+                    setCategory(null);
                 }
             } catch (error) {
                 console.error('Failed to fetch category articles', error);
@@ -41,24 +45,23 @@ const CategoryPage = () => {
     }, [slug, filterType]);
 
     if (loading) {
-        return (
-            <div className="loader-container">
-                <Loader2 className="loader-icon" size={48} />
-            </div>
-        );
+        return <LoadingState message={`Opening ${slug} section...`} />;
     }
 
     if (!category) {
         return (
-            <div className="container py-2xl text-center">
-                <h2 className="font-serif text-2xl">Category not found</h2>
-                <Link to="/" className="btn btn-outline mt-lg">Return Home</Link>
-            </div>
+            <EmptyState
+                icon={Layers}
+                title="Category Not Found"
+                description="The category you are looking for doesn't exist or has been removed from our records."
+                actionText="Explore all categories"
+                actionLink="/"
+            />
         );
     }
 
     return (
-        <div className="category-page">
+        <div className="category-page animate-in fade-in">
             <SEO
                 title={category.seo?.metaTitle || `${category.name} News`}
                 description={category.seo?.metaDescription || category.description}
@@ -66,37 +69,61 @@ const CategoryPage = () => {
 
             <header className="page-header glass mb-2xl" style={{ borderRadius: 'var(--radius-lg)' }}>
                 <div className="container">
+                    <span className="article-category mx-auto mb-md" style={{ display: 'table' }}>Exploring Category</span>
                     <h1 className="page-title">{category.name}</h1>
                     {category.description && <p className="page-description">{category.description}</p>}
-
-                    <div className="flex justify-center mt-xl gap-md">
-                        <button
-                            className={`btn ${filterType === 'all' ? 'btn-primary' : 'btn-outline'}`}
-                            onClick={() => setFilterType('all')}
-                        > All </button>
-                        <button
-                            className={`btn ${filterType === 'news' ? 'btn-primary' : 'btn-outline'}`}
-                            onClick={() => setFilterType('news')}
-                        > News </button>
-                        <button
-                            className={`btn ${filterType === 'blog' ? 'btn-primary' : 'btn-outline'}`}
-                            onClick={() => setFilterType('blog')}
-                        > Blogs </button>
-                    </div>
                 </div>
             </header>
 
+            {/* Redesigned Filter - Centered and Big */}
+            <section className="container mb-2xl">
+                <div className="flex justify-center">
+                    <div className="glass p-sm flex gap-sm" style={{
+                        borderRadius: 'var(--radius-full)',
+                        border: '1px solid var(--color-border)',
+                        backgroundColor: 'var(--color-white)',
+                        boxShadow: 'var(--shadow-md)'
+                    }}>
+                        <button
+                            className={`btn flex items-center gap-sm ${filterType === 'all' ? 'btn-primary' : 'btn-outline'}`}
+                            onClick={() => setFilterType('all')}
+                            style={{ borderRadius: 'var(--radius-full)', padding: '0.6rem 1.75rem' }}
+                        >
+                            <Layers size={18} /> All
+                        </button>
+                        <button
+                            className={`btn flex items-center gap-sm ${filterType === 'news' ? 'btn-primary' : 'btn-outline'}`}
+                            onClick={() => setFilterType('news')}
+                            style={{ borderRadius: 'var(--radius-full)', padding: '0.6rem 1.75rem' }}
+                        >
+                            <Newspaper size={18} /> News
+                        </button>
+                        <button
+                            className={`btn flex items-center gap-sm ${filterType === 'blog' ? 'btn-primary' : 'btn-outline'}`}
+                            onClick={() => setFilterType('blog')}
+                            style={{ borderRadius: 'var(--radius-full)', padding: '0.6rem 1.75rem' }}
+                        >
+                            <Layout size={18} /> Blogs
+                        </button>
+                    </div>
+                </div>
+            </section>
+
             <section className="container mb-3xl">
                 {articles.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-sm">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
                         {articles.map(article => (
                             <ArticleCard key={article._id} article={article} />
                         ))}
                     </div>
                 ) : (
-                    <div className="text-center py-2xl border bg-white rounded-lg">
-                        <p className="text-muted">No {filterType !== 'all' ? filterType : ''} articles found in this category.</p>
-                    </div>
+                    <EmptyState
+                        icon={filterType === 'news' ? Newspaper : filterType === 'blog' ? Layout : Layers}
+                        title={`No ${filterType !== 'all' ? filterType : ''} articles`}
+                        description={`We don't have any ${filterType !== 'all' ? filterType : 'articles'} in the ${category.name} category at the moment.`}
+                        actionText="Clear Filter"
+                        onActionClick={() => setFilterType('all')}
+                    />
                 )}
             </section>
         </div>
@@ -104,3 +131,5 @@ const CategoryPage = () => {
 };
 
 export default CategoryPage;
+
+

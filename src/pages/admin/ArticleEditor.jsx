@@ -10,6 +10,7 @@ import {
     AlertTriangle,
     User,
 } from 'lucide-react';
+import LoadingState from '../../components/LoadingState';
 
 const ArticleEditor = () => {
     const { id } = useParams();
@@ -103,7 +104,7 @@ const ArticleEditor = () => {
         }
     };
 
-    if (loading) return <div className="loader-container"><Loader2 className="loader-icon" /></div>;
+    if (loading) return <LoadingState message={isEdit ? "Retrieving article data..." : "Preparing editor..."} />;
 
     return (
         <div className="article-editor">
@@ -122,7 +123,7 @@ const ArticleEditor = () => {
                     className="btn btn-primary flex items-center gap-sm"
                     style={{ padding: '0.75rem 2rem' }}
                 >
-                    {saving ? <Loader2 size={18} className="spin" /> : <Save size={18} />}
+                    {saving ? <div className="flex items-center gap-xs"><div className="loader-icon-small animate-spin" /><span className="shimmer-text">Saving...</span></div> : <Save size={18} />}
                     Save Article
                 </button>
             </div>

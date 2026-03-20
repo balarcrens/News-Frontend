@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { UserPlus } from 'lucide-react';
+import LoadingState from '../components/LoadingState';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -30,6 +31,20 @@ const RegisterPage = () => {
       <Helmet>
         <title>Subscribe | The Chronicle</title>
       </Helmet>
+
+      {loading && (
+        <div style={{
+          position: 'fixed',
+          top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+          zIndex: 1000,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <LoadingState message="Creating your account..." />
+        </div>
+      )}
 
       <div className="form-container" style={{textAlign: 'left', marginTop: 'var(--spacing-2xl)'}}>
         <div style={{display: 'flex', justifyContent: 'center', marginBottom: 'var(--spacing-md)'}}>

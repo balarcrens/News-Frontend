@@ -9,9 +9,9 @@ import {
     CheckCircle,
     AlertCircle,
     ArrowUpRight,
-    Loader2,
     Settings
 } from 'lucide-react';
+import LoadingState from '../../components/LoadingState';
 
 const AdminDashboard = () => {
     const [stats, setStats] = useState(null);
@@ -31,7 +31,7 @@ const AdminDashboard = () => {
         fetchStats();
     }, []);
 
-    if (loading) return <div className="loader-container"><Loader2 className="loader-icon" /></div>;
+    if (loading) return <LoadingState message="Loading dashboard statistics..." />;
 
     const cards = [
         { label: 'Total Articles', value: stats.totalArticles, icon: <FileText className="text-accent" />, trend: '+12%', color: '#eff6ff' },

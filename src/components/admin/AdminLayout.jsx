@@ -8,7 +8,8 @@ import {
     ChevronLeft,
     Menu,
     Bell,
-    User
+    User,
+    Home
 } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
@@ -29,6 +30,7 @@ const AdminLayout = () => {
         { icon: <Tag size={20} />, label: 'Categories', path: '/admin/categories' },
         { icon: <User size={20} />, label: 'Users', path: '/admin/users' },
         { icon: <Settings size={20} />, label: 'Settings', path: '/admin/settings' },
+        { icon: <Home size={20} />, label: 'Home', path: '/' },
     ];
 
     return (

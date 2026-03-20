@@ -1,15 +1,12 @@
 import { useState, useEffect } from 'react';
 import api from '../../api/axios';
-import { 
-  User, 
-  Trash2, 
-  Shield, 
-  Mail, 
+import {
+  User,
+  Trash2,
   Calendar,
-  Loader2,
-  Search,
-  UserPlus
+  Search
 } from 'lucide-react';
+import LoadingState from '../../components/LoadingState';
 
 const UserManager = () => {
   const [users, setUsers] = useState([]);
@@ -46,7 +43,7 @@ const UserManager = () => {
 
   const handleDeleteUser = async (userId) => {
     if (!window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) return;
-    
+
     setActionLoading(userId);
     try {
       await api.delete(`/api/users/${userId}`);
@@ -58,28 +55,28 @@ const UserManager = () => {
     }
   };
 
-  const filteredUsers = users.filter(u => 
-    u.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+  const filteredUsers = users.filter(u =>
+    u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     u.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  if (loading) return <div className="loader-container"><Loader2 className="loader-icon" /></div>;
+  if (loading) return <LoadingState message="Loading user directory..." />;
 
   return (
     <div className="user-manager">
       <div className="flex items-center justify-between mb-xl">
         <h1 className="font-serif" style={{ fontSize: '2rem', fontWeight: 'bold' }}>User Management</h1>
         <div className="flex items-center gap-md">
-           <div className="flex items-center gap-sm px-md py-sm glass" style={{ borderRadius: 'var(--radius-md)' }}>
-              <Search size={18} className="text-muted" />
-              <input 
-                type="text" 
-                placeholder="Find users..." 
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                style={{ background: 'none', border: 'none', outline: 'none', fontSize: '0.875rem' }}
-              />
-           </div>
+          <div className="flex items-center gap-sm px-md py-sm glass" style={{ borderRadius: 'var(--radius-md)' }}>
+            <Search size={18} className="text-muted" />
+            <input
+              type="text"
+              placeholder="Find users..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ background: 'none', border: 'none', outline: 'none', fontSize: '0.875rem' }}
+            />
+          </div>
         </div>
       </div>
 
@@ -108,13 +105,13 @@ const UserManager = () => {
                   </div>
                 </td>
                 <td style={{ padding: 'var(--spacing-md)' }}>
-                  <select 
-                    value={u.role} 
+                  <select
+                    value={u.role}
                     onChange={(e) => handleUpdateRole(u._id, e.target.value)}
                     disabled={actionLoading === u._id}
-                    style={{ 
-                      padding: '4px 8px', 
-                      borderRadius: '4px', 
+                    style={{
+                      padding: '4px 8px',
+                      borderRadius: '4px',
                       border: '1px solid var(--color-border)',
                       fontSize: '0.875rem',
                       backgroundColor: u.role === 'admin' ? '#fdf2f2' : 'white',
@@ -133,7 +130,7 @@ const UserManager = () => {
                   </div>
                 </td>
                 <td style={{ padding: 'var(--spacing-md)', textAlign: 'right' }}>
-                  <button 
+                  <button
                     onClick={() => handleDeleteUser(u._id)}
                     disabled={actionLoading === u._id}
                     className="icon-btn text-accent"

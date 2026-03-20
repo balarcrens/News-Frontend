@@ -7,10 +7,9 @@ import {
     Trash2,
     Save,
     X,
-    Loader2,
-    Tag as TagIcon,
-    ChevronRight
+    TagIcon
 } from 'lucide-react';
+import LoadingState from '../../components/LoadingState';
 
 const CategoryManager = () => {
     const [categories, setCategories] = useState([]);
@@ -84,7 +83,7 @@ const CategoryManager = () => {
         }
     };
 
-    if (loading) return <div className="loader-container"><Loader2 className="loader-icon" /></div>;
+    if (loading) return <LoadingState message="Loading category management..." />;
 
     return (
         <div className="category-manager">

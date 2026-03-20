@@ -2,6 +2,7 @@ import { Menu, Search, User, LogIn, LogOut, LayoutDashboard, X, ChevronLeft } fr
 import { useAuth } from '../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import LanguageSelector from './LanguageSelector';
 
 const Navbar = () => {
     const { user, logout, isAdmin } = useAuth();
@@ -67,6 +68,7 @@ const Navbar = () => {
                             </div>
 
                             <div className="navbar-actions">
+                                <LanguageSelector />
                                 <button className="icon-btn" aria-label="Search" onClick={() => setIsSearchOpen(true)}><Search size={20} /></button>
 
                                 {isAdmin && (

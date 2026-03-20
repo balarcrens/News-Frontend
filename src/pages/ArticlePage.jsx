@@ -1,73 +1,74 @@
-/* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import api from '../api/axios';
-import { Loader2, ArrowLeft, Share2, Facebook, Twitter, Linkedin } from 'lucide-react';
+import { ArrowLeft, Share2, Facebook, Twitter, Linkedin, BookOpen } from 'lucide-react';
 import { format } from 'date-fns';
-
-// Premium Dummy Article for Fallback
-const DUMMY_ARTICLE = {
-    _id: 'dummy',
-    title: 'The Unprecedented Rise of Artificial Intelligence in Modern Journalism',
-    slug: 'rise-of-ai-journalism',
-    summary: 'A deep dive into how newsrooms across the globe are adopting AI to automate reports, analyze vast datasets, and sometimes, replace standard reporting entirely.',
-    content: '<p>The integration of artificial intelligence in newsrooms is no longer a futuristic concept—it is a present reality. Major publications have quietly shifted toward algorithmic generation for sports summaries, financial earnings reports, and weather updates.</p><h2>The Core Benefits</h2><p>Advocates argue that AI frees journalists from mundane, repetitive tasks, allowing them to focus on investigative reporting and deep-dive analysis. The efficiency gains are undeniable. A system can parse through thousands of pages of court documents in minutes, identifying key phrases and anomalies that might take a human team weeks to uncover.</p><h2>Ethical Dilemmas</h2><p>However, the ethical implications are profound. Who is responsible when an algorithm hallucinates a fact? How do we maintain the essential human empathy required to cover sensitive topics? These questions remain largely unanswered as media conglomerates race to cut costs and increase output.</p><p>Ultimately, the successful newsroom of the future will likely treat AI not as a replacement for reporters, but as an incredibly powerful assistant. The human element—the instinct to ask the tough questions—remains irreplaceable.</p>',
-    category: { name: 'Technology' },
-    author: { name: 'Alex Sterling', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&q=80' },
-    publishedAt: new Date().toISOString(),
-    media: { featuredImage: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=1200&q=80' },
-    tags: [{ _id: '1', name: 'AI' }, { _id: '2', name: 'Journalism' }, { _id: '3', name: 'Future' }]
-};
-
 import SEO from '../components/SEO';
+import ErrorState from '../components/ErrorState';
+import EmptyState from '../components/EmptyState';
+import LoadingState from '../components/LoadingState';
 
 const ArticlePage = () => {
     const { slug } = useParams();
     const [article, setArticle] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [error] = useState(false);
+    const [error, setError] = useState(null);
+
+    const fetchArticle = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const { data } = await api.get(`/api/articles/${slug}`);
+            if (data) {
+                setArticle(data);
+            } else {
+                setError('not_found');
+            }
+        } catch (err) {
+            console.error('Error fetching article:', err);
+            if (err.response && err.response.status === 404) {
+                setError('not_found');
+            } else {
+                setError('fetch_error');
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchArticle = async () => {
-            try {
-                const { data } = await api.get(`/api/articles/${slug}`);
-                if (data) {
-                    setArticle(data);
-                } else {
-                    setArticle(DUMMY_ARTICLE);
-                }
-            } catch (_) {
-                console.warn('API error fetching article, using dummy data');
-                setArticle(DUMMY_ARTICLE);
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchArticle();
     }, [slug]);
 
     if (loading) {
+        return <LoadingState message="Loading article..." />;
+    }
+
+    if (error === 'not_found' || (!article && !loading)) {
         return (
-            <div className="loader-container">
-                <Loader2 className="loader-icon" size={48} />
-            </div>
+            <EmptyState 
+                icon={BookOpen}
+                title="Article Not Found"
+                description="The story you are looking for does not exist or has been removed from our archives."
+                actionText="Return to News"
+                actionLink="/"
+            />
         );
     }
 
-    if (error && !article) {
+    if (error === 'fetch_error') {
         return (
-            <div className="page-header" style={{ marginTop: 'var(--spacing-xl)' }}>
-                <h2 className="page-title">Article Not Found</h2>
-                <p className="page-description mb-lg">The story you are looking for does not exist or has been removed.</p>
-                <Link to="/" className="btn btn-primary" style={{ display: 'inline-flex', gap: '8px' }}>
-                    <ArrowLeft size={16} /> Return Home
-                </Link>
-            </div>
+            <ErrorState 
+                title="Failed to load article"
+                description="There was a problem communicating with our servers. Please check your connection and try again."
+                onRetry={fetchArticle}
+            />
         );
     }
 
     const imgUrl = article.media?.featuredImage || `https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=1200&q=80`;
+
     const metaTitle = article.seo?.metaTitle || article.title;
     const metaDesc = article.seo?.metaDescription || article.summary;
 

@@ -11,9 +11,9 @@ import {
     CheckCircle,
     XCircle,
     ExternalLink,
-    Loader2,
     Eye
 } from 'lucide-react';
+import LoadingState from '../../components/LoadingState';
 
 const ArticlesList = () => {
     const [articles, setArticles] = useState([]);
@@ -124,7 +124,7 @@ const ArticlesList = () => {
                     </thead>
                     <tbody>
                         {loading ? (
-                            <tr><td colSpan="6" style={{ padding: 'var(--spacing-2xl)', textAlign: 'center' }}><Loader2 className="loader-icon" /></td></tr>
+                            <tr><td colSpan="6" style={{ padding: 'var(--spacing-3xl) 0' }}><LoadingState message="Fetching article archive..." fullPage={false} /></td></tr>
                         ) : filteredArticles.length === 0 ? (
                             <tr><td colSpan="6" style={{ padding: 'var(--spacing-2xl)', textAlign: 'center', color: 'var(--color-text-muted)' }}>No articles found.</td></tr>
                         ) : filteredArticles.map(article => (

@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
+import { useLocation } from 'react-router-dom';
 import api from '../api/axios';
 import ArticleCard from '../components/ArticleCard';
-import { Loader2 } from 'lucide-react';
+import { Search } from 'lucide-react';
 import SEO from '../components/SEO';
+import EmptyState from '../components/EmptyState';
+import LoadingState from '../components/LoadingState';
 
 // Premium Dummy Data for UI presentation
 const DUMMY_ARTICLES = [
@@ -59,8 +61,6 @@ const DUMMY_ARTICLES = [
     }
 ];
 
-import { useLocation } from 'react-router-dom';
-
 const HomePage = () => {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
@@ -82,24 +82,21 @@ const HomePage = () => {
                 if (data && data.length > 0) {
                     setArticles(data);
                 } else {
-                    setArticles(DUMMY_ARTICLES);
+                    // Only use dummy data if it's NOT a search result
+                    setArticles(searchKeyword ? [] : DUMMY_ARTICLES);
                 }
             } catch (error) {
                 console.error('Failed to fetch articles', error);
-                setArticles(DUMMY_ARTICLES);
+                setArticles(searchKeyword ? [] : DUMMY_ARTICLES);
             } finally {
                 setLoading(false);
             }
         };
         fetchNews();
-    }, [filterType]);
+    }, [filterType, searchKeyword]); // Added searchKeyword to dependencies
 
     if (loading) {
-        return (
-            <div className="loader-container">
-                <Loader2 className="loader-icon" size={48} />
-            </div>
-        );
+        return <LoadingState message="Fetching top stories..." />;
     }
 
     const featuredArticle = articles.length > 0 ? articles[0] : null;
@@ -125,13 +122,20 @@ const HomePage = () => {
                     </div>
                 </div>
                 {featuredArticle ? (
-                    <div className="glass p-lg" style={{ borderRadius: 'var(--radius-lg)' }}>
+                    <div className="glass p-lg animate-in fade-in" style={{ borderRadius: 'var(--radius-lg)' }}>
                         <ArticleCard article={featuredArticle} featured={true} />
                     </div>
                 ) : (
-                    <div className="p-10 border text-center font-serif text-xl tracking-wide text-muted" style={{ backgroundColor: 'var(--color-white)', borderRadius: 'var(--radius-lg)' }}>No articles found.</div>
+                    <EmptyState 
+                        icon={Search}
+                        title={searchKeyword ? "No results found" : "No articles found"}
+                        description={searchKeyword ? `We couldn't find any articles matching "${searchKeyword}". Please try a different search term.` : "There are no featured articles at the moment. Please check back later."}
+                        actionText="Clear Search"
+                        actionLink="/"
+                    />
                 )}
             </section>
+
 
             {/* Latest News Grid */}
             {latestArticles.length > 0 && (
