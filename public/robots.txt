@@ -1,7 +1,9 @@
 User-agent: *
 Allow: /
-Disallow: /admin
-Disallow: /login
-Disallow: /register
 
-Sitemap: https://your-production-url.com/api/sitemap
+# Block admin or private routes
+Disallow: /admin
+Disallow: /dashboard
+
+# Sitemap
+Sitemap: https://thechronicle.qzz.io/sitemap.xml

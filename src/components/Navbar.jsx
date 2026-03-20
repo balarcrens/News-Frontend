@@ -31,19 +31,19 @@ const Navbar = () => {
 
                             <div className="navbar-links">
                                 <Link to="/" className="navbar-link">Home</Link>
-                                
+
                                 {/* Categories Dropdown */}
                                 <div className="dropdown" style={{ position: 'relative', display: 'inline-block' }}>
-                                    <span className="navbar-link cursor-pointer flex items-center gap-xs">
+                                    <span className="navbar-link cursor-pointer flex items-center gap-sm">
                                         Categories
-                                        <ChevronLeft size={14} style={{ transform: 'rotate(-90deg)' }} />
+                                        <ChevronLeft size={14} style={{ transform: 'rotate(-90deg)', marginTop: '2px' }} />
                                     </span>
                                     <div className="dropdown-content" style={{
-                                        background: 'white', 
-                                        position: 'absolute', 
-                                        top: '100%', 
-                                        left: 0, 
-                                        minWidth: '200px', 
+                                        background: 'white',
+                                        position: 'absolute',
+                                        top: '100%',
+                                        left: 0,
+                                        minWidth: '200px',
                                         padding: 'var(--spacing-sm)',
                                         borderRadius: 'var(--radius-md)',
                                         marginTop: 'var(--spacing-sm)',
@@ -61,8 +61,8 @@ const Navbar = () => {
                                         <Link to="/category/culture" className="dropdown-item">Culture</Link>
                                     </div>
                                 </div>
-                                
-                                <Link to="/category/world">World</Link>
+
+                                <Link to="/contact">Contact</Link>
                                 <Link to="/about">About</Link>
                             </div>
 
@@ -88,42 +88,42 @@ const Navbar = () => {
                             </div>
                         </>
                     ) : (
-                    <form onSubmit={handleSearch} style={{ flexGrow: 1, display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
-                        <div style={{ position: 'relative', flexGrow: 1 }}>
-                            <Search 
-                                size={18} 
-                                style={{ 
-                                    position: 'absolute', 
-                                    left: '12px', 
-                                    top: '50%', 
-                                    transform: 'translateY(-50%)', 
-                                    color: 'var(--color-primary)',
-                                    pointerEvents: 'none'
-                                }} 
-                            />
-                            <input 
-                                type="text"
-                                autoFocus
-                                placeholder="Search stories, topics, and more..."
-                                className="navbar-search-input"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                style={{ 
-                                    width: '100%',
-                                    color: 'var(--color-primary)', 
-                                    background: '#fff', 
-                                    border: '1px solid var(--color-border)', 
-                                    padding: '0.6rem 1rem 0.6rem 2.8rem',
-                                    borderRadius: 'var(--radius-full)',
-                                    outline: 'none',
-                                    fontSize: '1rem',
-                                    transition: 'all 0.3s ease'
-                                }}
-                            />
-                        </div>
-                        <button type="submit" className="btn btn-primary" style={{ padding: '0.6rem 1.5rem', borderRadius: 'var(--radius-full)' }}>Search</button>
-                        <button type="button" className="icon-btn" onClick={() => setIsSearchOpen(false)}><X size={24} /></button>
-                    </form>
+                        <form onSubmit={handleSearch} style={{ flexGrow: 1, display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
+                            <div style={{ position: 'relative', flexGrow: 1 }}>
+                                <Search
+                                    size={18}
+                                    style={{
+                                        position: 'absolute',
+                                        left: '12px',
+                                        top: '50%',
+                                        transform: 'translateY(-50%)',
+                                        color: 'var(--color-primary)',
+                                        pointerEvents: 'none'
+                                    }}
+                                />
+                                <input
+                                    type="text"
+                                    autoFocus
+                                    placeholder="Search stories, topics, and more..."
+                                    className="navbar-search-input"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    style={{
+                                        width: '100%',
+                                        color: 'var(--color-primary)',
+                                        background: '#fff',
+                                        border: '1px solid var(--color-border)',
+                                        padding: '0.6rem 1rem 0.6rem 2.8rem',
+                                        borderRadius: 'var(--radius-full)',
+                                        outline: 'none',
+                                        fontSize: '1rem',
+                                        transition: 'all 0.3s ease'
+                                    }}
+                                />
+                            </div>
+                            <button type="submit" className="btn btn-primary" style={{ padding: '0.6rem 1.5rem', borderRadius: 'var(--radius-full)' }}>Search</button>
+                            <button type="button" className="icon-btn" onClick={() => setIsSearchOpen(false)}><X size={24} /></button>
+                        </form>
                     )}
                 </div>
             </div>

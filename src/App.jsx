@@ -12,6 +12,7 @@ import CategoryPage from './pages/CategoryPage';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import CookiePolicy from './pages/CookiePolicy';
+import ScrollToTop from './components/ScrollToTop';
 
 // Admin Pages
 import AdminLayout from './components/admin/AdminLayout';
@@ -29,6 +30,7 @@ const Layout = () => (
             <Outlet />
         </main>
         <Footer />
+        <ScrollToTop />
     </div>
 );
 
