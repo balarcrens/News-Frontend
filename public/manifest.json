@@ -1,0 +1,21 @@
+{
+  "short_name": "Chronicle",
+  "name": "The Chronicle | Premium News",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/vite.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#1e293b",
+  "background_color": "#ffffff",
+  "description": "Premium news and independent journalism platform."
+}
