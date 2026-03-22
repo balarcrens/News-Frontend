@@ -35,10 +35,33 @@ const ArticleEditor = () => {
         category: '',
         status: 'draft',
         type: 'news',
-        media: { featuredImage: '' },
-        seo: { metaTitle: '', metaDescription: '', keywords: [] },
+        media: { 
+            featuredImage: '',
+            imageAlt: '',
+            gallery: [],
+            videoUrl: ''
+        },
+        seo: { 
+            metaTitle: '', 
+            metaDescription: '', 
+            keywords: [],
+            canonicalUrl: '',
+            ogTitle: '',
+            ogDescription: '',
+            ogImage: ''
+        },
+        customAuthor: {
+            name: '',
+            bio: '',
+            profileImage: ''
+        },
+        source: {
+            name: '',
+            url: ''
+        },
         isFeatured: false,
-        isBreaking: false
+        isBreaking: false,
+        tags: []
     });
 
     useEffect(() => {
@@ -56,18 +79,18 @@ const ArticleEditor = () => {
                         if (typeof content === 'string') {
                             content = [{ type: 'text', value: content }];
                         }
-                        setFormData({
-                            title: art.title || '',
-                            summary: art.summary || '',
+                        
+                        setFormData(prev => ({
+                            ...prev,
+                            ...art,
                             content: content,
                             category: art.category?._id || art.category || '',
-                            status: art.status || 'draft',
-                            type: art.type || 'news',
-                            media: art.media || { featuredImage: '' },
-                            seo: art.seo || { metaTitle: '', metaDescription: '', keywords: [] },
-                            isFeatured: art.isFeatured || false,
-                            isBreaking: art.isBreaking || false
-                        });
+                            media: { ...prev.media, ...art.media },
+                            seo: { ...prev.seo, ...art.seo },
+                            customAuthor: { ...prev.customAuthor, ...art.customAuthor },
+                            source: { ...prev.source, ...art.source },
+                            tags: art.tags?.map(t => t._id || t) || []
+                        }));
                     }
             } catch (err) {
                 console.error('Fetch failed', err);
@@ -325,6 +348,49 @@ const ArticleEditor = () => {
                                 style={{ minHeight: '60px' }}
                             />
                         </div>
+                        <div className="form-group">
+                            <label className="form-label">Canonical URL</label>
+                            <input
+                                type="text"
+                                name="seo.canonicalUrl"
+                                value={formData.seo.canonicalUrl || ''}
+                                onChange={handleChange}
+                                className="form-input"
+                                placeholder="https://..."
+                            />
+                        </div>
+                        <div className="grid md:grid-cols-2 gap-lg mt-md pt-md border-t">
+                            <div className="form-group">
+                                <label className="form-label">OG Title (Social)</label>
+                                <input
+                                    type="text"
+                                    name="seo.ogTitle"
+                                    value={formData.seo.ogTitle || ''}
+                                    onChange={handleChange}
+                                    className="form-input"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">OG Image URL</label>
+                                <input
+                                    type="text"
+                                    name="seo.ogImage"
+                                    value={formData.seo.ogImage || ''}
+                                    onChange={handleChange}
+                                    className="form-input"
+                                />
+                            </div>
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label">OG Description</label>
+                            <textarea
+                                name="seo.ogDescription"
+                                value={formData.seo.ogDescription || ''}
+                                onChange={handleChange}
+                                className="form-input"
+                                style={{ minHeight: '60px' }}
+                            />
+                        </div>
                     </div>
                 </div>
 
@@ -397,6 +463,45 @@ const ArticleEditor = () => {
                                 style={{ minHeight: '80px' }}
                             />
                         </div>
+                        <div className="form-group">
+                            <label className="form-label">Author Profile Image URL</label>
+                            <input
+                                type="text"
+                                name="customAuthor.profileImage"
+                                value={formData.customAuthor?.profileImage || ''}
+                                onChange={handleChange}
+                                className="form-input"
+                                placeholder="https://..."
+                            />
+                        </div>
+                    </div>
+
+                    <div style={{ backgroundColor: 'white', padding: 'var(--spacing-sm)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
+                        <h3 style={{ fontSize: '1rem', fontWeight: 'bold', marginBottom: 'var(--spacing-lg)', display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)' }}>
+                            <Globe size={18} className="text-accent" /> Source Information
+                        </h3>
+                        <div className="form-group">
+                            <label className="form-label">Source Name</label>
+                            <input
+                                type="text"
+                                name="source.name"
+                                value={formData.source?.name || ''}
+                                onChange={handleChange}
+                                className="form-input"
+                                placeholder="Reuters, BBC, etc."
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label">Source URL</label>
+                            <input
+                                type="text"
+                                name="source.url"
+                                value={formData.source?.url || ''}
+                                onChange={handleChange}
+                                className="form-input"
+                                placeholder="https://..."
+                            />
+                        </div>
                     </div>
 
                     <div style={{ backgroundColor: 'white', padding: 'var(--spacing-sm)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
@@ -412,6 +517,17 @@ const ArticleEditor = () => {
                                 onChange={handleChange}
                                 className="form-input"
                                 placeholder="https://images.unsplash.com/..."
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label">Image Alt Text (SEO)</label>
+                            <input
+                                type="text"
+                                name="media.imageAlt"
+                                value={formData.media.imageAlt || ''}
+                                onChange={handleChange}
+                                className="form-input"
+                                placeholder="Descriptive text for the image..."
                             />
                         </div>
                         {formData.media.featuredImage && (
