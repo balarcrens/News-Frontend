@@ -87,7 +87,7 @@ const CategoryManager = () => {
 
     return (
         <div className="category-manager">
-            <div className="flex justify-between items-center mb-xl">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-md mb-xl">
                 <h1 className="font-serif" style={{ fontSize: '2rem', fontWeight: 'bold' }}>Categories</h1>
                 {!isAdding && !editingId && (
                     <button onClick={() => setIsAdding(true)} className="btn btn-primary flex items-center gap-sm">
@@ -99,7 +99,7 @@ const CategoryManager = () => {
             <div className="grid grid-cols-1 gap-lg">
                 {/* Category List */}
                 <div>
-                    <div style={{ backgroundColor: 'white', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)', overflow: 'hidden', border: '1px solid var(--color-border)' }}>
+                    <div style={{ backgroundColor: 'white', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)', overflowX: 'auto', border: '1px solid var(--color-border)' }}>
                         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                             <thead>
                                 <tr style={{ backgroundColor: '#f9fafb', borderBottom: '1px solid var(--color-border)' }}>

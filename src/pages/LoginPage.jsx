@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom'
-import { Helmet } from 'react-helmet-async';
+import SEO from '../components/SEO';
 import { LogIn } from 'lucide-react';
 import LoadingState from '../components/LoadingState';
 
@@ -28,10 +28,7 @@ const LoginPage = () => {
 
   return (
     <div className="page-header" style={{ borderBottom: 'none' }}>
-      <Helmet>
-        <title>Sign In | The Chronicle</title>
-      </Helmet>
-
+      <SEO title="Sign In | The Chronicle" description="Log in to your Chronicle account to read unlimited news." />
       {loading && (
         <div style={{
           position: 'fixed',

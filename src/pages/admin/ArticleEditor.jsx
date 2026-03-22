@@ -9,6 +9,12 @@ import {
     Loader2,
     AlertTriangle,
     User,
+    Plus,
+    Trash2,
+    ArrowUp,
+    ArrowDown,
+    Type,
+    Heading as HeadingIcon,
 } from 'lucide-react';
 import LoadingState from '../../components/LoadingState';
 
@@ -25,7 +31,7 @@ const ArticleEditor = () => {
     const [formData, setFormData] = useState({
         title: '',
         summary: '',
-        content: '',
+        content: [{ type: 'text', value: '' }],
         category: '',
         status: 'draft',
         type: 'news',
@@ -44,21 +50,25 @@ const ArticleEditor = () => {
                 ]);
 
                 setCategories(catsRes.data);
-                if (isEdit && articleRes.data) {
-                    const art = articleRes.data;
-                    setFormData({
-                        title: art.title || '',
-                        summary: art.summary || '',
-                        content: art.content || '',
-                        category: art.category?._id || art.category || '',
-                        status: art.status || 'draft',
-                        type: art.type || 'news',
-                        media: art.media || { featuredImage: '' },
-                        seo: art.seo || { metaTitle: '', metaDescription: '', keywords: [] },
-                        isFeatured: art.isFeatured || false,
-                        isBreaking: art.isBreaking || false
-                    });
-                }
+                    if (isEdit && articleRes.data) {
+                        const art = articleRes.data;
+                        let content = art.content || [{ type: 'text', value: '' }];
+                        if (typeof content === 'string') {
+                            content = [{ type: 'text', value: content }];
+                        }
+                        setFormData({
+                            title: art.title || '',
+                            summary: art.summary || '',
+                            content: content,
+                            category: art.category?._id || art.category || '',
+                            status: art.status || 'draft',
+                            type: art.type || 'news',
+                            media: art.media || { featuredImage: '' },
+                            seo: art.seo || { metaTitle: '', metaDescription: '', keywords: [] },
+                            isFeatured: art.isFeatured || false,
+                            isBreaking: art.isBreaking || false
+                        });
+                    }
             } catch (err) {
                 console.error('Fetch failed', err);
                 setError('Failed to load data.');
@@ -85,6 +95,35 @@ const ArticleEditor = () => {
         }
     };
 
+    const addBlock = (type) => {
+        setFormData(prev => ({
+            ...prev,
+            content: [...prev.content, { type, value: '', caption: type === 'image' || type === 'quote' ? '' : undefined }]
+        }));
+    };
+
+    const removeBlock = (index) => {
+        if (formData.content.length <= 1) return;
+        setFormData(prev => ({
+            ...prev,
+            content: prev.content.filter((_, i) => i !== index)
+        }));
+    };
+
+    const moveBlock = (index, direction) => {
+        const newContent = [...formData.content];
+        const newIndex = index + direction;
+        if (newIndex < 0 || newIndex >= newContent.length) return;
+        [newContent[index], newContent[newIndex]] = [newContent[newIndex], newContent[index]];
+        setFormData(prev => ({ ...prev, content: newContent }));
+    };
+
+    const handleBlockChange = (index, field, value) => {
+        const newContent = [...formData.content];
+        newContent[index] = { ...newContent[index], [field]: value };
+        setFormData(prev => ({ ...prev, content: newContent }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSaving(true);
@@ -108,7 +147,7 @@ const ArticleEditor = () => {
 
     return (
         <div className="article-editor">
-            <div className="flex items-center justify-between mb-xl">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-md mb-xl">
                 <div className="flex items-center gap-md">
                     <button onClick={() => navigate('/admin/articles')} className="icon-btn">
                         <ArrowLeft size={20} />
@@ -136,8 +175,8 @@ const ArticleEditor = () => {
 
             <form onSubmit={handleSubmit} className="grid lg:grid-cols-3 gap-xl">
                 {/* Main Content Area */}
-                <div style={{ gridColumn: '1 / span 2', display: 'flex', flexDirection: 'column', gap: 'var(--spacing-xl)' }}>
-                    <div style={{ backgroundColor: 'white', padding: 'var(--spacing-xl)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
+                <div className="lg:col-span-2" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-xl)' }}>
+                    <div style={{ backgroundColor: 'white', padding: 'var(--spacing-sm)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
                         <div className="form-group">
                             <label className="form-label">Article Title</label>
                             <input
@@ -165,21 +204,91 @@ const ArticleEditor = () => {
                         </div>
 
                         <div className="form-group">
-                            <label className="form-label">Article Body Content</label>
-                            <textarea
-                                name="content"
-                                value={formData.content}
-                                onChange={handleChange}
-                                className="form-input"
-                                placeholder="Write the full article content here... (HTML supported)"
-                                required
-                                style={{ minHeight: '400px', fontFamily: 'var(--font-serif)', fontSize: '1.125rem' }}
-                            />
+                            <label className="form-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                Article Content Blocks
+                            </label>
+                            
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)' }}>
+                                {formData.content.map((block, index) => (
+                                    <div key={index} style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 'var(--spacing-md)', backgroundColor: '#fafafa', position: 'relative' }}>
+                                        <div className="flex items-center justify-between mb-sm pb-xs border-b" style={{ borderColor: 'var(--color-border)' }}>
+                                            <div className="flex items-center gap-xs font-bold text-sm text-muted">
+                                                {block.type === 'text' && <><Type size={14} /> Paragraph</>}
+                                                {block.type === 'heading' && <><HeadingIcon size={14} /> Heading</>}
+                                                {block.type === 'image' && <><ImageIcon size={14} /> Image Block</>}
+                                            </div>
+                                            <div className="flex items-center gap-xs">
+                                                <button type="button" onClick={() => moveBlock(index, -1)} disabled={index === 0} className="icon-btn" style={{ padding: '4px' }}><ArrowUp size={16} /></button>
+                                                <button type="button" onClick={() => moveBlock(index, 1)} disabled={index === formData.content.length - 1} className="icon-btn" style={{ padding: '4px' }}><ArrowDown size={16} /></button>
+                                                <button type="button" onClick={() => removeBlock(index)} className="icon-btn text-accent" style={{ padding: '4px' }}><Trash2 size={16} /></button>
+                                            </div>
+                                        </div>
+
+                                        {block.type === 'text' && (
+                                            <textarea
+                                                className="form-input"
+                                                value={block.value}
+                                                onChange={(e) => handleBlockChange(index, 'value', e.target.value)}
+                                                placeholder="Write your paragraph here..."
+                                                style={{ minHeight: '120px', fontSize: '1.1rem' }}
+                                                required
+                                            />
+                                        )}
+
+                                        {block.type === 'heading' && (
+                                            <input
+                                                type="text"
+                                                className="form-input"
+                                                value={block.value}
+                                                onChange={(e) => handleBlockChange(index, 'value', e.target.value)}
+                                                placeholder="Enter section heading..."
+                                                style={{ fontWeight: 'bold', fontSize: '1.25rem' }}
+                                                required
+                                            />
+                                        )}
+
+                                        {block.type === 'image' && (
+                                            <div className="flex flex-col gap-sm">
+                                                <input
+                                                    type="text"
+                                                    className="form-input"
+                                                    value={block.value}
+                                                    onChange={(e) => handleBlockChange(index, 'value', e.target.value)}
+                                                    placeholder="Enter image URL (Unsplash, etc.)..."
+                                                />
+                                                <input
+                                                    type="text"
+                                                    className="form-input"
+                                                    value={block.caption}
+                                                    onChange={(e) => handleBlockChange(index, 'caption', e.target.value)}
+                                                    placeholder="Optional image caption/credit..."
+                                                    style={{ fontSize: '0.85rem' }}
+                                                />
+                                                {block.value && (
+                                                    <img src={block.value} alt="Preview" style={{ maxWidth: '200px', borderRadius: '4px', marginTop: '4px' }} />
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="flex items-center gap-sm mt-lg flex-wrap">
+                                <button type="button" onClick={() => addBlock('text')} className="btn btn-outline flex items-center gap-xs" style={{ fontSize: '0.75rem', padding: '0.5rem 1rem' }}>
+                                    <Plus size={14} /> Add Paragraph
+                                </button>
+                                <button type="button" onClick={() => addBlock('heading')} className="btn btn-outline flex items-center gap-xs" style={{ fontSize: '0.75rem', padding: '0.5rem 1rem' }}>
+                                    <Plus size={14} /> Add Heading
+                                </button>
+                                <button type="button" onClick={() => addBlock('image')} className="btn btn-outline flex items-center gap-xs" style={{ fontSize: '0.75rem', padding: '0.5rem 1rem' }}>
+                                    <Plus size={14} /> Add Image Block
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                    <div style={{ backgroundColor: 'white', padding: 'var(--spacing-xl)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
-                        <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: 'var(--spacing-lg)', display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)' }}>
+                    <div style={{ backgroundColor: 'white', padding: 'var(--spacing-sm)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
+                        <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: 'var(--spacing-sm)', display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)' }}>
                             <Globe size={20} className="text-accent" /> SEO Optimization
                         </h3>
                         <div className="grid md:grid-cols-2 gap-lg">
@@ -221,7 +330,7 @@ const ArticleEditor = () => {
 
                 {/* Sidebar Settings Area */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-xl)' }}>
-                    <div style={{ backgroundColor: 'white', padding: 'var(--spacing-xl)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
+                    <div style={{ backgroundColor: 'white', padding: 'var(--spacing-sm)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
                         <h3 style={{ fontSize: '1rem', fontWeight: 'bold', marginBottom: 'var(--spacing-lg)' }}>Publish Settings</h3>
 
                         <div className="form-group">
@@ -262,7 +371,7 @@ const ArticleEditor = () => {
                         </div>
                     </div>
 
-                    <div style={{ backgroundColor: 'white', padding: 'var(--spacing-xl)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
+                    <div style={{ backgroundColor: 'white', padding: 'var(--spacing-sm)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
                         <h3 style={{ fontSize: '1rem', fontWeight: 'bold', marginBottom: 'var(--spacing-lg)', display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)' }}>
                             <User size={18} className="text-accent" /> Author Details (Manual)
                         </h3>
@@ -290,7 +399,7 @@ const ArticleEditor = () => {
                         </div>
                     </div>
 
-                    <div style={{ backgroundColor: 'white', padding: 'var(--spacing-xl)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
+                    <div style={{ backgroundColor: 'white', padding: 'var(--spacing-sm)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
                         <h3 style={{ fontSize: '1rem', fontWeight: 'bold', marginBottom: 'var(--spacing-lg)', display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)' }}>
                             <ImageIcon size={18} className="text-accent" /> Featured Image
                         </h3>

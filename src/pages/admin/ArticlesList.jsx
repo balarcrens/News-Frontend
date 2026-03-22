@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../../api/axios';
+import Pagination from '../../components/Pagination';
 import {
     Plus,
     Search,
@@ -21,13 +22,27 @@ const ArticlesList = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     const [message, setMessage] = useState({ type: '', text: '' });
+    const [pagination, setPagination] = useState({ totalPages: 1 });
+    const [currentPage, setCurrentPage] = useState(1);
     const navigate = useNavigate();
 
     const fetchArticles = async () => {
         setLoading(true);
         try {
-            const { data } = await api.get('/api/articles');
-            setArticles(data || []);
+            const params = {
+                page: currentPage,
+                limit: 15
+            };
+            if (statusFilter !== 'all') params.status = statusFilter;
+            // Note: server-side search isn't fully utilized here yet, 
+            // but we'll stick to full list for now or adapt as needed.
+            
+            const { data } = await api.get('/api/articles', { params });
+            const fetched = Array.isArray(data) ? data : (data.articles || []);
+            const pag = Array.isArray(data) ? { totalPages: 1 } : (data.pagination || { totalPages: 1 });
+            
+            setArticles(fetched);
+            setPagination(pag);
         } catch (error) {
             console.error('Failed to fetch articles', error);
             setMessage({ type: 'error', text: 'Could not load articles.' });
@@ -38,7 +53,11 @@ const ArticlesList = () => {
 
     useEffect(() => {
         fetchArticles();
-    }, []);
+    }, [currentPage, statusFilter]);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [statusFilter]);
 
     const handleDelete = async (id) => {
         if (!window.confirm('Are you sure?')) return;
@@ -63,13 +82,12 @@ const ArticlesList = () => {
 
     const filteredArticles = articles.filter(a => {
         const matchesSearch = a.title.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesStatus = statusFilter === 'all' || a.status === statusFilter;
-        return matchesSearch && matchesStatus;
+        return matchesSearch;
     });
 
     return (
         <div className="articles-list-page">
-            <div className="flex justify-between items-center mb-xl">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-md mb-xl">
                 <h1 className="font-serif" style={{ fontSize: '2rem', fontWeight: 'bold' }}>Manage Articles</h1>
                 <Link to="/admin/articles/create" className="btn btn-primary flex items-center gap-sm">
                     <Plus size={18} /> New Article
@@ -174,6 +192,12 @@ const ArticlesList = () => {
                     </tbody>
                 </table>
             </div>
+
+            <Pagination 
+                currentPage={currentPage}
+                totalPages={pagination.totalPages}
+                onPageChange={(p) => setCurrentPage(p)}
+            />
         </div>
     );
 };

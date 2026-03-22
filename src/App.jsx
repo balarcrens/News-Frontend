@@ -36,24 +36,36 @@ const Layout = () => (
 );
 
 
+import LanguageSyncManager from './components/LanguageSyncManager';
+
+const publicRoutes = [
+    { path: "", element: <HomePage /> },
+    { path: "article/:slug", element: <ArticlePage /> },
+    { path: "category/:slug", element: <CategoryPage /> },
+    { path: "login", element: <LoginPage /> },
+    { path: "register", element: <RegisterPage /> },
+    { path: "about", element: <AboutUsPage /> },
+    { path: "contact", element: <ContactUsPage /> },
+    { path: "privacy-policy", element: <PrivacyPolicy /> },
+    { path: "terms-of-service", element: <TermsOfService /> },
+    { path: "cookie-policy", element: <CookiePolicy /> },
+    { path: "*", element: <NotFoundPage /> },
+];
+
 function App() {
     return (
         <AuthProvider>
             <BrowserRouter>
+                <LanguageSyncManager />
                 <Routes>
                     {/* Public Routes with Navbar and Footer */}
                     <Route element={<Layout />}>
-                        <Route path="/" element={<HomePage />} />
-                        <Route path="/article/:slug" element={<ArticlePage />} />
-                        <Route path="/category/:slug" element={<CategoryPage />} />
-                        <Route path="/login" element={<LoginPage />} />
-                        <Route path="/register" element={<RegisterPage />} />
-                        <Route path="/about" element={<AboutUsPage />} />
-                        <Route path="/contact" element={<ContactUsPage />} />
-                        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                        <Route path="/terms-of-service" element={<TermsOfService />} />
-                        <Route path="/cookie-policy" element={<CookiePolicy />} />
-                        <Route path="*" element={<NotFoundPage />} />
+                        {publicRoutes.map((route, i) => (
+                            <Route key={`base-${i}`} path={`/${route.path}`} element={route.element} />
+                        ))}
+                        {publicRoutes.map((route, i) => (
+                            <Route key={`lang-${i}`} path={`/:lang/${route.path}`} element={route.element} />
+                        ))}
                     </Route>
 
                     {/* Admin Routes - Standalone Layout */}

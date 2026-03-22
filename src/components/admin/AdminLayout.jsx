@@ -150,15 +150,7 @@ const AdminLayout = () => {
                             <Bell size={20} color="#64748b" />
                             <span style={{ position: 'absolute', top: '8px', right: '8px', width: '8px', height: '8px', backgroundColor: '#ef4444', borderRadius: '50%', border: '2px solid white' }}></span>
                         </button>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '4px 12px', border: '1px solid #e2e8f0', borderRadius: '2rem', backgroundColor: '#f8fafc' }}>
-                            <div style={{ width: '28px', height: '28px', backgroundColor: '#3b82f6', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem' }}>
-                                <User size={16} />
-                            </div>
-                            <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                <span style={{ fontSize: '0.813rem', fontWeight: '600', color: '#1e293b', lineHeight: 1 }}>{user?.name || 'Admin'}</span>
-                                <span style={{ fontSize: '0.688rem', color: '#64748b' }}>Administrator</span>
-                            </div>
-                        </div>
+
                     </div>
                 </header>
 
@@ -166,7 +158,7 @@ const AdminLayout = () => {
                 <main style={{
                     flexGrow: 1,
                     overflowY: 'auto',
-                    padding: '2rem',
+                    padding: '1rem',
                     backgroundColor: '#f8fafc'
                 }}>
                     <div style={{ maxWidth: '1600px', margin: '0 auto' }}>

@@ -8,6 +8,7 @@ const Navbar = () => {
     const { user, logout, isAdmin } = useAuth();
     const navigate = useNavigate();
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
     const handleSearch = (e) => {
@@ -26,7 +27,9 @@ const Navbar = () => {
                     {!isSearchOpen ? (
                         <>
                             <div className="flex items-center gap-md">
-                                <button className="icon-btn" style={{ display: 'none' }}><Menu size={24} /></button>
+                                <button className="icon-btn mobile-menu-btn mobile-only" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                                    {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                                </button>
                                 <Link to="/" className="navbar-brand">The Chronicle</Link>
                             </div>
 
@@ -68,25 +71,29 @@ const Navbar = () => {
                             </div>
 
                             <div className="navbar-actions">
-                                <LanguageSelector />
+                                <div className="desktop-only items-center">
+                                    <LanguageSelector />
+                                </div>
                                 <button className="icon-btn" aria-label="Search" onClick={() => setIsSearchOpen(true)}><Search size={20} /></button>
 
-                                {isAdmin && (
-                                    <Link to="/admin" className="icon-btn" title="Admin Dashboard">
-                                        <LayoutDashboard size={20} />
-                                    </Link>
-                                )}
+                                <div className="desktop-only items-center gap-md">
+                                    {isAdmin && (
+                                        <Link to="/admin" className="icon-btn" title="Admin Dashboard">
+                                            <LayoutDashboard size={20} />
+                                        </Link>
+                                    )}
 
-                                {user ? (
-                                    <div className="flex items-center gap-sm">
-                                        <span className="text-sm font-bold">{user.name}</span>
-                                        <button onClick={logout} className="icon-btn" title="Logout">
-                                            <LogOut size={20} />
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <Link to="/login" className="icon-btn" title="Login"><LogIn size={20} /></Link>
-                                )}
+                                    {user ? (
+                                        <div className="flex items-center gap-sm">
+                                            <span className="text-sm font-bold">{user.name}</span>
+                                            <button onClick={logout} className="icon-btn" title="Logout">
+                                                <LogOut size={20} />
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <Link to="/login" className="icon-btn" title="Login"><LogIn size={20} /></Link>
+                                    )}
+                                </div>
                             </div>
                         </>
                     ) : (
@@ -126,6 +133,44 @@ const Navbar = () => {
                             <button type="submit" className="btn btn-primary" style={{ padding: '0.6rem 1.5rem', borderRadius: 'var(--radius-full)' }}>Search</button>
                             <button type="button" className="icon-btn" onClick={() => setIsSearchOpen(false)}><X size={24} /></button>
                         </form>
+                    )}
+
+                    {isMobileMenuOpen && !isSearchOpen && (
+                        <div className="mobile-nav-panel">
+                            <div>
+                                <LanguageSelector />
+                            </div>
+
+                            <Link to="/" className="navbar-link" style={{ color: 'var(--color-white)', padding: 'var(--spacing-sm) 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }} onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
+
+                            <Link to="/category/world" className="navbar-link" style={{ color: 'var(--color-white)', padding: 'var(--spacing-sm) 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }} onClick={() => setIsMobileMenuOpen(false)}>World News</Link>
+
+                            <Link to="/category/politics" className="navbar-link" style={{ color: 'var(--color-white)', padding: 'var(--spacing-sm) 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }} onClick={() => setIsMobileMenuOpen(false)}>Politics</Link>
+
+                            <Link to="/category/business" className="navbar-link" style={{ color: 'var(--color-white)', padding: 'var(--spacing-sm) 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }} onClick={() => setIsMobileMenuOpen(false)}>Business</Link>
+
+                            <Link to="/category/tech" className="navbar-link" style={{ color: 'var(--color-white)', padding: 'var(--spacing-sm) 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }} onClick={() => setIsMobileMenuOpen(false)}>Technology</Link>
+
+                            <Link to="/contact" className="navbar-link" style={{ color: 'var(--color-white)', padding: 'var(--spacing-sm) 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }} onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
+
+                            <Link to="/about" className="navbar-link" style={{ color: 'var(--color-white)', padding: 'var(--spacing-sm) 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }} onClick={() => setIsMobileMenuOpen(false)}>About</Link>
+
+                            <div className="mt-sm pt-sm flex items-center justify-between" style={{ color: 'white' }}>
+                                {user ? (
+                                    <>
+                                        <span className="font-bold text-sm">{user.name}</span>
+                                        <div className="flex gap-md">
+                                            {isAdmin && <Link to="/admin" onClick={() => setIsMobileMenuOpen(false)} title="Dashboard"><LayoutDashboard size={20} /></Link>}
+                                            <button onClick={() => { logout(); setIsMobileMenuOpen(false); }} title="Logout"><LogOut size={20} /></button>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <Link to="/login" className="flex items-center gap-sm text-sm font-bold" onClick={() => setIsMobileMenuOpen(false)}>
+                                        <LogIn size={20} /> Login / Register
+                                    </Link>
+                                )}
+                            </div>
+                        </div>
                     )}
                 </div>
             </div>

@@ -30,6 +30,8 @@ const ArticlePage = () => {
     const [comments, setComments] = useState([]);
     const [commentData, setCommentData] = useState({ userName: '', email: '', comment: '' });
     const [submittingComment, setSubmittingComment] = useState(false);
+    const [scrollProgress, setScrollProgress] = useState(0);
+    const [relatedArticles, setRelatedArticles] = useState([]);
 
     const fetchArticle = async () => {
         setLoading(true);
@@ -39,7 +41,11 @@ const ArticlePage = () => {
             if (data) {
                 setArticle(data);
                 setLikes(data.engagement?.likes || 0);
+                setIsLiked(data.isLiked || false);
                 fetchComments(data._id);
+                if (data.category?._id) {
+                    fetchRelatedArticles(data.category._id, data._id);
+                }
             } else {
                 setError('not_found');
             }
@@ -55,6 +61,16 @@ const ArticlePage = () => {
         }
     };
 
+    const fetchRelatedArticles = async (categoryId, currentArticleId) => {
+        try {
+            const { data } = await api.get(`/api/articles?category=${categoryId}`);
+            const fetchedArticles = Array.isArray(data) ? data : (data.articles || []);
+            setRelatedArticles(fetchedArticles.filter(a => a._id !== currentArticleId).slice(0, 3));
+        } catch (err) {
+            console.error('Error fetching related articles:', err);
+        }
+    };
+
     const fetchComments = async (articleId) => {
         try {
             const { data } = await api.get(`/api/comments/article/${articleId}`);
@@ -65,11 +81,10 @@ const ArticlePage = () => {
     };
 
     const handleLike = async () => {
-        if (isLiked) return;
         try {
             const { data } = await api.post(`/api/articles/${article._id}/like`);
             setLikes(data.likes);
-            setIsLiked(true);
+            setIsLiked(data.isLiked);
         } catch (err) {
             console.error('Error liking article:', err);
         }
@@ -93,6 +108,15 @@ const ArticlePage = () => {
 
     useEffect(() => {
         fetchArticle();
+
+        const handleScroll = () => {
+            const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = (window.scrollY / totalHeight) * 100;
+            setScrollProgress(progress);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
     }, [slug]);
 
     if (loading) {
@@ -157,12 +181,28 @@ const ArticlePage = () => {
 
     return (
         <article className="mt-md mb-2xl">
+            {/* Reading Progress Bar */}
+            <div 
+                style={{ 
+                    position: 'fixed', 
+                    top: 0, 
+                    left: 0, 
+                    width: `${scrollProgress}%`, 
+                    height: '4px', 
+                    backgroundColor: 'var(--color-accent)', 
+                    zIndex: 100,
+                    transition: 'width 0.1s ease-out'
+                }} 
+            />
+
             <SEO
                 title={metaTitle}
                 description={metaDesc}
                 ogImage={imgUrl}
                 ogType="article"
                 keywords={article.seo?.keywords || article.tags?.map(t => t.name)}
+                author={article.customAuthor?.name || article.author?.name}
+                publishedDate={article.publishedAt}
             />
 
             <div style={{ marginBottom: 'var(--spacing-xl)' }}>
@@ -172,7 +212,7 @@ const ArticlePage = () => {
             </div>
 
             <header className="article-header">
-                <div className="flex items-center gap-md mb-sm">
+                <div className="flex items-center gap-md mb-sm flex-wrap">
                     {article.category?.name && (
                         <span className="article-category">
                             {article.category.name}
@@ -185,15 +225,15 @@ const ArticlePage = () => {
                         <Eye size={14} /> {article.engagement?.views || 0} views
                     </span>
                 </div>
-                <h1 className="article-title" style={{ fontSize: '2.5rem', marginBottom: 'var(--spacing-md)' }}>
+                <h1 className="article-title" style={{ fontSize: 'clamp(1.75rem, 5vw, 2.5rem)', marginBottom: 'var(--spacing-md)' }}>
                     {article.title}
                 </h1>
-                <p className="article-excerpt" style={{ fontSize: '1.25rem', marginBottom: 'var(--spacing-xl)', WebkitLineClamp: 'unset' }}>
+                <p className="article-excerpt" style={{ fontSize: 'clamp(1rem, 3vw, 1.25rem)', marginBottom: 'var(--spacing-xl)', WebkitLineClamp: 'unset' }}>
                     {article.summary}
                 </p>
 
-                <div className="flex items-center justify-between py-md border-t border-b" style={{ borderColor: 'var(--color-border)' }}>
-                    <div className="flex items-center gap-md">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-md py-md border-t border-b" style={{ borderColor: 'var(--color-border)' }}>
+                    <div className="flex items-center gap-sm flex-wrap">
                         <div style={{ width: '48px', height: '48px', borderRadius: '50%', overflow: 'hidden' }}>
                             <img src={article.author?.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=Journalist"} alt="Author" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         </div>
@@ -207,13 +247,19 @@ const ArticlePage = () => {
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-sm">
+                    <div className="flex items-center gap-sm flex-wrap">
                         <button
                             onClick={handleLike}
                             className={`icon-btn flex items-center gap-xs ${isLiked ? 'text-accent' : ''}`}
-                            style={{ width: 'auto', padding: '0 12px', borderRadius: '20px' }}
+                            style={{ 
+                                width: 'auto', 
+                                padding: '0 12px', 
+                                borderRadius: '20px',
+                                transform: isLiked ? 'scale(1.05)' : 'scale(1)',
+                                transition: 'all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+                            }}
                         >
-                            <Heart size={18} fill={isLiked ? "currentColor" : "none"} />
+                            <Heart size={18} fill={isLiked ? "var(--color-accent)" : "none"} />
                             <span style={{ fontSize: '0.85rem', fontWeight: 'bold' }}>{likes}</span>
                         </button>
                         <div className="flex items-center gap-xs px-md border-l" style={{ height: '24px', borderColor: 'var(--color-border)' }}>
@@ -233,8 +279,63 @@ const ArticlePage = () => {
                 <img src={imgUrl} alt={article.title} className="article-hero-image" />
             </figure>
 
-            <div className="article-body" dangerouslySetInnerHTML={{ __html: article.content }}>
+            <div 
+                className="article-body font-serif" 
+                style={{ 
+                    fontSize: '1.25rem', 
+                    lineHeight: '1.8', 
+                    color: 'var(--color-text-main)',
+                    maxWidth: '800px',
+                    margin: '0 auto'
+                }} 
+            >
+                {Array.isArray(article.content) ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)' }}>
+                        {article.content.map((block, index) => {
+                            switch (block.type) {
+                                case 'heading':
+                                    return <h2 key={index} style={{ fontSize: '1.75rem', fontWeight: '800', marginTop: 'var(--spacing-xl)', marginBottom: 'var(--spacing-sm)', color: 'var(--color-primary)' }}>{block.value}</h2>;
+                                case 'image':
+                                    return (
+                                        <figure key={index} style={{ margin: 'var(--spacing-xl) 0' }}>
+                                            <img src={block.value} alt={block.caption || "Article image"} style={{ width: '100%', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-md)' }} />
+                                            {block.caption && <figcaption style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)', textAlign: 'center', marginTop: 'var(--spacing-sm)', fontStyle: 'italic' }}>{block.caption}</figcaption>}
+                                        </figure>
+                                    );
+                                case 'text':
+                                default:
+                                    return <p key={index} style={{ marginBottom: 'var(--spacing-md)' }}>{block.value}</p>;
+                            }
+                        })}
+                    </div>
+                ) : (
+                    <div dangerouslySetInnerHTML={{ __html: article.content }}></div>
+                )}
             </div>
+
+            {/* Related Articles Section */}
+            {relatedArticles.length > 0 && (
+                <div style={{ maxWidth: '800px', margin: 'var(--spacing-3xl) auto 0' }}>
+                    <h3 style={{ fontSize: '1.5rem', fontWeight: '800', marginBottom: 'var(--spacing-xl)', borderBottom: '2px solid var(--color-accent)', display: 'inline-block' }}>Related Stories</h3>
+                    <div className="grid md:grid-cols-3 gap-md">
+                        {relatedArticles.map(rel => (
+                            <Link key={rel._id} to={`/article/${rel.slug}`} className="group">
+                                <div style={{ aspectRatio: '16/9', overflow: 'hidden', borderRadius: 'var(--radius-md)', marginBottom: 'var(--spacing-sm)' }}>
+                                    <img 
+                                        src={rel.media?.featuredImage || `https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=400&q=80`} 
+                                        alt={rel.title} 
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.3s ease' }}
+                                        className="group-hover:scale-110"
+                                    />
+                                </div>
+                                <h4 style={{ fontSize: '0.95rem', fontWeight: '700', lineHeight: '1.4', color: 'var(--color-primary)' }} className="group-hover:text-accent line-clamp-2">
+                                    {rel.title}
+                                </h4>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             {/* Structured Data for Google News */}
             <script type="application/ld+json">

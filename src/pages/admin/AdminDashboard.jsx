@@ -13,8 +13,10 @@ import {
     MessageCircle
 } from 'lucide-react';
 import LoadingState from '../../components/LoadingState';
+import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
+    const navigate = useNavigate();
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -44,7 +46,7 @@ const AdminDashboard = () => {
 
     return (
         <div>
-            <div className="flex justify-between items-center mb-xl">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-md mb-xl">
                 <div>
                     <h1 className="font-serif" style={{ fontSize: '2rem', fontWeight: 'bold' }}>Dashboard Overview</h1>
                     <p className="text-muted">Welcome back, here's what's happening today.</p>
@@ -72,7 +74,7 @@ const AdminDashboard = () => {
 
             <div className="grid lg:grid-cols-3 gap-xl">
                 {/* Recent Articles */}
-                <div style={{ gridColumn: '1 / span 2', backgroundColor: 'white', padding: 'var(--spacing-xl)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
+                <div className="lg:col-span-2" style={{ backgroundColor: 'white', padding: 'var(--spacing-xl)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
                     <div className="flex justify-between items-center mb-lg">
                         <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>Recent Articles</h3>
                         <button className="text-accent" style={{ fontSize: '0.875rem', fontWeight: '600' }}>View All</button>
@@ -94,13 +96,13 @@ const AdminDashboard = () => {
                 <div style={{ backgroundColor: 'white', padding: 'var(--spacing-xl)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
                     <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: 'var(--spacing-lg)' }}>Quick Actions</h3>
                     <div className="flex flex-col gap-sm">
-                        <button className="btn btn-outline" style={{ justifyContent: 'flex-start', width: '100%', gap: 'var(--spacing-sm)' }}>
+                        <button className="btn btn-outline" style={{ justifyContent: 'flex-start', width: '100%', gap: 'var(--spacing-sm)' }} onClick={() => { navigate('/admin/articles/create') }}>
                             <Clock size={18} /> Draft New Article
                         </button>
-                        <button className="btn btn-outline" style={{ justifyContent: 'flex-start', width: '100%', gap: 'var(--spacing-sm)' }}>
+                        <button className="btn btn-outline" style={{ justifyContent: 'flex-start', width: '100%', gap: 'var(--spacing-sm)' }} onClick={() => { navigate('/admin/users') }}>
                             <Users size={18} /> Manage Team
                         </button>
-                        <button className="btn btn-outline" style={{ justifyContent: 'flex-start', width: '100%', gap: 'var(--spacing-sm)' }}>
+                        <button className="btn btn-outline" style={{ justifyContent: 'flex-start', width: '100%', gap: 'var(--spacing-sm)' }} onClick={() => { navigate('/admin/settings') }}>
                             <Settings size={18} /> Site Settings
                         </button>
                     </div>

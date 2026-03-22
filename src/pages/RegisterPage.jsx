@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useState } from 'react';
-import { Helmet } from 'react-helmet-async';
+import SEO from '../components/SEO';
 import { UserPlus } from 'lucide-react';
 import LoadingState from '../components/LoadingState';
 
@@ -28,10 +28,7 @@ const RegisterPage = () => {
 
   return (
     <div className="page-header" style={{borderBottom: 'none'}}>
-      <Helmet>
-        <title>Subscribe | The Chronicle</title>
-      </Helmet>
-
+      <SEO title="Subscribe | The Chronicle" description="Register for a free Chronicle account to get the latest news updates." />
       {loading && (
         <div style={{
           position: 'fixed',

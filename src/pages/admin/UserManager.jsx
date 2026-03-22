@@ -64,7 +64,7 @@ const UserManager = () => {
 
   return (
     <div className="user-manager">
-      <div className="flex items-center justify-between mb-xl">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-md mb-xl">
         <h1 className="font-serif" style={{ fontSize: '2rem', fontWeight: 'bold' }}>User Management</h1>
         <div className="flex items-center gap-md">
           <div className="flex items-center gap-sm px-md py-sm glass" style={{ borderRadius: 'var(--radius-md)' }}>
@@ -80,7 +80,7 @@ const UserManager = () => {
         </div>
       </div>
 
-      <div className="glass overflow-hidden" style={{ borderRadius: 'var(--radius-lg)' }}>
+      <div className="glass" style={{ borderRadius: 'var(--radius-lg)', overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ backgroundColor: 'rgba(0,0,0,0.02)', borderBottom: '1px solid var(--color-border)' }}>
