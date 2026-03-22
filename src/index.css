@@ -815,7 +815,6 @@ h6 {
   text-transform: uppercase;
   padding: 0.25rem 0.5rem;
   border-radius: var(--radius-sm);
-  margin-bottom: var(--spacing-md);
   align-self: flex-start;
 }
 
