@@ -1,7 +1,8 @@
 import { Menu, Search, User, LogIn, LogOut, LayoutDashboard, X, ChevronLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import api from '../api/axios';
 import LanguageSelector from './LanguageSelector';
 
 const Navbar = () => {
@@ -10,6 +11,23 @@ const Navbar = () => {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const { data } = await api.get('/api/categories');
+                // Only show active categories and sort by displayOrder
+                const activeCategories = data
+                    .filter(cat => cat.isActive !== false)
+                    .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+                setCategories(activeCategories);
+            } catch (err) {
+                console.error('Failed to fetch categories for navbar', err);
+            }
+        };
+        fetchCategories();
+    }, []);
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -47,7 +65,7 @@ const Navbar = () => {
                                         position: 'absolute',
                                         top: '100%',
                                         left: 0,
-                                        minWidth: '200px',
+                                        minWidth: '220px',
                                         padding: 'var(--spacing-sm)',
                                         borderRadius: 'var(--radius-md)',
                                         marginTop: 'var(--spacing-sm)',
@@ -57,12 +75,19 @@ const Navbar = () => {
                                         zIndex: 100,
                                         boxShadow: 'var(--shadow-lg)'
                                     }}>
-                                        <Link to="/category/world" className="dropdown-item">World News</Link>
-                                        <Link to="/category/politics" className="dropdown-item">Politics</Link>
-                                        <Link to="/category/business" className="dropdown-item">Business</Link>
-                                        <Link to="/category/tech" className="dropdown-item">Technology</Link>
-                                        <Link to="/category/science" className="dropdown-item">Science</Link>
-                                        <Link to="/category/culture" className="dropdown-item">Culture</Link>
+                                        {categories.length > 0 ? (
+                                            categories.map(cat => (
+                                                <Link 
+                                                    key={cat._id} 
+                                                    to={`/category/${cat.slug}`} 
+                                                    className="dropdown-item"
+                                                >
+                                                    {cat.name}
+                                                </Link>
+                                            ))
+                                        ) : (
+                                            <div className="dropdown-item text-muted">No categories</div>
+                                        )}
                                     </div>
                                 </div>
 
@@ -143,13 +168,17 @@ const Navbar = () => {
 
                             <Link to="/" className="navbar-link" style={{ color: 'var(--color-white)', padding: 'var(--spacing-sm) 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }} onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
 
-                            <Link to="/category/world" className="navbar-link" style={{ color: 'var(--color-white)', padding: 'var(--spacing-sm) 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }} onClick={() => setIsMobileMenuOpen(false)}>World News</Link>
-
-                            <Link to="/category/politics" className="navbar-link" style={{ color: 'var(--color-white)', padding: 'var(--spacing-sm) 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }} onClick={() => setIsMobileMenuOpen(false)}>Politics</Link>
-
-                            <Link to="/category/business" className="navbar-link" style={{ color: 'var(--color-white)', padding: 'var(--spacing-sm) 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }} onClick={() => setIsMobileMenuOpen(false)}>Business</Link>
-
-                            <Link to="/category/tech" className="navbar-link" style={{ color: 'var(--color-white)', padding: 'var(--spacing-sm) 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }} onClick={() => setIsMobileMenuOpen(false)}>Technology</Link>
+                            {categories.map(cat => (
+                                <Link 
+                                    key={`mobile-${cat._id}`}
+                                    to={`/category/${cat.slug}`} 
+                                    className="navbar-link" 
+                                    style={{ color: 'var(--color-white)', padding: 'var(--spacing-sm) 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }} 
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                >
+                                    {cat.name}
+                                </Link>
+                            ))}
 
                             <Link to="/contact" className="navbar-link" style={{ color: 'var(--color-white)', padding: 'var(--spacing-sm) 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }} onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
 

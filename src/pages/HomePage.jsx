@@ -63,7 +63,7 @@ const HomePage = () => {
         return (
             <div className="container py-3xl">
                 <SEO title="Error | The Chronicle" />
-                <ErrorState 
+                <ErrorState
                     title="Unable to connect to news server"
                     description="We're having trouble reaching our servers. Please check your internet connection or try again."
                     onRetry={() => window.location.reload()}
@@ -185,7 +185,7 @@ const HomePage = () => {
                                     </div>
                                     {(<div className="flex items-center gap-sm mt-auto text-accent">
                                         <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: 'var(--color-accent)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.75rem' }}>
-                                            {art?.author?.name || art.customAuthor?.name?.[0] || 'A'}
+                                            {'A'}
                                         </div>
                                         <span className="text-sm">By {art?.author?.name || art.customAuthor?.name || 'Editorial Team'}</span>
                                     </div>)}
