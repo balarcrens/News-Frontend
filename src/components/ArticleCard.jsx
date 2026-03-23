@@ -4,7 +4,7 @@ import { formatDistanceToNow } from 'date-fns';
 const ArticleCard = ({ article, featured = false }) => {
     const publishedText = article.publishedAt
         ? formatDistanceToNow(new Date(article.publishedAt), { addSuffix: true })
-        : 'Draft';
+        : 'Published';
 
     const imgUrl = article.media?.featuredImage || `https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800&q=80`;
     const categoryName = article.category?.name || 'News';

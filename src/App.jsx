@@ -12,8 +12,11 @@ import CategoryPage from './pages/CategoryPage';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import CookiePolicy from './pages/CookiePolicy';
+import Disclaimer from './pages/Disclaimer';
 import ScrollToTop from './components/ScrollToTop';
 import NotFoundPage from './pages/NotFoundPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 
 // Admin Pages
 import AdminLayout from './components/admin/AdminLayout';
@@ -49,6 +52,9 @@ const publicRoutes = [
     { path: "privacy-policy", element: <PrivacyPolicy /> },
     { path: "terms-of-service", element: <TermsOfService /> },
     { path: "cookie-policy", element: <CookiePolicy /> },
+    { path: "disclaimer", element: <Disclaimer /> },
+    { path: "forgot-password", element: <ForgotPasswordPage /> },
+    { path: "reset-password/:token", element: <ResetPasswordPage /> },
     { path: "*", element: <NotFoundPage /> },
 ];
 

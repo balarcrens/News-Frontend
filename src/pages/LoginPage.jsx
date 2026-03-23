@@ -75,7 +75,7 @@ const LoginPage = () => {
           <div className="form-group">
             <div className="flex justify-between items-center mb-sm">
               <label className="form-label" style={{ marginBottom: 0 }} htmlFor="password">Password</label>
-              <a href="#" style={{ fontSize: '0.75rem', color: 'var(--color-accent)', fontWeight: '600' }}>Forgot password?</a>
+              <Link to="/forgot-password" style={{ fontSize: '0.75rem', color: 'var(--color-accent)', fontWeight: '600' }}>Forgot password?</Link>
             </div>
             <input
               id="password"

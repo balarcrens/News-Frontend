@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import SEO from '../components/SEO';
-import { Mail, Phone, MapPin, Send, MessageSquare, ChevronDown, ChevronUp, Newspaper, HelpCircle, Briefcase } from 'lucide-react';
-import contactHero from '../assets/contact-hero.png';
+import { MapPin, Send, ChevronDown, ChevronUp, Newspaper, HelpCircle, Briefcase } from 'lucide-react';
+import contactHero from '../assets/contact-hero.jpg';
 
 const ContactUsPage = () => {
     const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
@@ -20,19 +20,19 @@ const ContactUsPage = () => {
             title: "Newsroom Tips",
             description: "Have a breaking story or a tip? Our investigative team is ready to listen.",
             icon: <Newspaper size={24} />,
-            email: "tips@nexoranews.com"
+            email: "nexoranews1@gmail.com"
         },
         {
             title: "Advertising",
             description: "Partner with us for high-impact campaigns.",
             icon: <Briefcase size={24} />,
-            email: "ads@nexoranews.com"
+            email: "nexoranews1@gmail.com"
         },
         {
             title: "Support",
             description: "Account help and subscription services.",
             icon: <HelpCircle size={24} />,
-            email: "support@nexoranews.com"
+            email: "nexoranews1@gmail.com"
         }
     ];
 
@@ -53,8 +53,10 @@ const ContactUsPage = () => {
 
     return (
         <div className="page-container bg-slate-900 min-h-screen pt-24 pb-12">
-            <SEO title="Contact Us" description="Get in touch with the NexoraNews newsroom." />
-
+            <SEO
+                title="Contact Us | Reach the NexoraNews Newsroom"
+                description="Get in touch with our editorial team, submit news tips, or reach out for support. NexoraNews is committed to open communication with our readers."
+            />
             {/* Hero Section */}
             <header className="page-header">
                 <div className="container">
@@ -129,25 +131,14 @@ const ContactUsPage = () => {
                     <div className="lg:col-span-2">
                         <div className="mb-2xl">
                             <h2 className="text-2xl font-serif mb-xl">Our Offices</h2>
-                            <div className="flex flex-col gap-sm">
-                                <div className="flex gap-md">
-                                    <div className="p-sm bg-accent-light text-accent rounded-md h-fit">
-                                        <MapPin size={20} />
-                                    </div>
-                                    <p className="text-muted leading-relaxed">
-                                        <span className="font-bold text-primary block mb-xs">Headquarters</span>
-                                        1280 Avenue of the Americas,<br />New York, NY 10019
-                                    </p>
+                            <div className="flex gap-md">
+                                <div className="p-sm bg-accent-light text-accent rounded-md h-fit">
+                                    <MapPin size={20} />
                                 </div>
-                                <div className="flex gap-md">
-                                    <div className="p-sm bg-accent-light text-accent rounded-md h-fit">
-                                        <Phone size={20} />
-                                    </div>
-                                    <p className="text-muted leading-relaxed">
-                                        <span className="font-bold text-primary block mb-xs">Contact Number</span>
-                                        +1 (212) 555-0198<br />Mon-Fri, 9am - 6pm EST
-                                    </p>
-                                </div>
+                                <p className="text-muted leading-relaxed">
+                                    <span className="font-bold text-primary block mb-xs">Service Area</span>
+                                    We operate fully online and serve users worldwide.
+                                </p>
                             </div>
                         </div>
 

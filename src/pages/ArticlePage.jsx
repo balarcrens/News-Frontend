@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../api/axios';
@@ -252,16 +253,16 @@ const ArticlePage = () => {
                     </div>
 
                     <div className="flex items-center gap-sm">
-                        <div className="flex items-center bg-gray-50 rounded-full p-1 border border-gray-100">
+                        <div className="flex items-center gap-sm bg-gray-50 rounded-full p-1">
                             <button
                                 onClick={handleLike}
-                                className={`flex items-center gap-sm px-md py-sm rounded-full transition-all ${isLiked ? 'bg-accent text-white shadow-md' : 'hover:bg-gray-100'}`}
+                                className={`flex items-center gap-sm px-md py-sm rounded-full transition-all ${isLiked ? 'bg-accent' : 'hover:bg-gray-100'}`}
                                 style={{
                                     border: 'none',
                                     outline: 'none'
                                 }}
                             >
-                                <Heart size={20} fill={isLiked ? "white" : "none"} />
+                                <Heart size={20} fill={isLiked ? "red" : "none"} />
                                 <span style={{ fontWeight: '700' }}>{likes}</span>
                             </button>
                             <div className="w-px h-6 bg-gray-200 mx-xs"></div>

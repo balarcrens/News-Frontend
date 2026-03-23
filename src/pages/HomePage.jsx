@@ -19,6 +19,8 @@ const HomePage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [filterType, setFilterType] = useState('all');
+    const [email, setEmail] = useState('');
+    const [subLoading, setSubLoading] = useState(false);
 
     useEffect(() => {
         const fetchNews = async () => {
@@ -55,6 +57,20 @@ const HomePage = () => {
         fetchNews();
     }, [filterType, searchKeyword]); // Added searchKeyword to dependencies
 
+    const handleSubscription = async () => {
+        if (!email) return alert('Please enter an email address');
+        setSubLoading(true);
+        try {
+            const { data } = await api.post('/api/subscriptions', { email });
+            alert(data.message || 'Thank you for subscribing!');
+            setEmail('');
+        } catch (err) {
+            alert(err.response?.data?.message || 'Subscription failed. Please try again.');
+        } finally {
+            setSubLoading(false);
+        }
+    };
+
     if (loading) {
         return <LoadingState message="Fetching top stories..." />;
     }
@@ -80,8 +96,8 @@ const HomePage = () => {
     return (
         <>
             <SEO
-                title="Home"
-                description="Stay ahead with NexoraNews. We provide deep-dive analysis, breaking news, and premium insights on global events, technology, and culture."
+                title="NexoraNews | Real-time Breaking News & Independent Journalism"
+                description="Stay ahead with NexoraNews. We provide deep-dive analysis, breaking news, and premium insights on global events, technology, business, and culture. Your source for independent journalism."
                 ogImage="https://nexoranews.dpdns.org/preview.jpg"
             />
 
@@ -160,8 +176,22 @@ const HomePage = () => {
                             <h4 className="font-bold mb-xs">Stay Informed</h4>
                             <p className="text-xs text-muted mb-md">Sign up for our daily newsletter to get the top stories delivered to your inbox.</p>
                             <div className="flex gap-xs">
-                                <input type="email" placeholder="Email" className="form-input text-xs" style={{ padding: '8px' }} />
-                                <button className="btn btn-primary" style={{ padding: '8px 12px', fontSize: '10px' }}>Join</button>
+                                <input 
+                                    type="email" 
+                                    placeholder="Email" 
+                                    className="form-input text-xs" 
+                                    style={{ padding: '8px' }} 
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
+                                <button 
+                                    className="btn btn-primary" 
+                                    style={{ padding: '8px 12px', fontSize: '10px' }}
+                                    onClick={handleSubscription}
+                                    disabled={subLoading}
+                                >
+                                    {subLoading ? '...' : 'Join'}
+                                </button>
                             </div>
                         </div>
                     </div>

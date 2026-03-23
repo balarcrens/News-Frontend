@@ -1,73 +1,100 @@
 import SEO from '../components/SEO';
-import { Info, Settings, PieChart, ShieldCheck } from 'lucide-react';
+import { Info, Settings, PieChart, ShieldCheck, Cookie, Fingerprint, EyeOff, Search } from 'lucide-react';
 
 const CookiePolicy = () => {
     return (
         <div className="container py-3xl">
-            <SEO title="Cookie Policy" description="How and why we use cookies to improve your experience on NexoraNews." />
+            <SEO 
+                title="Cookie Policy" 
+                description="Understanding how NexoraNews uses cookies and tracking technologies to enhance your journalism experience." 
+            />
 
             <div className="max-w-4xl mx-auto">
                 <header className="mb-3xl text-center">
-                    <div className='flex items-center justify-center gap-sm'>
-                        <div className="inline-block p-md bg-accent/10 text-accent rounded-full mb-md" style={{ backgroundColor: 'rgba(190, 18, 60, 0.05)', color: 'var(--color-accent)', borderRadius: '10px' }}>
-                            <PieChart size={48} />
-                        </div>
-                        <h1 className="font-serif text-5xl mb-md">Cookie Policy</h1>
+                    <div className="inline-block p-lg bg-accent/5 text-accent rounded-2xl mb-xl">
+                        <Cookie size={64} strokeWidth={1.5} />
                     </div>
-                    <p className="text-xl text-muted">Transparency regarding how we use tracking technologies.</p>
-                    <div className="mt-lg pt-lg border-t border-border flex justify-center gap-xl text-sm font-bold uppercase tracking-widest text-muted">
-                        <span>Version 1.1</span>
-                        <span>Revised: March 20, 2026</span>
+                    <h1 className="font-serif text-5xl md:text-6xl mb-md">Cookie Policy</h1>
+                    <p className="text-xl text-muted max-w-2xl mx-auto leading-relaxed">
+                        Explaining our use of tracking technologies and how you can manage your digital footprint on our platform.
+                    </p>
+                    <div className="mt-xl border-t flex flex-wrap justify-center gap-xl text-xs font-bold uppercase tracking-widest text-muted" style={{ paddingTop: "10px" }}>
+                        <span className="flex items-center gap-xs"><Info size={14} /> Version 1.2</span>
+                        <span className="flex items-center gap-xs"><Fingerprint size={14} /> Privacy First</span>
+                        <span className="flex items-center gap-xs"><Settings size={14} /> Revised: March 23, 2026</span>
                     </div>
                 </header>
 
-                <div className="glass p-2xl mb-2xl" style={{ borderRadius: 'var(--radius-lg)', lineHeight: '1.8' }}>
-                    <section className="mb-2xl">
-                        <h2 className="flex items-center gap-sm mb-lg text-2xl font-serif">
-                            <Info className="text-accent" /> What are Cookies?
+                <div className="flex flex-col gap-xl">
+                    {/* Definition */}
+                    <section className="p-2xl rounded-3xl border border-white/20">
+                        <h2 className="text-3xl font-serif mb-6 flex items-center gap-md">
+                            <Search className="text-accent" /> What are Cookies?
                         </h2>
-                        <p>
-                            Cookies are small data files that are stored on your computer or mobile device when you visit a website.
-                            They are widely used by website owners to make their websites work, or to work more efficiently,
-                            as well as to provide reporting information.
-                        </p>
+                        <div className="prose prose-lg text-slate-700 leading-relaxed">
+                            <p>
+                                Cookies are small text files stored on your device that help us recognize you and remember your preferences. They act as a "memory" for the website, allowing it to provide a more personalized and efficient experience.
+                            </p>
+                        </div>
                     </section>
 
-                    <section className="mb-2xl">
-                        <h2 className="flex items-center gap-sm mb-lg text-2xl font-serif">
-                            <Settings className="text-accent" /> How We Use Cookies
+                    {/* How We Use Them */}
+                    <section className="p-xl md:p-2xl">
+                        <h2 className="text-3xl font-serif mb-xl flex items-center gap-md">
+                            <PieChart className="text-accent" /> Categories of Use
                         </h2>
-                        <div className="grid md:grid-cols-2 gap-lg">
-                            <div className="p-lg border border-border rounded-lg bg-white/50">
-                                <h3 className="font-bold flex items-center gap-sm mb-sm">
-                                    <ShieldCheck size={18} className="text-green-600" /> Essential Cookies
-                                </h3>
-                                <p className="text-sm text-muted">These are strictly necessary to provide you with services available through our Website and to use some of its features, such as access to secure areas.</p>
+                        
+                        <div className="grid md:grid-cols-2 gap-xl">
+                            <div className="p-lg bg-white rounded-2xl border border-slate-100 shadow-sm">
+                                <div className="w-12 h-12 rounded-xl bg-green-50 text-green-600 flex items-center justify-center mb-lg">
+                                    <ShieldCheck size={24} />
+                                </div>
+                                <h3 className="text-xl font-bold mb-md">Essential</h3>
+                                <p className="text-muted text-sm leading-relaxed">
+                                    Strictly necessary for the website to function. These handle authentication, security, and basic navigation. They cannot be disabled.
+                                </p>
                             </div>
-                            <div className="p-lg border border-border rounded-lg bg-white/50">
-                                <h3 className="font-bold flex items-center gap-sm mb-sm">
-                                    <PieChart size={18} className="text-blue-600" /> Analytics Cookies
-                                </h3>
-                                <p className="text-sm text-muted">These cookies collect information that is used in aggregate form to help us understand how our Website is being used or how effective our marketing campaigns are.</p>
+
+                            <div className="p-lg bg-white rounded-2xl border border-slate-100 shadow-sm">
+                                <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-lg">
+                                    <PieChart size={24} />
+                                </div>
+                                <h3 className="text-xl font-bold mb-md">Analytics</h3>
+                                <p className="text-muted text-sm leading-relaxed">
+                                    Help us understand how users interact with our journalism, which articles are trending, and where we can improve performance.
+                                </p>
                             </div>
                         </div>
                     </section>
 
-                    <section className="mb-2xl">
-                        <h2 className="text-2xl font-serif mb-lg">Cookie Preferences</h2>
-                        <p className="mb-md">
-                            You have the right to decide whether to accept or reject cookies. You can set or amend your web browser controls to accept or refuse cookies. If you choose to refuse cookies, you may still use our website though your access to some functionality and areas of our website may be restricted.
+                    {/* Control */}
+                    <section className="p-2xl rounded-3xl border border-white/20">
+                        <h2 className="text-3xl font-serif mb-xl flex items-center gap-md">
+                            <Settings className="text-accent" /> Your Preferences
+                        </h2>
+                        <p className="mb-lg text-slate-300 leading-relaxed">
+                            You have the absolute right to control your data. While some cookies are essential, you can manage your preferences through your browser settings or our integrated privacy tools.
                         </p>
-                        <p>
-                            Most browsers allow you to block cookies via settings. For example, in Google Chrome, you can go to <code>Settings &gt; Privacy and Security &gt; Cookies and other site data</code>.
-                        </p>
-                    </section> section
+                        <div className="p-lg bg-white/5 rounded-2xl border border-white/10 flex flex-col md:flex-row gap-lg items-center justify-between">
+                            <div className="flex gap-md items-center">
+                                <EyeOff className="text-slate-400" size={24} />
+                                <span className="text-sm font-medium">Blocking Third-Party Cookies</span>
+                            </div>
+                            <div className="text-xs text-slate-400 max-w-xs md:text-right">
+                                Most modern browsers (Chrome, Safari, Firefox) allow you to block cookies entirely via their Privacy settings.
+                            </div>
+                        </div>
+                    </section>
 
-                    <section>
-                        <h2 className="text-2xl font-serif mb-lg">Updates to this Policy</h2>
-                        <p>
-                            We may update this Cookie Policy from time to time in order to reflect, for example, changes to the cookies we use or for other operational, legal, or regulatory reasons. Please therefore re-visit this Cookie Policy regularly to stay informed about our use of cookies and related technologies.
+                    {/* Updates */}
+                    <section className="text-center py-xl">
+                        <h2 className="text-2xl font-serif mb-lg text-primary">Policy Evolution</h2>
+                        <p className="text-muted max-w-2xl mx-auto leading-relaxed">
+                            We may update this policy to reflect changes in our practices or for legal reasons. We encourage you to review this page periodically to stay informed about our use of tracking technologies.
                         </p>
+                        <div className="mt-xl border-t border-slate-100" style={{ paddingTop: "10px" }}>
+                            <p className="text-sm font-bold text-accent uppercase tracking-widest">Global Compliance</p>
+                        </div>
                     </section>
                 </div>
             </div>
@@ -76,3 +103,4 @@ const CookiePolicy = () => {
 };
 
 export default CookiePolicy;
+

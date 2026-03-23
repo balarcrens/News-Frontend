@@ -30,8 +30,10 @@ const AboutUsPage = () => {
 
     return (
         <div className="about-page">
-            <SEO title="About Us" description="Learn about the mission and history of NexoraNews." />
-
+            <SEO
+                title="About Us | Our Mission & Editorial Standards"
+                description="Learn about NexoraNews's commitment to independent journalism, our story, and the editorial standards that guide our global reporting."
+            />
             <div className="container relative py-2xl">
                 {/* Hero Section */}
                 <div className="mb-32">
