@@ -49,12 +49,12 @@ const Navbar = () => {
                                 <button className="icon-btn mobile-menu-btn mobile-only" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
                                     {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                                 </button>
-                                <Link to="/" className="navbar-brand">NexoraNews</Link>
+                                <Link to="/" className="navbar-brand">Nexora<span style={{ fontSize: "20px" }}>News</span></Link>
                             </div>
 
-                             <div className="navbar-links">
+                            <div className="navbar-links">
                                 <Link to="/" className="navbar-link">Home</Link>
-                                
+
                                 {/* Categories Dropdown */}
                                 <div className="dropdown" style={{ position: 'relative', display: 'inline-block' }}>
                                     <span className="navbar-link">
@@ -64,9 +64,9 @@ const Navbar = () => {
                                     <div className="dropdown-content">
                                         {categories.length > 0 ? (
                                             categories.map(cat => (
-                                                <Link 
-                                                    key={cat._id} 
-                                                    to={`/category/${cat.slug}`} 
+                                                <Link
+                                                    key={cat._id}
+                                                    to={`/category/${cat.slug}`}
                                                     className="dropdown-item"
                                                 >
                                                     {cat.name}
@@ -154,15 +154,15 @@ const Navbar = () => {
                             </div>
 
                             <Link to="/" className="navbar-link" style={{ color: 'var(--color-white)', padding: 'var(--spacing-sm) 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }} onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
-                            
+
                             <div className="mobile-categories-section" style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                                <button 
-                                    className="navbar-link" 
-                                    style={{ 
-                                        color: 'var(--color-white)', 
-                                        width: '100%', 
-                                        display: 'flex', 
-                                        justifyContent: 'space-between', 
+                                <button
+                                    className="navbar-link"
+                                    style={{
+                                        color: 'var(--color-white)',
+                                        width: '100%',
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
                                         alignItems: 'center',
                                         padding: 'var(--spacing-sm) 0',
                                         background: 'none',
@@ -171,16 +171,16 @@ const Navbar = () => {
                                     onClick={() => setIsMobileCategoriesOpen(!isMobileCategoriesOpen)}
                                 >
                                     <span>Categories</span>
-                                    <ChevronLeft 
-                                        size={18} 
-                                        style={{ 
+                                    <ChevronLeft
+                                        size={18}
+                                        style={{
                                             transform: isMobileCategoriesOpen ? 'rotate(-90deg)' : 'rotate(0deg)',
                                             transition: 'transform 0.3s ease'
-                                        }} 
+                                        }}
                                     />
                                 </button>
-                                
-                                <div style={{ 
+
+                                <div style={{
                                     maxHeight: isMobileCategoriesOpen ? '500px' : '0',
                                     overflow: 'hidden',
                                     transition: 'max-height 0.3s ease-out',
@@ -190,16 +190,16 @@ const Navbar = () => {
                                     background: 'rgba(255,255,255,0.03)'
                                 }}>
                                     {categories.map(cat => (
-                                        <Link 
+                                        <Link
                                             key={`mobile-${cat._id}`}
-                                            to={`/category/${cat.slug}`} 
-                                            className="navbar-link" 
-                                            style={{ 
-                                                color: '#cbd5e1', 
+                                            to={`/category/${cat.slug}`}
+                                            className="navbar-link"
+                                            style={{
+                                                color: '#cbd5e1',
                                                 fontSize: '0.9rem',
                                                 padding: 'var(--spacing-xs) 0',
                                                 border: 'none'
-                                            }} 
+                                            }}
                                             onClick={() => {
                                                 setIsMobileMenuOpen(false);
                                                 setIsMobileCategoriesOpen(false);
