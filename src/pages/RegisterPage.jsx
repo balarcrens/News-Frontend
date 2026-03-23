@@ -28,7 +28,7 @@ const RegisterPage = () => {
 
   return (
     <div className="page-header" style={{borderBottom: 'none'}}>
-      <SEO title="Subscribe | The Chronicle" description="Register for a free Chronicle account to get the latest news updates." />
+      <SEO title="Subscribe | NexoraNews" description="Register for a free NexoraNews account to get the latest news updates." />
       {loading && (
         <div style={{
           position: 'fixed',
@@ -49,7 +49,7 @@ const RegisterPage = () => {
             <UserPlus size={32} />
           </div>
         </div>
-        <h1 className="form-title">Join The Chronicle</h1>
+        <h1 className="form-title">Join NexoraNews</h1>
         <p className="form-subtitle">Create an account to get unlimited access to our award-winning journalism.</p>
 
         {error && (

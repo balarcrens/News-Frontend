@@ -199,8 +199,11 @@ const ArticlePage = () => {
             <SEO
                 title={metaTitle}
                 description={metaDesc}
-                ogImage={imgUrl}
+                ogTitle={article.seo?.ogTitle}
+                ogDescription={article.seo?.ogDescription}
+                ogImage={article.seo?.ogImage || imgUrl}
                 ogType="article"
+                canonicalUrl={article.seo?.canonicalUrl}
                 keywords={article.seo?.keywords || article.tags?.map(t => t.name)}
                 author={article.customAuthor?.name || article.author?.name}
                 publishedDate={article.publishedAt}

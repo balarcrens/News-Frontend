@@ -28,7 +28,7 @@ const LoginPage = () => {
 
   return (
     <div className="page-header" style={{ borderBottom: 'none' }}>
-      <SEO title="Sign In | The Chronicle" description="Log in to your Chronicle account to read unlimited news." />
+      <SEO title="Sign In | NexoraNews" description="Log in to your NexoraNews account to read unlimited news." />
       {loading && (
         <div style={{
           position: 'fixed',

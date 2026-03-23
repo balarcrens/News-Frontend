@@ -68,7 +68,7 @@ const CategoryPage = () => {
     if (error) {
         return (
             <div className="container py-3xl">
-                <SEO title="Error | The Chronicle" />
+                <SEO title="Error | NexoraNews" />
                 <ErrorState 
                     title="Channel Access Error"
                     description="We couldn't load the articles for this channel. Our editorial team has been notified."

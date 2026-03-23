@@ -4,7 +4,7 @@ import { Shield, Eye, Lock, Globe, Bell } from 'lucide-react';
 const PrivacyPolicy = () => {
     return (
         <div className="container py-3xl">
-            <SEO title="Privacy Policy" description="Detailed privacy practices and commitment to user data protection at The Chronicle." />
+            <SEO title="Privacy Policy" description="Detailed privacy practices and commitment to user data protection at NexoraNews." />
 
             <div className="max-w-4xl mx-auto">
                 <header className="mb-3xl text-center">
@@ -23,16 +23,14 @@ const PrivacyPolicy = () => {
 
                 <div className="glass p-2xl mb-2xl" style={{ borderRadius: 'var(--radius-lg)', lineHeight: '1.8' }}>
                     <section className="mb-2xl">
-                        <h2 className="flex items-center gap-sm mb-lg text-2xl font-serif">
-                            <Eye className="text-accent" /> 1. Overview
-                        </h2>
-                        <p className="mb-md">
-                            At The Chronicle, we believe that privacy is a fundamental human right. As a leading news organization, our relationship with our audience is built on trust. This Privacy Policy explains how we collect, use, and protect your information when you interact with our website, newsletters, and mobile applications.
+                        <h2 className="text-3xl font-serif mb-6">Introduction</h2>
+                        <p className="mb-6">
+                            At NexoraNews, we believe that privacy is a fundamental human right. As a leading news organization, our relationship with our audience is built on trust. This Privacy Policy explains how we collect, use, and protect your information when you interact with our website, newsletters, and mobile applications.
                         </p>
                         <p>
                             We are committed to minimizing data collection and ensuring that the information we do process is handled with the highest standards of security and ethical responsibility.
                         </p>
-                    </section> section
+                    </section>
 
                     <section className="mb-2xl">
                         <h2 className="flex items-center gap-sm mb-lg text-2xl font-serif">
@@ -103,8 +101,8 @@ const PrivacyPolicy = () => {
                             Direct any inquiries regarding this policy or your data rights to our dedicated privacy desk:
                         </p>
                         <div className="p-lg bg-primary text-white rounded-lg inline-block">
-                            <p className="font-bold">Privacy Desk — The Chronicle</p>
-                            <p className="opacity-80">Email: help@thechronicle.com</p>
+                            <p className="font-bold">Privacy Desk — NexoraNews</p>
+                            <p className="opacity-80">Email: help@nexoranews.com</p>
                             <p className="opacity-80">Phone: +1 (212) 555-0198</p>
                         </div>
                     </section>

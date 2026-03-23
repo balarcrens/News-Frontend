@@ -10,6 +10,7 @@ const Navbar = () => {
     const navigate = useNavigate();
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isMobileCategoriesOpen, setIsMobileCategoriesOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [categories, setCategories] = useState([]);
 
@@ -48,33 +49,19 @@ const Navbar = () => {
                                 <button className="icon-btn mobile-menu-btn mobile-only" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
                                     {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                                 </button>
-                                <Link to="/" className="navbar-brand">The Chronicle</Link>
+                                <Link to="/" className="navbar-brand">NexoraNews</Link>
                             </div>
 
-                            <div className="navbar-links">
+                             <div className="navbar-links">
                                 <Link to="/" className="navbar-link">Home</Link>
-
+                                
                                 {/* Categories Dropdown */}
                                 <div className="dropdown" style={{ position: 'relative', display: 'inline-block' }}>
-                                    <span className="navbar-link cursor-pointer flex items-center gap-sm">
+                                    <span className="navbar-link">
                                         Categories
                                         <ChevronLeft size={14} style={{ transform: 'rotate(-90deg)', marginTop: '2px' }} />
                                     </span>
-                                    <div className="dropdown-content" style={{
-                                        background: 'white',
-                                        position: 'absolute',
-                                        top: '100%',
-                                        left: 0,
-                                        minWidth: '220px',
-                                        padding: 'var(--spacing-sm)',
-                                        borderRadius: 'var(--radius-md)',
-                                        marginTop: 'var(--spacing-sm)',
-                                        opacity: 0,
-                                        visibility: 'hidden',
-                                        transition: 'all 0.3s ease',
-                                        zIndex: 100,
-                                        boxShadow: 'var(--shadow-lg)'
-                                    }}>
+                                    <div className="dropdown-content">
                                         {categories.length > 0 ? (
                                             categories.map(cat => (
                                                 <Link 
@@ -91,8 +78,8 @@ const Navbar = () => {
                                     </div>
                                 </div>
 
-                                <Link to="/contact">Contact</Link>
-                                <Link to="/about">About</Link>
+                                <Link to="/contact" className="navbar-link">Contact</Link>
+                                <Link to="/about" className="navbar-link">About</Link>
                             </div>
 
                             <div className="navbar-actions">
@@ -167,18 +154,62 @@ const Navbar = () => {
                             </div>
 
                             <Link to="/" className="navbar-link" style={{ color: 'var(--color-white)', padding: 'var(--spacing-sm) 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }} onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
-
-                            {categories.map(cat => (
-                                <Link 
-                                    key={`mobile-${cat._id}`}
-                                    to={`/category/${cat.slug}`} 
+                            
+                            <div className="mobile-categories-section" style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                                <button 
                                     className="navbar-link" 
-                                    style={{ color: 'var(--color-white)', padding: 'var(--spacing-sm) 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }} 
-                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    style={{ 
+                                        color: 'var(--color-white)', 
+                                        width: '100%', 
+                                        display: 'flex', 
+                                        justifyContent: 'space-between', 
+                                        alignItems: 'center',
+                                        padding: 'var(--spacing-sm) 0',
+                                        background: 'none',
+                                        border: 'none'
+                                    }}
+                                    onClick={() => setIsMobileCategoriesOpen(!isMobileCategoriesOpen)}
                                 >
-                                    {cat.name}
-                                </Link>
-                            ))}
+                                    <span>Categories</span>
+                                    <ChevronLeft 
+                                        size={18} 
+                                        style={{ 
+                                            transform: isMobileCategoriesOpen ? 'rotate(-90deg)' : 'rotate(0deg)',
+                                            transition: 'transform 0.3s ease'
+                                        }} 
+                                    />
+                                </button>
+                                
+                                <div style={{ 
+                                    maxHeight: isMobileCategoriesOpen ? '500px' : '0',
+                                    overflow: 'hidden',
+                                    transition: 'max-height 0.3s ease-out',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    paddingLeft: '1rem',
+                                    background: 'rgba(255,255,255,0.03)'
+                                }}>
+                                    {categories.map(cat => (
+                                        <Link 
+                                            key={`mobile-${cat._id}`}
+                                            to={`/category/${cat.slug}`} 
+                                            className="navbar-link" 
+                                            style={{ 
+                                                color: '#cbd5e1', 
+                                                fontSize: '0.9rem',
+                                                padding: 'var(--spacing-xs) 0',
+                                                border: 'none'
+                                            }} 
+                                            onClick={() => {
+                                                setIsMobileMenuOpen(false);
+                                                setIsMobileCategoriesOpen(false);
+                                            }}
+                                        >
+                                            {cat.name}
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
 
                             <Link to="/contact" className="navbar-link" style={{ color: 'var(--color-white)', padding: 'var(--spacing-sm) 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }} onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
 

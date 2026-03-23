@@ -30,40 +30,32 @@ const AboutUsPage = () => {
 
     return (
         <div className="about-page">
-            <SEO title="About Us" description="Learn about the mission and history of The Chronicle." />
+            <SEO title="About Us" description="Learn about the mission and history of NexoraNews." />
 
-            {/* Hero Section */}
-            <header className="page-header">
-                <div className="container">
-                    <h1 className="page-title">Our Story</h1>
-                    <p className="page-description">
-                        Delivering uncompromised journalism and breaking stories from around the world since 1928.
-                    </p>
-                </div>
-            </header>
-
-            <div className="container py-2xl">
-                {/* Mission Section */}
-                <div className="grid md:grid-cols-2 gap-lg items-center mb-3xl">
-                    <div>
-                        <div className="article-category">Our Mission</div>
-                        <h2 className="text-4xl font-serif mb-lg mt-md">Truth, Clarity, and Impact</h2>
-                        <div className="article-body">
-                            <p className="text-lg leading-relaxed mb-lg">
-                                At The Chronicle, our mission is simple: to seek the truth and help people understand the world. We believe that great journalism has the power to make each reader's life richer and more fulfilling, and all of society stronger and more just.
+            <div className="container relative py-2xl">
+                {/* Hero Section */}
+                <div className="mb-32">
+                    <div className="flex flex-col md:flex-row gap-xl items-center">
+                        <div className="md:w-3/5">
+                            <span className="inline-block px-4 py-1 rounded-full bg-accent/10 text-accent font-semibold text-sm mb-6 uppercase tracking-wider">Our Story</span>
+                            <h1 className="text-5xl md:text-7xl font-serif mb-8 text-black leading-tight">
+                                Journalism for a <span className="text-accent italic">Better Informed</span> World.
+                            </h1>
+                            <p className="text-xl text-slate-400 leading-relaxed mb-8">
+                                At NexoraNews, our mission is simple: to seek the truth and help people understand the world. We believe that great journalism has the power to make each reader's life richer and more fulfilling, and all of society stronger and more just.
                             </p>
                             <p className="text-muted">
                                 Since our founding nearly a century ago, we have stood at the forefront of global events, documenting history as it happens with a commitment to accuracy that has never wavered.
                             </p>
                         </div>
-                    </div>
-                    <div className="relative">
-                        <div className="rounded-lg overflow-hidden shadow-2xl">
-                            <img src={aboutHero} alt="Our Newsroom" className="w-full h-auto" />
-                        </div>
-                        <div className="absolute -bottom-6 -right-6 p-xl bg-primary text-white hidden md:block rounded-lg shadow-lg max-w-xs">
-                            <p className="font-serif italic text-lg">"Journalism is the first rough draft of history."</p>
-                            <p className="text-sm mt-md opacity-70">— Philip Graham</p>
+                        <div className="relative">
+                            <div className="rounded-lg overflow-hidden shadow-2xl">
+                                <img src={aboutHero} alt="Our Newsroom" className="w-full h-auto" />
+                            </div>
+                            <div className="absolute -bottom-6 -right-6 p-xl bg-primary text-white hidden md:block rounded-lg shadow-lg max-w-xs">
+                                <p className="font-serif italic text-lg">"Journalism is the first rough draft of history."</p>
+                                <p className="text-sm mt-md opacity-70">— Philip Graham</p>
+                            </div>
                         </div>
                     </div>
                 </div>

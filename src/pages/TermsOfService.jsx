@@ -4,7 +4,7 @@ import { Scale, CheckCircle, AlertCircle, FileText } from 'lucide-react';
 const TermsOfService = () => {
     return (
         <div className="container py-3xl">
-            <SEO title="Terms of Service" description="Terms and conditions for accessing and using The Chronicle's journalism." />
+            <SEO title="Terms of Service" description="Terms and conditions for accessing and using NexoraNews's journalism." />
 
             <div className="max-w-4xl mx-auto">
                 <header className="mb-3xl text-center">
@@ -35,7 +35,7 @@ const TermsOfService = () => {
                             <CheckCircle className="text-accent" /> 1. Intellectual Property
                         </h2>
                         <p className="mb-md">
-                            All materials published on The Chronicle, including but not limited to articles, photographs, videos, graphics, and trademarks, are protected by international copyright laws. These materials are the property of The Chronicle Media Group or its licensors.
+                            All materials published on NexoraNews, including but not limited to articles, photographs, videos, graphics, and trademarks, are protected by international copyright laws. These materials are the property of NexoraNews Media Group or its licensors.
                         </p>
                         <ul className="list-disc pl-lg flex flex-col gap-sm">
                             <li><strong>Personal Use:</strong> You may download or print individual articles for personal, non-commercial use only.</li>
@@ -43,41 +43,33 @@ const TermsOfService = () => {
                             <li><strong>AI training:</strong> Use of our content for training large language models or machine learning algorithms is strictly prohibited without a commercial license.</li>
                         </ul>
                     </section> section
+                    <h2 className="text-3xl font-serif mb-6">1. Acceptance of Terms</h2>
+                    <p className="mb-6">
+                    By accessing or using NexoraNews, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.
+                    </p>
+                    <div className="bg-slate-800/50 p-6 rounded-xl border border-slate-700 mb-8">
+                    <strong className="text-white">Note:</strong> By continuing to use NexoraNews, you agree to these legally binding terms.
+                    </div>
 
-                    <section className="mb-2xl">
-                        <h2 className="flex items-center gap-sm mb-lg text-2xl font-serif">
-                            <FileText className="text-accent" /> 2. User Submissions & Comments
-                        </h2>
-                        <p className="mb-md">
-                            When you post comments or submit "Tips" to our desk, you grant The Chronicle a perpetual, irrevocable, worldwide license to use, reproduce, and distribute that material in across all platforms.
-                        </p>
-                        <p className="mb-md font-bold">Community Rules:</p>
-                        <ul className="list-disc pl-lg flex flex-col gap-xs text-muted">
-                            <li>No hate speech or targeted harassment.</li>
-                            <li>No unauthorized promotion or advertisements.</li>
-                            <li>No spreading of demonstrably false disinformation.</li>
-                        </ul>
-                    </section>
+                    <h2 className="text-2xl font-serif mb-4">2. Intellectual Property</h2>
+                    <p className="mb-6">
+                    All materials published on NexoraNews, including but not limited to articles, photographs, videos, graphics, and trademarks, are protected by international copyright laws. These materials are the property of NexoraNews Media Group or its licensors.
+                    </p>
 
-                    <section className="mb-2xl">
-                        <h2 className="text-2xl font-serif mb-lg">3. Subscriptions & Billing</h2>
-                        <p className="mb-md">
-                            Premium subscriptions are billed in advance on a recurring monthly or annual basis. You may cancel at any time through your account dashboard or by contacting our support desk.
-                        </p>
-                        <p>
-                            Refunds are processed solely at our discretion, typically within 7 business days of a verified request.
-                        </p>
-                    </section>
+                    <h2 className="text-2xl font-serif mb-4">3. User Content</h2>
+                    <p className="mb-6">
+                    When you post comments or submit "Tips" to our desk, you grant NexoraNews a perpetual, irrevocable, worldwide license to use, reproduce, and distribute that material across all platforms.
+                    </p>
 
-                    <section>
-                        <h2 className="text-2xl font-serif mb-lg">4. Limitation of Liability</h2>
-                        <p className="mb-md italic">
-                            The Chronicle provides journalism "as is." While we strive for absolute factual accuracy, we are not liable for any losses arising from errors, omissions, or delays in publishing content.
-                        </p>
-                        <p>
-                            For further legal inquiries, please contact our counsel: <span className="font-bold">legal@thechronicle.com</span>.
-                        </p>
-                    </section>
+                    <h2 className="text-2xl font-serif mb-4">4. Limitation of Liability</h2>
+                    <p className="mb-6">
+                    NexoraNews provides journalism "as is." While we strive for absolute factual accuracy, we are not liable for any losses arising from errors, omissions, or delays in publishing content.
+                    </p>
+
+                    <h2 className="text-2xl font-serif mb-4">5. Contact</h2>
+                    <p className="mb-6">
+                    For further legal inquiries, please contact our counsel: <span className="font-bold">legal@nexoranews.com</span>.
+                    </p>
                 </div>
             </div>
         </div>

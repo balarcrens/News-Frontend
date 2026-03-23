@@ -55,7 +55,40 @@ const CategoryManager = () => {
     const handleCancel = () => {
         setEditingId(null);
         setIsAdding(false);
-        setFormData({ name: '', description: '', isActive: true, displayOrder: 0 });
+        setFormData({ name: '', description: '', isActive: true, displayOrder: 0, media: { image: '', icon: '' } });
+    };
+
+    const convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    };
+
+    const handleFileUpload = async (e, field) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        try {
+            const base64 = await convertToBase64(file);
+            const { data } = await api.post('/api/upload', {
+                fileData: base64,
+                fileName: file.name,
+                folder: 'categories'
+            });
+
+            if (data.success) {
+                setFormData(prev => ({
+                    ...prev,
+                    media: { ...prev.media, [field]: data.url }
+                }));
+            }
+        } catch (err) {
+            console.error('Upload failed', err);
+            setError('Image upload failed.');
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -97,6 +130,88 @@ const CategoryManager = () => {
             </div>
 
             <div className="grid grid-cols-1 gap-lg">
+                {/* Add/Edit Form */}
+                <div>
+                    {(isAdding || editingId) ? (
+                        <div style={{ backgroundColor: 'white', padding: 'var(--spacing-xl)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)', borderTop: `4px solid ${editingId ? 'var(--color-accent)' : '#22c55e'}` }}>
+                            <div className="flex justify-between items-center mb-lg">
+                                <h3 style={{ fontWeight: 'bold' }}>{editingId ? 'Edit Category' : 'New Category'}</h3>
+                                <button onClick={handleCancel} className="icon-btn text-muted"><X size={18} /></button>
+                            </div>
+
+                            <form onSubmit={handleSubmit} className="flex flex-col gap-md">
+                                <div className="form-group">
+                                    <label className="form-label">Category Name</label>
+                                    <input
+                                        type="text"
+                                        className="form-input"
+                                        value={formData.name}
+                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                        required
+                                        placeholder="e.g. Technology"
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Description</label>
+                                    <textarea
+                                        className="form-input"
+                                        value={formData.description}
+                                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                        style={{ minHeight: '80px' }}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Category Image</label>
+                                    <div className="flex gap-sm">
+                                        <input
+                                            type="text"
+                                            className="form-input"
+                                            value={formData.media?.image || ''}
+                                            onChange={(e) => setFormData({ ...formData, media: { ...formData.media, image: e.target.value } })}
+                                            placeholder="Image URL"
+                                            style={{ flexGrow: 1 }}
+                                        />
+                                        <div style={{ position: 'relative' }}>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={(e) => handleFileUpload(e, 'image')}
+                                                style={{ position: 'absolute', opacity: 0, width: '100%', height: '100%', cursor: 'pointer', left: 0, top: 0 }}
+                                            />
+                                            <button type="button" className="btn btn-outline">Upload</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Display Order</label>
+                                    <input
+                                        type="number"
+                                        className="form-input"
+                                        value={formData.displayOrder}
+                                        onChange={(e) => setFormData({ ...formData, displayOrder: parseInt(e.target.value) })}
+                                    />
+                                </div>
+                                <label className="flex items-center gap-sm" style={{ cursor: 'pointer' }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={formData.isActive}
+                                        onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
+                                    />
+                                    <span style={{ fontSize: '0.875rem' }}>Active and Visible</span>
+                                </label>
+                                <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: 'var(--spacing-md)' }}>
+                                    <Save size={18} /> {editingId ? 'Update' : 'Create'} Category
+                                </button>
+                            </form>
+                        </div>
+                    ) : (
+                        <div style={{ backgroundColor: 'white', padding: 'var(--spacing-xl)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)', textAlign: 'center', border: '1px dashed var(--color-border)', margin: "0 auto" }}>
+                            <TagIcon size={48} className="text-muted" style={{ margin: '0 auto var(--spacing-md)' }} />
+                            <p className="text-muted" style={{ fontSize: '0.875rem' }}>Select a category to edit or click the button to create a new one.</p>
+                        </div>
+                    )}
+                </div>
+
                 {/* Category List */}
                 <div>
                     <div style={{ backgroundColor: 'white', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)', overflowX: 'auto', border: '1px solid var(--color-border)' }}>
@@ -139,66 +254,6 @@ const CategoryManager = () => {
                             </tbody>
                         </table>
                     </div>
-                </div>
-
-                {/* Add/Edit Form */}
-                <div>
-                    {(isAdding || editingId) ? (
-                        <div style={{ backgroundColor: 'white', padding: 'var(--spacing-xl)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)', borderTop: `4px solid ${editingId ? 'var(--color-accent)' : '#22c55e'}` }}>
-                            <div className="flex justify-between items-center mb-lg">
-                                <h3 style={{ fontWeight: 'bold' }}>{editingId ? 'Edit Category' : 'New Category'}</h3>
-                                <button onClick={handleCancel} className="icon-btn text-muted"><X size={18} /></button>
-                            </div>
-
-                            <form onSubmit={handleSubmit} className="flex flex-col gap-md">
-                                <div className="form-group">
-                                    <label className="form-label">Category Name</label>
-                                    <input
-                                        type="text"
-                                        className="form-input"
-                                        value={formData.name}
-                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                        required
-                                        placeholder="e.g. Technology"
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label className="form-label">Description</label>
-                                    <textarea
-                                        className="form-input"
-                                        value={formData.description}
-                                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                        style={{ minHeight: '80px' }}
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label className="form-label">Display Order</label>
-                                    <input
-                                        type="number"
-                                        className="form-input"
-                                        value={formData.displayOrder}
-                                        onChange={(e) => setFormData({ ...formData, displayOrder: parseInt(e.target.value) })}
-                                    />
-                                </div>
-                                <label className="flex items-center gap-sm" style={{ cursor: 'pointer' }}>
-                                    <input
-                                        type="checkbox"
-                                        checked={formData.isActive}
-                                        onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                                    />
-                                    <span style={{ fontSize: '0.875rem' }}>Active and Visible</span>
-                                </label>
-                                <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: 'var(--spacing-md)' }}>
-                                    <Save size={18} /> {editingId ? 'Update' : 'Create'} Category
-                                </button>
-                            </form>
-                        </div>
-                    ) : (
-                        <div style={{ backgroundColor: 'white', padding: 'var(--spacing-xl)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)', textAlign: 'center', border: '1px dashed var(--color-border)', margin: "0 auto" }}>
-                            <TagIcon size={48} className="text-muted" style={{ margin: '0 auto var(--spacing-md)' }} />
-                            <p className="text-muted" style={{ fontSize: '0.875rem' }}>Select a category to edit or click the button to create a new one.</p>
-                        </div>
-                    )}
                 </div>
             </div>
         </div>

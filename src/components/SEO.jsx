@@ -1,28 +1,32 @@
 import { Helmet } from 'react-helmet-async';
 
-const SEO = ({ title, description, keywords, ogImage, ogType, canonicalUrl, author, publishedDate }) => {
-  const siteTitle = "The Chronicle | Premium News & Insights";
-  const fullTitle = title ? `${title} | The Chronicle` : siteTitle;
-  const defaultDescription = "Stay ahead with The Chronicle. We provide deep-dive analysis, breaking news, and premium insights on global events, technology, and culture.";
+const SEO = ({ title, description, ogTitle, ogDescription, keywords, ogImage, ogType, canonicalUrl, author, publishedDate }) => {
+  const siteTitle = "NexoraNews | Real-time Breaking News & Independent Journalism";
+  const fullTitle = title ? `${title} | NexoraNews` : siteTitle;
+  const defaultDescription = "NexoraNews delivers the latest breaking news, deep-dive analysis, and premium insights on global events, technology, and culture. Stay informed with our independent journalism.";
+  
+  // SEO optimization: prioritizes custom OG metadata if provided
+  const seoTitle = ogTitle ? `${ogTitle} | NexoraNews` : fullTitle;
+  const seoDescription = ogDescription || description || defaultDescription;
   
   // Fix: Ensure canonicalUrl is prioritized, then window.location.href
-  const currentUrl = canonicalUrl || (typeof window !== 'undefined' ? window.location.href : 'https://thechronicle.qzz.io/');
-  const defaultImage = "https://thechronicle.qzz.io/preview.jpg";
+  const currentUrl = canonicalUrl || (typeof window !== 'undefined' ? window.location.href : 'https://nexoranews.dpdns.org/');
+  const defaultImage = "https://nexoranews.dpdns.org/preview.jpg";
 
   return (
     <Helmet key={fullTitle}>
       {/* Basic Metadata */}
       <title>{fullTitle}</title>
       <meta name="description" content={description || defaultDescription} />
-      <meta name="keywords" content={Array.isArray(keywords) ? keywords.join(', ') : (keywords || "breaking news, world news, technology, business, journalism")} />
+      <meta name="keywords" content={Array.isArray(keywords) ? keywords.join(', ') : (keywords || "NexoraNews, breaking news, world news, technology insights, business headlines, independent journalism, global events")} />
       <link rel="canonical" href={currentUrl} />
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={ogType || 'website'} />
-      <meta property="og:site_name" content="The Chronicle" />
+      <meta property="og:site_name" content="NexoraNews" />
       <meta property="og:url" content={currentUrl} />
-      <meta property="og:title" content={fullTitle} />
-      <meta property="og:description" content={description || defaultDescription} />
+      <meta property="og:title" content={seoTitle} />
+      <meta property="og:description" content={seoDescription} />
       <meta property="og:image" content={ogImage || defaultImage} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
@@ -30,16 +34,16 @@ const SEO = ({ title, description, keywords, ogImage, ogType, canonicalUrl, auth
       {/* Article Specific OG */}
       {ogType === 'article' && (
         <>
-          <meta property="article:author" content={author || 'The Chronicle Editorial Team'} />
+          <meta property="article:author" content={author || 'NexoraNews Editorial Team'} />
           <meta property="article:published_time" content={publishedDate || new Date().toISOString()} />
         </>
       )}
 
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:site" content="@thechronicle" />
-      <meta name="twitter:title" content={fullTitle} />
-      <meta name="twitter:description" content={description || defaultDescription} />
+      <meta name="twitter:site" content="@nexoranews" />
+      <meta name="twitter:title" content={seoTitle} />
+      <meta name="twitter:description" content={seoDescription} />
       <meta name="twitter:image" content={ogImage || defaultImage} />
 
       {/* Ranking Signals */}

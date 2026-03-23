@@ -4,7 +4,7 @@ import { Info, Settings, PieChart, ShieldCheck } from 'lucide-react';
 const CookiePolicy = () => {
     return (
         <div className="container py-3xl">
-            <SEO title="Cookie Policy" description="How and why we use cookies to improve your experience on The Chronicle." />
+            <SEO title="Cookie Policy" description="How and why we use cookies to improve your experience on NexoraNews." />
 
             <div className="max-w-4xl mx-auto">
                 <header className="mb-3xl text-center">

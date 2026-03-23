@@ -62,7 +62,7 @@ const HomePage = () => {
     if (error) {
         return (
             <div className="container py-3xl">
-                <SEO title="Error | The Chronicle" />
+                <SEO title="Error | NexoraNews" />
                 <ErrorState
                     title="Unable to connect to news server"
                     description="We're having trouble reaching our servers. Please check your internet connection or try again."
@@ -80,10 +80,9 @@ const HomePage = () => {
     return (
         <>
             <SEO
-                title="Global Breaking News & Independent Journalism"
-                description="Stay ahead with The Chronicle. We provide deep-dive analysis, breaking news, and premium insights on global events, technology, and culture."
-                keywords="breaking news, world events, tech analysis, business insights, unbiased journalism"
-                ogImage="https://thechronicle.qzz.io/preview.jpg"
+                title="Home"
+                description="Stay ahead with NexoraNews. We provide deep-dive analysis, breaking news, and premium insights on global events, technology, and culture."
+                ogImage="https://nexoranews.dpdns.org/preview.jpg"
             />
 
             {!searchKeyword && <BreakingNews />}
@@ -107,7 +106,7 @@ const HomePage = () => {
                         </div>
 
                         {featuredArticle ? (
-                            <div className="animate-in fade-in relative overflow-hidden shadow-2xl group" style={{ borderRadius: 'var(--radius-lg)', minHeight: '500px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+                            <div className="animate-in fade-in relative overflow-hidden shadow-2xl group" style={{ borderRadius: 'var(--radius-lg)', minHeight: '555px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
                                 <img
                                     src={featuredArticle.media?.featuredImage || 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=1200&q=80'}
                                     alt={featuredArticle.title}
@@ -222,7 +221,7 @@ const HomePage = () => {
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-x-md gap-y-lg">
-                        {categories.slice(0, 4).map(cat => {
+                        {categories.slice(0, 6).map(cat => {
                             const catArticles = articles.filter(a => a.category?._id === cat._id || a.category === cat._id).slice(0, 4);
                             if (catArticles.length === 0) return null;
 
@@ -245,6 +244,40 @@ const HomePage = () => {
                                 </div>
                             );
                         })}
+                    </div>
+                </section>
+            )}
+
+            {/* Section 5: Experience More (Category Explorer) */}
+            {!searchKeyword && categories.length > 0 && (
+                <section className="mb-4xl py-3xl" style={{
+                    borderRadius: 'var(--radius-xl)',
+                    padding: '4rem 2rem'
+                }}>
+                    <div className="text-center mb-3xl">
+                        <span className="text-accent font-bold tracking-widest uppercase text-sm mb-md block">Discover Your Interests</span>
+                        <h2 className="font-serif text-5xl md:text-6xl mb-md">Explore by Section</h2>
+                        <p className="text-slate-400 max-w-2xl mx-auto text-lg">
+                            Dive deep into the topics that matter most to you, from cutting-edge technology to global politics and beyond.
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-md lg:gap-lg">
+                        {categories.map((cat) => (
+                            <Link
+                                key={`explorer-${cat._id}`}
+                                to={`/category/${cat.slug}`}
+                                className="cat-explorer-card group"
+                            >
+                                <div className="card-inner">
+                                    <div className="icon-wrapper">
+                                        <Grid size={24} className="group-hover:text-accent transition-colors" />
+                                    </div>
+                                    <h3 className="cat-name">{cat.name}</h3>
+                                    <span className="cat-stats">Latest stories →</span>
+                                </div>
+                            </Link>
+                        ))}
                     </div>
                 </section>
             )}

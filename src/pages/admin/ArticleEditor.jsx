@@ -35,15 +35,15 @@ const ArticleEditor = () => {
         category: '',
         status: 'draft',
         type: 'news',
-        media: { 
+        media: {
             featuredImage: '',
             imageAlt: '',
             gallery: [],
             videoUrl: ''
         },
-        seo: { 
-            metaTitle: '', 
-            metaDescription: '', 
+        seo: {
+            metaTitle: '',
+            metaDescription: '',
             keywords: [],
             canonicalUrl: '',
             ogTitle: '',
@@ -73,25 +73,25 @@ const ArticleEditor = () => {
                 ]);
 
                 setCategories(catsRes.data);
-                    if (isEdit && articleRes.data) {
-                        const art = articleRes.data;
-                        let content = art.content || [{ type: 'text', value: '' }];
-                        if (typeof content === 'string') {
-                            content = [{ type: 'text', value: content }];
-                        }
-                        
-                        setFormData(prev => ({
-                            ...prev,
-                            ...art,
-                            content: content,
-                            category: art.category?._id || art.category || '',
-                            media: { ...prev.media, ...art.media },
-                            seo: { ...prev.seo, ...art.seo },
-                            customAuthor: { ...prev.customAuthor, ...art.customAuthor },
-                            source: { ...prev.source, ...art.source },
-                            tags: art.tags?.map(t => t._id || t) || []
-                        }));
+                if (isEdit && articleRes.data) {
+                    const art = articleRes.data;
+                    let content = art.content || [{ type: 'text', value: '' }];
+                    if (typeof content === 'string') {
+                        content = [{ type: 'text', value: content }];
                     }
+
+                    setFormData(prev => ({
+                        ...prev,
+                        ...art,
+                        content: content,
+                        category: art.category?._id || art.category || '',
+                        media: { ...prev.media, ...art.media },
+                        seo: { ...prev.seo, ...art.seo },
+                        customAuthor: { ...prev.customAuthor, ...art.customAuthor },
+                        source: { ...prev.source, ...art.source },
+                        tags: art.tags?.map(t => t._id || t) || []
+                    }));
+                }
             } catch (err) {
                 console.error('Fetch failed', err);
                 setError('Failed to load data.');
@@ -145,6 +145,53 @@ const ArticleEditor = () => {
         const newContent = [...formData.content];
         newContent[index] = { ...newContent[index], [field]: value };
         setFormData(prev => ({ ...prev, content: newContent }));
+    };
+
+    const convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    };
+
+    const handleFileUpload = async (e, targetField, blockIndex = null) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // Visual feedback
+        setSaving(true);
+        setError('');
+
+        try {
+            const base64 = await convertToBase64(file);
+            const { data } = await api.post('/api/upload', {
+                fileData: base64,
+                fileName: file.name,
+                folder: 'articles'
+            });
+
+            if (data.success) {
+                if (blockIndex !== null) {
+                    handleBlockChange(blockIndex, 'value', data.url);
+                } else if (targetField.includes('.')) {
+                    const [parent, child] = targetField.split('.');
+                    setFormData(prev => ({
+                        ...prev,
+                        [parent]: { ...prev[parent], [child]: data.url }
+                    }));
+                } else {
+                    setFormData(prev => ({ ...prev, [targetField]: data.url }));
+                }
+            }
+        } catch (err) {
+            console.error('Upload failed', err);
+            const msg = err.response?.data?.message || 'Image upload failed. Please try again or use a URL.';
+            setError(msg);
+        } finally {
+            setSaving(false);
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -201,36 +248,38 @@ const ArticleEditor = () => {
                 <div className="lg:col-span-2" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-xl)' }}>
                     <div style={{ backgroundColor: 'white', padding: 'var(--spacing-sm)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
                         <div className="form-group">
-                            <label className="form-label">Article Title</label>
+                            <label className="form-label">Article Title <span style={{ color: 'var(--color-accent)' }}>*</span></label>
                             <input
                                 type="text"
                                 name="title"
                                 value={formData.title}
                                 onChange={handleChange}
                                 className="form-input"
-                                placeholder="The headline goes here..."
+                                placeholder="Enter a catchy headline..."
                                 required
                                 style={{ fontSize: '1.25rem', fontWeight: '600' }}
                             />
                         </div>
 
                         <div className="form-group">
-                            <label className="form-label">Short Summary</label>
+                            <label className="form-label">Summary / Excerpt <span style={{ color: 'var(--color-accent)' }}>*</span></label>
                             <textarea
                                 name="summary"
                                 value={formData.summary}
                                 onChange={handleChange}
                                 className="form-input"
-                                placeholder="A brief overview for snippets..."
+                                rows="3"
+                                placeholder="Brief overview of the article..."
+                                required
                                 style={{ minHeight: '80px' }}
                             />
                         </div>
 
                         <div className="form-group">
                             <label className="form-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                Article Content Blocks
+                                Article Content Blocks <span style={{ color: 'var(--color-accent)', marginLeft: '4px' }}>*</span>
                             </label>
-                            
+
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)' }}>
                                 {formData.content.map((block, index) => (
                                     <div key={index} style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 'var(--spacing-md)', backgroundColor: '#fafafa', position: 'relative' }}>
@@ -272,13 +321,28 @@ const ArticleEditor = () => {
 
                                         {block.type === 'image' && (
                                             <div className="flex flex-col gap-sm">
-                                                <input
-                                                    type="text"
-                                                    className="form-input"
-                                                    value={block.value}
-                                                    onChange={(e) => handleBlockChange(index, 'value', e.target.value)}
-                                                    placeholder="Enter image URL (Unsplash, etc.)..."
-                                                />
+                                                <div className="flex gap-sm">
+                                                    <input
+                                                        type="text"
+                                                        className="form-input"
+                                                        value={block.value}
+                                                        onChange={(e) => handleBlockChange(index, 'value', e.target.value)}
+                                                        placeholder="Enter image URL..."
+                                                        style={{ flexGrow: 1 }}
+                                                    />
+                                                    <div className="relative">
+                                                        <input
+                                                            type="file"
+                                                            accept="image/*"
+                                                            onChange={(e) => handleFileUpload(e, 'content', index)}
+                                                            className="absolute inset-0 opacity-0 cursor-pointer"
+                                                            style={{ position: 'absolute', opacity: 0, width: '40px', height: '100%', cursor: 'pointer' }}
+                                                        />
+                                                        <button type="button" className="btn btn-outline" style={{ padding: '0.8rem' }} title="Upload Image">
+                                                            <Plus size={18} />
+                                                        </button>
+                                                    </div>
+                                                </div>
                                                 <input
                                                     type="text"
                                                     className="form-input"
@@ -349,14 +413,14 @@ const ArticleEditor = () => {
                             />
                         </div>
                         <div className="form-group">
-                            <label className="form-label">Canonical URL</label>
+                            <label className="form-label">NexoraNews Primary Link (Canonical)</label>
                             <input
                                 type="text"
                                 name="seo.canonicalUrl"
                                 value={formData.seo.canonicalUrl || ''}
                                 onChange={handleChange}
                                 className="form-input"
-                                placeholder="https://..."
+                                placeholder="https://nexoranews.dpdns.org/..."
                             />
                         </div>
                         <div className="grid md:grid-cols-2 gap-lg mt-md pt-md border-t">
@@ -418,10 +482,10 @@ const ArticleEditor = () => {
                         </div>
 
                         <div className="form-group">
-                            <label className="form-label">Category</label>
+                            <label className="form-label">Category <span style={{ color: 'var(--color-accent)' }}>*</span></label>
                             <select name="category" value={formData.category} onChange={handleChange} className="form-input" required>
                                 <option value="">Select Category</option>
-                                {categories.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
+                                {categories.map(cat => <option key={cat._id} value={cat._id}>{cat.name}</option>)}
                             </select>
                         </div>
 
@@ -464,15 +528,27 @@ const ArticleEditor = () => {
                             />
                         </div>
                         <div className="form-group">
-                            <label className="form-label">Author Profile Image URL</label>
-                            <input
-                                type="text"
-                                name="customAuthor.profileImage"
-                                value={formData.customAuthor?.profileImage || ''}
-                                onChange={handleChange}
-                                className="form-input"
-                                placeholder="https://..."
-                            />
+                            <label className="form-label">Author Profile Image</label>
+                            <div className="flex gap-sm">
+                                <input
+                                    type="text"
+                                    name="customAuthor.profileImage"
+                                    value={formData.customAuthor?.profileImage || ''}
+                                    onChange={handleChange}
+                                    className="form-input"
+                                    placeholder="https://..."
+                                    style={{ flexGrow: 1 }}
+                                />
+                                <div style={{ position: 'relative' }}>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) => handleFileUpload(e, 'customAuthor.profileImage')}
+                                        style={{ position: 'absolute', opacity: 0, width: '100%', height: '100%', cursor: 'pointer', left: 0, top: 0 }}
+                                    />
+                                    <button type="button" className="btn btn-outline" style={{ height: "100%" }}>Upload</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -509,15 +585,29 @@ const ArticleEditor = () => {
                             <ImageIcon size={18} className="text-accent" /> Featured Image
                         </h3>
                         <div className="form-group">
-                            <label className="form-label">Image URL</label>
-                            <input
-                                type="text"
-                                name="media.featuredImage"
-                                value={formData.media.featuredImage}
-                                onChange={handleChange}
-                                className="form-input"
-                                placeholder="https://images.unsplash.com/..."
-                            />
+                            <label className="form-label">Featured Image <span style={{ color: 'var(--color-accent)' }}>*</span></label>
+                            <div className="flex gap-sm">
+                                <input
+                                    type="text"
+                                    name="media.featuredImage"
+                                    value={formData.media.featuredImage}
+                                    onChange={handleChange}
+                                    className="form-input"
+                                    placeholder="https://images.unsplash.com/..."
+                                    style={{ flexGrow: 1 }}
+                                />
+                                <div style={{ position: 'relative' }}>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) => handleFileUpload(e, 'media.featuredImage')}
+                                        style={{ position: 'absolute', opacity: 0, width: '100%', height: '100%', cursor: 'pointer', left: 0, top: 0 }}
+                                    />
+                                    <button type="button" className="btn btn-outline" style={{ height: '100%' }}>
+                                        Upload
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                         <div className="form-group">
                             <label className="form-label">Image Alt Text (SEO)</label>

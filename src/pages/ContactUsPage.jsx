@@ -20,40 +20,40 @@ const ContactUsPage = () => {
             title: "Newsroom Tips",
             description: "Have a breaking story or a tip? Our investigative team is ready to listen.",
             icon: <Newspaper size={24} />,
-            email: "tips@thechronicle.com"
+            email: "tips@nexoranews.com"
         },
         {
             title: "Advertising",
-            description: "Reach our global audience of 50M+ readers through our premium ad placements.",
+            description: "Partner with us for high-impact campaigns.",
             icon: <Briefcase size={24} />,
-            email: "ads@thechronicle.com"
+            email: "ads@nexoranews.com"
         },
         {
-            title: "General Support",
-            description: "Questions about your subscription or technical issues? We're here to help.",
+            title: "Support",
+            description: "Account help and subscription services.",
             icon: <HelpCircle size={24} />,
-            email: "support@thechronicle.com"
+            email: "support@nexoranews.com"
         }
     ];
 
     const faqs = [
         {
-            q: "How do I pitch a story to The Chronicle?",
-            a: "We welcome pitches from freelance journalists. Please send a brief outline of your story idea, any relevant experience, and why it's a fit for us to pitches@thechronicle.com."
+            q: "How do I pitch a story to NexoraNews?",
+            a: "We welcome pitches from freelance journalists. Please send a brief outline of your story idea, any relevant experience, and why it's a fit for us to pitches@nexoranews.com."
         },
         {
-            q: "Where can I find information about subscriptions?",
-            a: "You can manage your subscription through your account profile. For group or corporate rates, please contact our sales team at corporate@thechronicle.com."
+            q: "Can I cancel my subscription anytime?",
+            a: "You can manage your subscription through your account profile. For group or corporate rates, please contact our sales team at corporate@nexoranews.com."
         },
         {
-            q: "How can I report a correction?",
-            a: "We strive for absolute accuracy. If you spot an error, please email corrections@thechronicle.com with the article URL and details of the mistake."
+            q: "How do I report a factual error?",
+            a: "We strive for absolute accuracy. If you spot an error, please email corrections@nexoranews.com with the article URL and details of the mistake."
         }
     ];
 
     return (
-        <div className="contact-page">
-            <SEO title="Contact Us" description="Get in touch with The Chronicle newsroom." />
+        <div className="page-container bg-slate-900 min-h-screen pt-24 pb-12">
+            <SEO title="Contact Us" description="Get in touch with the NexoraNews newsroom." />
 
             {/* Hero Section */}
             <header className="page-header">

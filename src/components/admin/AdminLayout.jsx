@@ -65,7 +65,7 @@ const AdminLayout = () => {
                     height: '70px',
                     flexShrink: 0
                 }}>
-                    {isSidebarOpen && <span style={{ fontWeight: '800', fontSize: '1.25rem', letterSpacing: '-0.025em', color: '#f8fafc' }}>CHRONICLE</span>}
+                    {isSidebarOpen && <span style={{ fontWeight: '800', fontSize: '1.25rem', letterSpacing: '-0.025em', color: '#f8fafc' }}>NEXORANEWS</span>}
                     <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="icon-btn hover:bg-slate-700" style={{ color: 'white', padding: '8px' }}>
                         {isSidebarOpen ? <ChevronLeft size={20} /> : <Menu size={20} />}
                     </button>
