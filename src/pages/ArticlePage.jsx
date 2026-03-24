@@ -410,7 +410,7 @@ const ArticlePage = () => {
                                 required
                                 value={commentData.userName}
                                 onChange={(e) => setCommentData({ ...commentData, userName: e.target.value })}
-                                style={{ padding: '14px', borderRadius: '8px', border: '1px solid var(--color-border)', fontSize: '0.95rem', outline: 'none' }}
+                                style={{ padding: '14px', borderRadius: '8px', border: '1px solid var(--color-border)', fontSize: '0.95rem', outline: 'none', background: "#fff", color: "#000" }}
                                 placeholder="e.g. John Doe"
                                 className="focus:border-accent"
                             />
@@ -422,7 +422,7 @@ const ArticlePage = () => {
                                 required
                                 value={commentData.email}
                                 onChange={(e) => setCommentData({ ...commentData, email: e.target.value })}
-                                style={{ padding: '14px', borderRadius: '8px', border: '1px solid var(--color-border)', fontSize: '0.95rem', outline: 'none' }}
+                                style={{ padding: '14px', borderRadius: '8px', border: '1px solid var(--color-border)', fontSize: '0.95rem', outline: 'none', background: "#fff", color: "#000" }}
                                 placeholder="john@example.com"
                                 className="focus:border-accent"
                             />
@@ -435,7 +435,7 @@ const ArticlePage = () => {
                             value={commentData.comment}
                             onChange={(e) => setCommentData({ ...commentData, comment: e.target.value })}
                             rows={5}
-                            style={{ padding: '14px', borderRadius: '8px', border: '1px solid var(--color-border)', fontSize: '0.95rem', outline: 'none', resize: 'vertical' }}
+                            style={{ padding: '14px', borderRadius: '8px', border: '1px solid var(--color-border)', fontSize: '0.95rem', outline: 'none', resize: 'vertical', background: "#fff", color: "#000" }}
                             placeholder="What do you think about this article?"
                             className="focus:border-accent"
                         />

@@ -63,7 +63,7 @@ const AboutUsPage = () => {
                 </div>
 
                 {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg mb-3xl">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg mb-3xl" style={{ marginTop: "20px" }}>
                     {stats.map((stat, index) => (
                         <div key={index} className="p-xl bg-white border rounded-lg text-center shadow-sm hover:shadow-md transition-normal">
                             <div className="flex justify-center mb-md">{stat.icon}</div>
