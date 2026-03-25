@@ -28,7 +28,7 @@ const getAlternateLinks = (baseUrl, path) => {
 
 exports.handler = async (event, context) => {
     const baseUrl = process.env.FRONTEND_URL || 'https://nexoranews.dpdns.org';
-    const apiUrl = process.env.API_URL || 'https://news-api-v1.up.railway.app';
+    const apiUrl = process.env.VITE_BACKEND_URL || 'https://news-backend-rh42.onrender.com';
 
     try {
         // 1. Fetch articles from backend API
