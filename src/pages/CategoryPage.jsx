@@ -69,7 +69,7 @@ const CategoryPage = () => {
         return (
             <div className="container py-3xl">
                 <SEO title="Error | NexoraNews" />
-                <ErrorState 
+                <ErrorState
                     title="Channel Access Error"
                     description="We couldn't load the articles for this channel. Our editorial team has been notified."
                     onRetry={() => window.location.reload()}
@@ -90,8 +90,6 @@ const CategoryPage = () => {
         );
     }
 
-    const heroArticle = currentPage === 1 && articles.length > 0 ? articles[0] : null;
-    const gridArticles = heroArticle ? articles.slice(1) : articles;
     const sidebarArticles = articles.slice(0, 5); // Reuse some for trending sidebar
 
     return (
@@ -100,7 +98,7 @@ const CategoryPage = () => {
                 title={category.seo?.metaTitle || `${category.name} News & Analysis`}
                 description={category.seo?.metaDescription || category.description}
                 keywords={category.seo?.keywords || `${category.name}, news, ${category.name} reports, latest stories`}
-                ogImage={heroArticle?.media?.featuredImage}
+                ogImage={articles?.media?.featuredImage}
             />
 
             {/* Premium Category Header */}
@@ -110,9 +108,9 @@ const CategoryPage = () => {
                         <span style={{ color: 'var(--color-accent)', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.2em', fontSize: '0.875rem', marginBottom: '1rem' }}>
                             The Archive
                         </span>
-                        <h1 className="page-title text-black font-serif" style={{ fontSize: '4rem', marginBottom: '1rem' }}>{category.name}</h1>
+                        <h1 className="page-title text-black font-serif" style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>{category.name}</h1>
                         {category.description && (
-                            <p className="max-w-2xl opacity-80 leading-relaxed text-lg">
+                            <p className="max-w-2xl opacity-80 leading-relaxed text-sm">
                                 {category.description}
                             </p>
                         )}
@@ -130,22 +128,14 @@ const CategoryPage = () => {
 
                     {/* Main Content Area */}
                     <div className="lg:col-span-8">
-                        {/* Hero Section (On page 1) */}
-                        {heroArticle && (
-                            <section className="mb-3xl">
-                                <ArticleCard article={heroArticle} featured={true} />
-                                <div className="mt-2xl border-b pb-xl"></div>
-                            </section>
-                        )}
-
-                        {gridArticles.length > 0 ? (
+                        {articles.length > 0 ? (
                             <div className="grid md:grid-cols-2 gap-xl">
-                                {gridArticles.map(article => (
+                                {articles.map(article => (
                                     <ArticleCard key={article._id} article={article} />
                                 ))}
                             </div>
                         ) : (
-                            !heroArticle && (
+                            !articles && (
                                 <EmptyState
                                     icon={Newspaper}
                                     title="No articles found"

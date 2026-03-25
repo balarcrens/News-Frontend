@@ -89,7 +89,7 @@ const ContactUsPage = () => {
                 <div className="grid lg:grid-cols-5 gap-lg mb-3xl">
                     {/* Form Section */}
                     <div className="lg:col-span-3">
-                        <div className="bg-white p-2xl border rounded-lg shadow-sm">
+                        <div className="bg-white p-xl border rounded-lg shadow-sm">
                             <h2 className="text-2xl font-serif mb-xl">Send us a Message</h2>
                             {sent ? (
                                 <div className="text-center py-2xl animate-in fade-in duration-500">
