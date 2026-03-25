@@ -1,12 +1,15 @@
+import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
+import { getOptimizedImage } from '../utils/imageUtils';
 
-const ArticleCard = ({ article, featured = false }) => {
+const ArticleCard = memo(({ article, featured = false }) => {
     const publishedText = article.publishedAt
         ? formatDistanceToNow(new Date(article.publishedAt), { addSuffix: true })
         : 'Published';
 
-    const imgUrl = article.media?.featuredImage || `https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800&q=80`;
+    const rawImgUrl = article.media?.featuredImage || `https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800&q=80`;
+    const imgUrl = getOptimizedImage(rawImgUrl, { width: featured ? 1200 : 800 });
     const categoryName = article.category?.name || 'News';
     const authorName = article.customAuthor?.name || article.author?.name || 'Editorial Team';
     const readingTime = Math.ceil((article.content?.length || 0) / 1000) || 5;
@@ -15,7 +18,7 @@ const ArticleCard = ({ article, featured = false }) => {
         return (
             <Link to={`/article/${article.slug || 'dummy-slug'}`} className="article-card article-card--featured" style={{ border: 'none', boxShadow: 'none' }}>
                 <div className="article-card-image-wrap" style={{ borderRadius: 'var(--radius-lg)' }}>
-                    <img src={imgUrl} alt={article.title} className="article-card-image" />
+                    <img src={imgUrl} alt={article.title} className="article-card-image" loading="lazy" />
                 </div>
                 <div className="article-card-content" style={{ paddingInline: 'var(--spacing-xl)' }}>
                     <div className="flex items-center gap-md mb-xs">
@@ -36,7 +39,7 @@ const ArticleCard = ({ article, featured = false }) => {
     return (
         <Link to={`/article/${article.slug || 'dummy-slug'}`} className="article-card glass">
             <div className="article-card-image-wrap">
-                <img src={imgUrl} alt={article.title} className="article-card-image" />
+                <img src={imgUrl} alt={article.title} className="article-card-image" loading="lazy" />
             </div>
             <div className="article-card-content">
                 <div className="flex items-center justify-between mb-xs">
@@ -52,6 +55,6 @@ const ArticleCard = ({ article, featured = false }) => {
             </div>
         </Link>
     );
-};
+});
 
 export default ArticleCard;

@@ -21,7 +21,7 @@ const ArticleSidebarItem = ({ article, index, showImage = true }) => {
             <div style={{
                 fontSize: '1.25rem',
                 fontWeight: '900',
-                color: 'var(--color-border)',
+                color: 'gray',
                 minWidth: '25px',
                 textAlign: 'center'
             }}>

@@ -1,45 +1,50 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import HomePage from './pages/HomePage';
-import ArticlePage from './pages/ArticlePage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import AboutUsPage from './pages/AboutUsPage';
-import ContactUsPage from './pages/ContactUsPage';
+import LoadingState from './components/LoadingState';
 import ProtectedRoute from './components/ProtectedRoute';
-import CategoryPage from './pages/CategoryPage';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import TermsOfService from './pages/TermsOfService';
-import CookiePolicy from './pages/CookiePolicy';
-import Disclaimer from './pages/Disclaimer';
 import ScrollToTop from './components/ScrollToTop';
-import NotFoundPage from './pages/NotFoundPage';
-import ForgotPasswordPage from './pages/ForgotPasswordPage';
-import ResetPasswordPage from './pages/ResetPasswordPage';
-
-// Admin Pages
-import AdminLayout from './components/admin/AdminLayout';
-import AdminDashboard from './pages/admin/AdminDashboard';
-import ArticlesList from './pages/admin/ArticlesList';
-import ArticleEditor from './pages/admin/ArticleEditor';
-import CategoryManager from './pages/admin/CategoryManager';
+import LanguageSyncManager from './components/LanguageSyncManager';
 import { AuthProvider } from './context/AuthContext';
-import UserManager from './pages/admin/UserManager';
+
+// Public Pages - Lazy Loaded
+const HomePage = lazy(() => import('./pages/HomePage'));
+const ArticlePage = lazy(() => import('./pages/ArticlePage'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const RegisterPage = lazy(() => import('./pages/RegisterPage'));
+const AboutUsPage = lazy(() => import('./pages/AboutUsPage'));
+const ContactUsPage = lazy(() => import('./pages/ContactUsPage'));
+const CategoryPage = lazy(() => import('./pages/CategoryPage'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const TermsOfService = lazy(() => import('./pages/TermsOfService'));
+const CookiePolicy = lazy(() => import('./pages/CookiePolicy'));
+const Disclaimer = lazy(() => import('./pages/Disclaimer'));
+const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
+const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
+
+// Admin Pages - Lazy Loaded
+const AdminLayout = lazy(() => import('./components/admin/AdminLayout'));
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
+const ArticlesList = lazy(() => import('./pages/admin/ArticlesList'));
+const ArticleEditor = lazy(() => import('./pages/admin/ArticleEditor'));
+const CategoryManager = lazy(() => import('./pages/admin/CategoryManager'));
+const UserManager = lazy(() => import('./pages/admin/UserManager'));
 
 const Layout = () => (
     <div className="app-layout">
         <Navbar />
         <main className="app-main container">
-            <Outlet />
+            <Suspense fallback={<LoadingState fullPage={false} />}>
+                <Outlet />
+            </Suspense>
         </main>
         <Footer />
         <ScrollToTop />
     </div>
 );
 
-
-import LanguageSyncManager from './components/LanguageSyncManager';
 
 const publicRoutes = [
     { path: "", element: <HomePage /> },
@@ -73,14 +78,16 @@ function App() {
                             <Route key={`lang-${i}`} path={`/:lang/${route.path}`} element={route.element} />
                         ))}
                     </Route>
-
+-
                     {/* Admin Routes - Standalone Layout */}
                     <Route
                         path="/admin"
                         element={
-                            <ProtectedRoute adminOnly={true}>
-                                <AdminLayout />
-                            </ProtectedRoute>
+                            <Suspense fallback={<LoadingState fullPage={true} />}>
+                                <ProtectedRoute adminOnly={true}>
+                                    <AdminLayout />
+                                </ProtectedRoute>
+                            </Suspense>
                         }
                     >
                         <Route index element={<AdminDashboard />} />

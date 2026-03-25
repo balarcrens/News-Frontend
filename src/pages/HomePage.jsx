@@ -7,7 +7,9 @@ import BreakingNews from '../components/BreakingNews';
 import { Search, TrendingUp, Grid, List } from 'lucide-react';
 import SEO from '../components/SEO';
 import EmptyState from '../components/EmptyState';
-import LoadingState from '../components/LoadingState';
+import ErrorState from '../components/ErrorState';
+import Skeleton from '../components/Skeleton';
+import { getOptimizedImage } from '../utils/imageUtils';
 
 const HomePage = () => {
     const location = useLocation();
@@ -71,9 +73,7 @@ const HomePage = () => {
         }
     };
 
-    if (loading) {
-        return <LoadingState message="Fetching top stories..." />;
-    }
+    /* Removed the full-page loader check to allow sectional skeletons */
 
     if (error) {
         return (
@@ -89,8 +89,8 @@ const HomePage = () => {
     }
 
     const featuredArticle = Array.isArray(articles) && articles.length > 0 ? articles[0] : null;
-    const trendingArticles = Array.isArray(articles) && articles.length > 1 ? articles.slice(1, 5) : [];
-    const latestArticles = Array.isArray(articles) && articles.length > 5 ? articles.slice(5, 11) : [];
+    const trendingArticles = Array.isArray(articles) && articles.length > 1 ? articles.slice(1, 6) : [];
+    const latestArticles = Array.isArray(articles) && articles.length > 6 ? articles.slice(6, 12) : [];
     const blogArticles = Array.isArray(articles) ? articles.filter(a => a.type === 'blog').slice(0, 4) : [];
 
     return (
@@ -121,27 +121,37 @@ const HomePage = () => {
                             )}
                         </div>
 
-                        {featuredArticle ? (
-                            <div className="animate-in fade-in relative overflow-hidden shadow-2xl group" style={{ borderRadius: 'var(--radius-lg)', minHeight: '555px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
-                                <img
-                                    src={featuredArticle.media?.featuredImage || 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=1200&q=80'}
-                                    alt={featuredArticle.title}
-                                    className="absolute top-0 right-0 bottom-0 left-0 transition-all duration-700"
-                                    style={{ width: '100%', height: '100%', objectFit: 'cover', zIndex: 0 }}
-                                    onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-                                    onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                                />
-                                <div className="absolute top-0 right-0 bottom-0 left-0" style={{ background: 'linear-gradient(to top, rgba(18, 18, 18, 0.95) 0%, rgba(18, 18, 18, 0.5) 50%, transparent 100%)', zIndex: 1 }}></div>
+                        {loading ? (
+                            <div className="relative overflow-hidden" style={{ borderRadius: 'var(--radius-lg)', minHeight: '555px' }}>
+                                <Skeleton height="100%" width="100%" />
+                                <div className="absolute bottom-0 left-0 w-full p-xl z-2">
+                                    <Skeleton width="40%" height="2rem" className="mb-md" />
+                                    <Skeleton width="80%" height="3rem" className="mb-md" />
+                                    <Skeleton width="60%" height="1.5rem" />
+                                </div>
+                            </div>
+                        ) : featuredArticle ? (
+                            <div className="animate-in fade-in relative overflow-hidden shadow-2xl group" style={{ borderRadius: 'var(--radius-lg)', minHeight: '430px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+                                <Link to={`/article/${featuredArticle.slug}`} className="absolute inset-0 block group overflow-hidden" style={{ zIndex: 0 }}>
+                                    <img
+                                        src={getOptimizedImage(featuredArticle?.media?.featuredImage, { width: 1200 })}
+                                        alt={featuredArticle.title}
+                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                        loading="eager"
+                                        fetchPriority="high"
+                                    />
+                                    <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(18, 18, 18, 0.95) 0%, rgba(18, 18, 18, 0.5) 50%, transparent 100%)', zIndex: 1 }}></div>
+                                </Link>
 
                                 <div className="relative" style={{ zIndex: 2, padding: 'var(--spacing-xl)' }}>
                                     <span style={{ backgroundColor: 'var(--color-accent)', color: 'white', padding: '0.35rem 1rem', borderRadius: '2px', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.75rem', fontWeight: '800', marginBottom: '1rem', display: 'inline-block' }}>
                                         {featuredArticle.category?.name || 'Must Read'}
                                     </span>
-                                    <a href={`/article/${featuredArticle.slug}`} className="block">
+                                    <Link to={`/article/${featuredArticle.slug}`} className="block">
                                         <h2 className="font-serif text-white hover:text-accent transition-colors mb-md" style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)', lineHeight: '1.1', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
                                             {featuredArticle.title}
                                         </h2>
-                                    </a>
+                                    </Link>
                                     <p className="text-white opacity-95 hidden md:block mb-lg font-sans" style={{ fontSize: '1.125rem', maxWidth: '700px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                                         {featuredArticle.summary}
                                     </p>
@@ -163,7 +173,17 @@ const HomePage = () => {
                             <h2 className="heading-text">Trending Now</h2>
                         </div>
                         <div className="flex flex-col gap-sm">
-                            {trendingArticles.length > 0 ? (
+                            {loading ? (
+                                Array(5).fill(0).map((_, i) => (
+                                    <div key={i} className="flex gap-md p-sm">
+                                        <Skeleton width="60px" height="60px" borderRadius="var(--radius-sm)" />
+                                        <div className="flex-1">
+                                            <Skeleton width="100%" height="1.2rem" className="mb-xs" />
+                                            <Skeleton width="60%" height="0.8rem" />
+                                        </div>
+                                    </div>
+                                ))
+                            ) : trendingArticles.length > 0 ? (
                                 trendingArticles.map((art, i) => (
                                     <ArticleSidebarItem key={`trending-${art._id}`} article={art} index={i} />
                                 ))
@@ -199,25 +219,37 @@ const HomePage = () => {
             </section>
 
             {/* Section 2: Opinion/Blogs (Horizontal Highlight) */}
-            {blogArticles.length > 0 && (
-                <section className="mb-3xl py-2xl text-white overflow-hidden -mx-lg px-lg sm:-mx-xl sm:px-xl md:-mx-4xl md:px-4xl">
+            {(blogArticles.length > 0 || loading) && (
+                <section className="mb-3xl py-2xl overflow-hidden">
                     <div className="max-w-7xl mx-auto">
                         <div className="section-heading" style={{ borderBottomColor: 'rgba(255,255,255,0.1)' }}>
-                            <h2 className="heading-text text-white">The Opinion <span className="text-accent italic">&</span> Commentary</h2>
+                            <h2 className="heading-text">The Opinion <span className="text-accent italic">&</span> Commentary</h2>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-xl">
-                            {blogArticles.map(art => (
+                            {loading ? (
+                                Array(4).fill(0).map((_, i) => (
+                                    <div key={i}>
+                                        <Skeleton width="40%" height="1rem" className="mb-sm" />
+                                        <Skeleton width="100%" height="1.5rem" className="mb-sm" />
+                                        <Skeleton width="100%" height="1.5rem" className="mb-md" />
+                                        <div className="flex items-center gap-sm">
+                                            <Skeleton variant="circular" width="32px" height="32px" />
+                                            <Skeleton width="50%" height="1rem" />
+                                        </div>
+                                    </div>
+                                ))
+                            ) : blogArticles.map(art => (
                                 <Link key={art._id} to={`/article/${art.slug}`} className="group block">
                                     <div className="mb-md transition-opacity">
                                         <span className="text-xs uppercase font-bold tracking-widest text-accent">{art.category?.name || 'Opinion'}</span>
                                         <h3 className="font-serif mt-xs group-hover:underline text-lg" style={{ lineHeight: '1.3' }}>{art.title}</h3>
                                     </div>
-                                    {(<div className="flex items-center gap-sm mt-auto text-accent">
+                                    <div className="flex items-center gap-sm mt-auto text-accent">
                                         <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: 'var(--color-accent)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.75rem' }}>
-                                            {'A'}
+                                            {art?.author?.name?.charAt(0) || art.customAuthor?.name?.charAt(0) || 'E'}
                                         </div>
                                         <span className="text-sm">By {art?.author?.name || art.customAuthor?.name || 'Editorial Team'}</span>
-                                    </div>)}
+                                    </div>
                                 </Link>
                             ))}
                         </div>
@@ -225,8 +257,8 @@ const HomePage = () => {
                 </section>
             )}
 
-            {/* Section 3: Latest Briefing (The existing Latest Grid) */}
-            {latestArticles.length > 0 && (
+            {/* Section 3: Latest Briefing */}
+            {(latestArticles.length > 0 || loading) && (
                 <section className="mb-3xl">
                     <div className="section-heading">
                         <List size={20} className="text-accent" />
@@ -235,7 +267,16 @@ const HomePage = () => {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
-                        {latestArticles.map(article => (
+                        {loading ? (
+                            Array(6).fill(0).map((_, i) => (
+                                <div key={i}>
+                                    <Skeleton height="200px" borderRadius="var(--radius-lg)" className="mb-md" />
+                                    <Skeleton width="80%" height="1.5rem" className="mb-sm" />
+                                    <Skeleton width="100%" height="1rem" className="mb-sm" />
+                                    <Skeleton width="40%" height="0.8rem" />
+                                </div>
+                            ))
+                        ) : latestArticles.map(article => (
                             <ArticleCard key={`latest-${article._id}`} article={article} />
                         ))}
                     </div>

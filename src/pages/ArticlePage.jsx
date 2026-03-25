@@ -19,12 +19,14 @@ import { format } from 'date-fns';
 import SEO from '../components/SEO';
 import ErrorState from '../components/ErrorState';
 import EmptyState from '../components/EmptyState';
-import LoadingState from '../components/LoadingState';
+import Skeleton from '../components/Skeleton';
+import { getOptimizedImage } from '../utils/imageUtils';
 
 const ArticlePage = () => {
     const { slug } = useParams();
     const [article, setArticle] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [extraLoading, setExtraLoading] = useState(true);
     const [error, setError] = useState(null);
     const [likes, setLikes] = useState(0);
     const [isLiked, setIsLiked] = useState(false);
@@ -34,7 +36,7 @@ const ArticlePage = () => {
     const [scrollProgress, setScrollProgress] = useState(0);
     const [relatedArticles, setRelatedArticles] = useState([]);
 
-    const fetchArticle = async () => {
+    const fetchArticleData = async () => {
         setLoading(true);
         setError(null);
         try {
@@ -43,12 +45,29 @@ const ArticlePage = () => {
                 setArticle(data);
                 setLikes(data.engagement?.likes || 0);
                 setIsLiked(data.isLiked || false);
-                fetchComments(data._id);
-                if (data.category?._id) {
-                    fetchRelatedArticles(data.category._id, data._id);
+                setLoading(false); // Article main content loaded
+
+                // Fetch extra data in parallel
+                setExtraLoading(true);
+                const articleId = data._id;
+                const categoryId = data.category?._id;
+
+                const requests = [api.get(`/api/comments/article/${articleId}`)];
+                if (categoryId) {
+                    requests.push(api.get(`/api/articles?category=${categoryId}&limit=4`));
                 }
+
+                const results = await Promise.all(requests.map(p => p.catch(e => ({ data: [] }))));
+                
+                setComments(results[0].data || []);
+                if (results[1]) {
+                    const related = Array.isArray(results[1].data) ? results[1].data : (results[1].data.articles || []);
+                    setRelatedArticles(related.filter(a => a._id !== articleId).slice(0, 3));
+                }
+                setExtraLoading(false);
             } else {
                 setError('not_found');
+                setLoading(false);
             }
         } catch (err) {
             console.error('Error fetching article:', err);
@@ -57,27 +76,7 @@ const ArticlePage = () => {
             } else {
                 setError('fetch_error');
             }
-        } finally {
             setLoading(false);
-        }
-    };
-
-    const fetchRelatedArticles = async (categoryId, currentArticleId) => {
-        try {
-            const { data } = await api.get(`/api/articles?category=${categoryId}`);
-            const fetchedArticles = Array.isArray(data) ? data : (data.articles || []);
-            setRelatedArticles(fetchedArticles.filter(a => a._id !== currentArticleId).slice(0, 3));
-        } catch (err) {
-            console.error('Error fetching related articles:', err);
-        }
-    };
-
-    const fetchComments = async (articleId) => {
-        try {
-            const { data } = await api.get(`/api/comments/article/${articleId}`);
-            setComments(data);
-        } catch (err) {
-            console.error('Error fetching comments:', err);
         }
     };
 
@@ -97,7 +96,9 @@ const ArticlePage = () => {
         try {
             await api.post('/api/comments', { ...commentData, articleId: article._id });
             setCommentData({ userName: '', email: '', comment: '' });
-            fetchComments(article._id);
+            // Re-fetch comments
+            const { data } = await api.get(`/api/comments/article/${article._id}`);
+            setComments(data);
             alert('Comment posted successfully!');
         } catch (err) {
             console.error('Error posting comment:', err);
@@ -108,7 +109,7 @@ const ArticlePage = () => {
     };
 
     useEffect(() => {
-        fetchArticle();
+        fetchArticleData();
 
         const handleScroll = () => {
             const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -119,10 +120,6 @@ const ArticlePage = () => {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, [slug]);
-
-    if (loading) {
-        return <LoadingState message="Loading article..." />;
-    }
 
     if (error === 'not_found' || (!article && !loading)) {
         return (
@@ -141,19 +138,18 @@ const ArticlePage = () => {
             <ErrorState
                 title="Failed to load article"
                 description="There was a problem communicating with our servers. Please check your connection and try again."
-                onRetry={fetchArticle}
+                onRetry={fetchArticleData}
             />
         );
     }
 
-    const imgUrl = article.media?.featuredImage || `https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=1200&q=80`;
-
-    const metaTitle = article.seo?.metaTitle || article.title;
-    const metaDesc = article.seo?.metaDescription || article.summary;
-
-    const readingTime = Math.ceil((article.content?.length || 0) / 1000) || 5;
+    const imgUrl = article?.media?.featuredImage || `https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=1200&q=80`;
+    const metaTitle = article?.seo?.metaTitle || article?.title;
+    const metaDesc = article?.seo?.metaDescription || article?.summary;
+    const readingTime = article ? Math.ceil((article.content?.length || 0) / 1000) || 5 : 5;
 
     const shareOnSocial = (platform) => {
+        if (!article) return;
         const url = window.location.href;
         const title = article.title;
         let shareUrl = '';
@@ -200,14 +196,14 @@ const ArticlePage = () => {
             <SEO
                 title={metaTitle}
                 description={metaDesc}
-                ogTitle={article.seo?.ogTitle}
-                ogDescription={article.seo?.ogDescription}
-                ogImage={article.seo?.ogImage || imgUrl}
+                ogTitle={article?.seo?.ogTitle}
+                ogDescription={article?.seo?.ogDescription}
+                ogImage={article?.seo?.ogImage || imgUrl}
                 ogType="article"
-                canonicalUrl={article.seo?.canonicalUrl}
-                keywords={article.seo?.keywords || article.tags?.map(t => t.name)}
-                author={article.customAuthor?.name || article.author?.name}
-                publishedDate={article.publishedAt}
+                canonicalUrl={article?.seo?.canonicalUrl}
+                keywords={article?.seo?.keywords || article?.tags?.map(t => t.name)}
+                author={article?.customAuthor?.name || article?.author?.name}
+                publishedDate={article?.publishedAt}
             />
 
             <div style={{ marginBottom: 'var(--spacing-xl)' }}>
@@ -218,37 +214,67 @@ const ArticlePage = () => {
 
             <header className="article-header" style={{ marginBottom: 'var(--spacing-2xl)' }}>
                 <div className="flex items-center gap-md mb-md flex-wrap">
-                    {article.category?.name && (
+                    {loading ? (
+                        <Skeleton width="100px" height="1.5rem" borderRadius="4px" />
+                    ) : article?.category?.name && (
                         <span className="article-category" style={{ backgroundColor: 'var(--color-accent)', color: 'white', padding: '4px 12px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                             {article.category.name}
                         </span>
                     )}
                     <div className="flex items-center gap-md text-muted" style={{ fontSize: '0.85rem', fontWeight: '500' }}>
-                        <span className="flex items-center gap-xs"><Clock size={14} /> {readingTime} min read</span>
-                        <span className="flex items-center gap-xs"><Eye size={14} /> {article.engagement?.views || 0} views</span>
+                        <span className="flex items-center gap-xs"><Clock size={14} /> {loading ? <Skeleton width="40px" height="1rem" /> : `${readingTime} min read`}</span>
+                        <span className="flex items-center gap-xs"><Eye size={14} /> {loading ? <Skeleton width="40px" height="1rem" /> : `${article.engagement?.views || 0} views`}</span>
                     </div>
                 </div>
 
-                <h1 className="article-title font-serif" style={{ fontSize: 'clamp(2rem, 8vw, 3.5rem)', lineHeight: '1.1', marginBottom: 'var(--spacing-lg)', color: 'var(--color-primary)', fontWeight: '900' }}>
-                    {article.title}
-                </h1>
+                {loading ? (
+                    <div className="flex flex-col gap-sm mb-xl">
+                        <Skeleton width="90%" height="3.5rem" />
+                        <Skeleton width="70%" height="3.5rem" />
+                    </div>
+                ) : (
+                    <h1 className="article-title font-serif" style={{ fontSize: 'clamp(2rem, 8vw, 3.5rem)', lineHeight: '1.1', marginBottom: 'var(--spacing-lg)', color: 'var(--color-primary)', fontWeight: '900' }}>
+                        {article.title}
+                    </h1>
+                )}
 
-                <p className="article-excerpt" style={{ fontSize: 'clamp(1.1rem, 4vw, 1.35rem)', lineHeight: '1.6', color: 'var(--color-text-muted)', marginBottom: 'var(--spacing-xl)', maxWidth: '900px', borderLeft: '4px solid var(--color-accent)', paddingLeft: 'var(--spacing-lg)', fontStyle: 'italic' }}>
-                    {article.summary}
-                </p>
+                {loading ? (
+                    <div className="flex flex-col gap-xs mb-xl">
+                        <Skeleton width="100%" height="1.2rem" />
+                        <Skeleton width="100%" height="1.2rem" />
+                        <Skeleton width="80%" height="1.2rem" />
+                    </div>
+                ) : (
+                    <p className="article-excerpt" style={{ fontSize: 'clamp(1.1rem, 4vw, 1.35rem)', lineHeight: '1.6', color: 'var(--color-text-muted)', marginBottom: 'var(--spacing-xl)', maxWidth: '900px', borderLeft: '4px solid var(--color-accent)', paddingLeft: 'var(--spacing-lg)', fontStyle: 'italic' }}>
+                        {article.summary}
+                    </p>
+                )}
 
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-xl py-lg border-t border-b" style={{ borderColor: 'var(--color-border)' }}>
                     <div className="flex items-center gap-md">
                         <div style={{ width: '56px', height: '56px', borderRadius: '50%', overflow: 'hidden', border: '2px solid var(--color-border)', padding: '2px' }}>
-                            <img src={article.author?.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=Journalist"} alt="Author" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                            {loading ? (
+                                <Skeleton variant="circular" width="100%" height="100%" />
+                            ) : (
+                                <img src={article.author?.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=Journalist"} alt="Author" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                            )}
                         </div>
                         <div>
-                            <p style={{ fontWeight: '800', color: 'var(--color-primary)', fontSize: '1.1rem' }}>
-                                {article.customAuthor?.name || article.author?.name || 'Editorial Board'}
-                            </p>
-                            <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', marginTop: '2px' }}>
-                                {article.publishedAt ? format(new Date(article.publishedAt), 'MMMM d, yyyy • h:mm a') : 'Unpublished Draft'}
-                            </p>
+                            {loading ? (
+                                <div className="flex flex-col gap-xs">
+                                    <Skeleton width="120px" height="1.1rem" />
+                                    <Skeleton width="100px" height="0.85rem" />
+                                </div>
+                            ) : (
+                                <>
+                                    <p style={{ fontWeight: '800', color: 'var(--color-primary)', fontSize: '1.1rem' }}>
+                                        {article.customAuthor?.name || article.author?.name || 'Editorial Board'}
+                                    </p>
+                                    <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', marginTop: '2px' }}>
+                                        {article.publishedAt ? format(new Date(article.publishedAt), 'MMMM d, yyyy • h:mm a') : 'Unpublished Draft'}
+                                    </p>
+                                </>
+                            )}
                         </div>
                     </div>
 
@@ -256,6 +282,7 @@ const ArticlePage = () => {
                         <div className="flex items-center gap-sm bg-gray-50 rounded-full p-1">
                             <button
                                 onClick={handleLike}
+                                disabled={loading}
                                 className={`flex items-center gap-sm px-md py-sm rounded-full transition-all ${isLiked ? 'bg-accent' : 'hover:bg-gray-100'}`}
                                 style={{
                                     border: 'none',
@@ -263,12 +290,12 @@ const ArticlePage = () => {
                                 }}
                             >
                                 <Heart size={20} fill={isLiked ? "red" : "none"} />
-                                <span style={{ fontWeight: '700' }}>{likes}</span>
+                                <span style={{ fontWeight: '700' }}>{loading ? '0' : likes}</span>
                             </button>
                             <div className="w-px h-6 bg-gray-200 mx-xs"></div>
                             <div className="flex items-center gap-sm px-md py-sm text-muted">
                                 <MessageCircle size={20} />
-                                <span style={{ fontWeight: '700' }}>{comments.length}</span>
+                                <span style={{ fontWeight: '700' }}>{loading || extraLoading ? '0' : comments.length}</span>
                             </div>
                         </div>
 
@@ -283,13 +310,19 @@ const ArticlePage = () => {
             </header>
 
             <figure style={{ marginBottom: 'var(--spacing-3xl)', position: 'relative' }}>
-                <img
-                    src={imgUrl}
-                    alt={article.title}
-                    className="article-hero-image shadow-2xl"
-                    style={{ width: '100%', borderRadius: 'var(--radius-lg)', maxHeight: '600px', objectFit: 'cover' }}
-                />
-                {article.media?.imageAlt && (
+                {loading ? (
+                    <Skeleton width="100%" height="600px" borderRadius="var(--radius-lg)" />
+                ) : (
+                    <img
+                        src={getOptimizedImage(article.media?.featuredImage, { width: 1200 })}
+                        alt={article.title}
+                        className="article-hero-image shadow-2xl"
+                        style={{ width: '100%', borderRadius: 'var(--radius-lg)', maxHeight: '600px', objectFit: 'cover' }}
+                        loading="eager"
+                        fetchpriority="high"
+                    />
+                )}
+                {!loading && article?.media?.imageAlt && (
                     <figcaption style={{ position: 'absolute', bottom: '1rem', right: '1rem', background: 'rgba(0,0,0,0.6)', color: 'white', padding: '4px 12px', fontSize: '0.75rem', borderRadius: '4px', backdropFilter: 'blur(4px)' }}>
                         © {article.media.imageAlt}
                     </figcaption>
@@ -309,7 +342,17 @@ const ArticlePage = () => {
                     hyphens: 'auto'
                 }}
             >
-                {Array.isArray(article.content) ? (
+                {loading ? (
+                    <div className="flex flex-col gap-md">
+                        <Skeleton width="100%" height="1.2rem" />
+                        <Skeleton width="100%" height="1.2rem" />
+                        <Skeleton width="90%" height="1.2rem" />
+                        <Skeleton width="100%" height="1.2rem" />
+                        <Skeleton width="95%" height="1.2rem" />
+                        <Skeleton width="100%" height="1.2rem" />
+                        <Skeleton width="85%" height="1.2rem" />
+                    </div>
+                ) : Array.isArray(article?.content) ? (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-xl)' }}>
                         {article.content.map((block, index) => {
                             switch (block.type) {
@@ -318,7 +361,7 @@ const ArticlePage = () => {
                                 case 'image':
                                     return (
                                         <figure key={index} style={{ margin: 'var(--spacing-2xl) 0', textAlign: 'center' }}>
-                                            <img src={block.value} alt={block.caption || "Article image"} style={{ width: '100%', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)' }} />
+                                            <img src={block.value} alt={block.caption || "Article image"} style={{ width: '100%', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-lg)' }} loading="lazy" />
                                             {block.caption && <figcaption style={{ fontSize: '0.95rem', color: 'var(--color-text-muted)', marginTop: 'var(--spacing-md)', fontStyle: 'italic', maxWidth: '600px', marginInline: 'auto' }}>{block.caption}</figcaption>}
                                         </figure>
                                     );
@@ -329,12 +372,12 @@ const ArticlePage = () => {
                         })}
                     </div>
                 ) : (
-                    <div className="prose" style={{ whiteSpace: 'pre-wrap', overflowWrap: 'break-word' }} dangerouslySetInnerHTML={{ __html: article.content }}></div>
+                    <div className="prose" style={{ whiteSpace: 'pre-wrap', overflowWrap: 'break-word' }} dangerouslySetInnerHTML={{ __html: article?.content }}></div>
                 )}
             </div>
 
             {/* Tags Section */}
-            {article.tags && article.tags.length > 0 && (
+            {!loading && article?.tags && article.tags.length > 0 && (
                 <div style={{ maxWidth: '800px', margin: 'var(--spacing-3xl) auto 0', padding: 'var(--spacing-xl) 0', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
                     <div className="flex items-center gap-sm flex-wrap">
                         <span style={{ fontWeight: '800', textTransform: 'uppercase', fontSize: '0.75rem', color: 'var(--color-text-muted)', letterSpacing: '0.1em' }}>Filed Under:</span>
@@ -347,36 +390,31 @@ const ArticlePage = () => {
                 </div>
             )}
 
-            {/* Author Bio Card */}
-            {article.customAuthor?.bio && (
-                <div className="" style={{ maxWidth: '800px', margin: 'var(--spacing-3xl) auto 0', padding: 'var(--spacing-xl)', borderRadius: 'var(--radius-lg)', display: 'flex', gap: 'var(--spacing-lg)', alignItems: 'center', flexWrap: 'wrap' }}>
-                    <div style={{ width: '80px', height: '80px', borderRadius: '50%', overflow: 'hidden', flexShrink: 0 }}>
-                        <img src={article.customAuthor.profileImage || article.author?.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=Journalist"} alt="Author" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    </div>
-                    <div style={{ flex: '1', minWidth: '250px' }}>
-                        <h4 style={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--color-accent)', marginBottom: '4px', letterSpacing: '0.1em' }}>The Author</h4>
-                        <p style={{ fontWeight: '900', color: 'var(--color-primary)', fontSize: '1.25rem', marginBottom: '8px' }}>{article.customAuthor.name}</p>
-                        <p style={{ fontSize: '0.95rem', color: 'var(--color-text-main)', lineHeight: '1.6' }}>{article.customAuthor.bio}</p>
-                    </div>
-                </div>
-            )}
-
             {/* Related Articles Section */}
-            {relatedArticles.length > 0 && (
+            {(extraLoading || relatedArticles.length > 0) && (
                 <div style={{ maxWidth: '1100px', margin: 'var(--spacing-3xl) auto 0' }}>
                     <div className="flex items-center justify-between mb-xl">
-                        <h3 className="font-serif" style={{ fontSize: '2rem', fontWeight: '900', color: 'var(--color-primary)' }}>More from {article.category?.name || 'News'}</h3>
-                        <Link to="/" className="text-accent font-bold text-sm tracking-widest uppercase hover:underline">View All</Link>
+                        <h3 className="font-serif" style={{ fontSize: '2rem', fontWeight: '900', color: 'var(--color-primary)' }}>{loading ? <Skeleton width="200px" height="2rem" /> : `More from ${article?.category?.name || 'News'}`}</h3>
+                        {!loading && <Link to="/" className="text-accent font-bold text-sm tracking-widest uppercase hover:underline">View All</Link>}
                     </div>
                     <div className="grid md:grid-cols-3 gap-xl">
-                        {relatedArticles.map(rel => (
+                        {extraLoading ? (
+                            Array(3).fill(0).map((_, i) => (
+                                <div key={i}>
+                                    <Skeleton width="100%" height="180px" borderRadius="var(--radius-lg)" className="mb-md" />
+                                    <Skeleton width="100%" height="1.5rem" className="mb-sm" />
+                                    <Skeleton width="50%" height="1rem" />
+                                </div>
+                            ))
+                        ) : relatedArticles.map(rel => (
                             <Link key={rel._id} to={`/article/${rel.slug}`} className="group block">
                                 <div style={{ aspectRatio: '16/9', overflow: 'hidden', borderRadius: 'var(--radius-lg)', marginBottom: 'var(--spacing-md)', boxShadow: 'var(--shadow-md)' }}>
                                     <img
-                                        src={rel.media?.featuredImage || `https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=400&q=80`}
+                                        src={getOptimizedImage(rel.media?.featuredImage, { width: 400 })}
                                         alt={rel.title}
                                         style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)' }}
                                         className="group-hover:scale-110"
+                                        loading="lazy"
                                     />
                                 </div>
                                 <h4 style={{ fontSize: '1.1rem', fontWeight: '800', lineHeight: '1.4', color: 'var(--color-primary)' }} className="group-hover:text-accent transition-colors">
@@ -394,7 +432,7 @@ const ArticlePage = () => {
             {/* Comments Section */}
             <div id="comments" style={{ maxWidth: '800px', margin: 'var(--spacing-3xl) auto 0' }}>
                 <div className="flex items-center justify-between mb-xl pb-md border-b" style={{ borderColor: 'var(--color-border)' }}>
-                    <h3 className="font-serif" style={{ fontSize: '2rem', fontWeight: '900' }}>Discussion ({comments.length})</h3>
+                    <h3 className="font-serif" style={{ fontSize: '2rem', fontWeight: '900' }}>Discussion {loading || extraLoading ? '(...) ' : `(${comments.length})`}</h3>
                     <div className="flex items-center gap-xs text-sm font-bold text-accent uppercase tracking-widest">
                         <MessageCircle size={18} /> Join the conversation
                     </div>
@@ -440,7 +478,7 @@ const ArticlePage = () => {
                             className="focus:border-accent"
                         />
                     </div>
-                    <button type="submit" disabled={submittingComment} className="btn btn-primary w-full py-md flex items-center justify-center gap-sm shadow-lg hover:shadow-accent/20">
+                    <button type="submit" disabled={submittingComment || loading} className="btn btn-primary w-full py-md flex items-center justify-center gap-sm shadow-lg hover:shadow-accent/20">
                         {submittingComment ? 'Sending...' : <><Send size={18} /> Publish Comment</>}
                     </button>
                     <p style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', textAlign: 'center', marginTop: 'var(--spacing-md)' }}>Your email address will not be published.</p>
@@ -448,7 +486,17 @@ const ArticlePage = () => {
 
                 {/* Comments List */}
                 <div className="flex flex-col gap-xl">
-                    {comments.length > 0 ? (
+                    {extraLoading ? (
+                        Array(3).fill(0).map((_, i) => (
+                            <div key={i} className="flex gap-lg p-lg">
+                                <Skeleton variant="circular" width="48px" height="48px" />
+                                <div className="flex-1">
+                                    <Skeleton width="150px" height="1.1rem" className="mb-xs" />
+                                    <Skeleton width="100%" height="1.5rem" />
+                                </div>
+                            </div>
+                        ))
+                    ) : comments.length > 0 ? (
                         comments.map((c) => (
                             <div key={c._id} className="flex gap-lg p-lg hover:bg-white rounded-lg transition-colors border border-transparent hover:border-gray-100">
                                 <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'var(--color-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', flexShrink: 0, fontWeight: '900', fontSize: '1.25rem', boxShadow: 'var(--shadow-sm)' }}>
@@ -473,21 +521,23 @@ const ArticlePage = () => {
             </div>
 
             {/* Structured Data for Google News */}
-            <script type="application/ld+json">
-                {JSON.stringify({
-                    "@context": "https://schema.org",
-                    "@type": "NewsArticle",
-                    "headline": article.title,
-                    "image": [imgUrl],
-                    "datePublished": article.publishedAt || article.createdAt,
-                    "dateModified": article.updatedAt || article.publishedAt || article.createdAt,
-                    "author": [{
-                        "@type": "Person",
-                        "name": article.customAuthor?.name || article.author?.name || "Editorial Team",
-                        "url": "#"
-                    }]
-                })}
-            </script>
+            {!loading && article && (
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "NewsArticle",
+                        "headline": article.title,
+                        "image": [imgUrl],
+                        "datePublished": article.publishedAt || article.createdAt,
+                        "dateModified": article.updatedAt || article.publishedAt || article.createdAt,
+                        "author": [{
+                            "@type": "Person",
+                            "name": article.customAuthor?.name || article.author?.name || "Editorial Team",
+                            "url": "#"
+                        }]
+                    })}
+                </script>
+            )}
         </article>
     );
 };
