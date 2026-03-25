@@ -122,7 +122,7 @@ const HomePage = () => {
                         </div>
 
                         {loading ? (
-                            <div className="relative overflow-hidden" style={{ borderRadius: 'var(--radius-lg)', minHeight: '555px' }}>
+                            <div className="relative overflow-hidden" style={{ borderRadius: 'var(--radius-lg)', height: 'clamp(400px, 70vh, 600px)' }}>
                                 <Skeleton height="100%" width="100%" />
                                 <div className="absolute bottom-0 left-0 w-full p-xl z-2">
                                     <Skeleton width="40%" height="2rem" className="mb-md" />
@@ -131,16 +131,20 @@ const HomePage = () => {
                                 </div>
                             </div>
                         ) : featuredArticle ? (
-                            <div className="animate-in fade-in relative overflow-hidden shadow-2xl group" style={{ borderRadius: 'var(--radius-lg)', minHeight: '430px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
-                                <Link to={`/article/${featuredArticle.slug}`} className="absolute inset-0 block group overflow-hidden" style={{ zIndex: 0 }}>
+                            <div className="animate-in fade-in shadow-2xl group" style={{ position: 'relative', borderRadius: 'var(--radius-lg)', height: 'clamp(400px, 75vh, 600px)', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', overflow: 'hidden' }}>
+                                <Link 
+                                    to={`/article/${featuredArticle.slug}`} 
+                                    style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'block', zIndex: 0, overflow: 'hidden' }}
+                                >
                                     <img
                                         src={getOptimizedImage(featuredArticle?.media?.featuredImage, { width: 1200 })}
                                         alt={featuredArticle.title}
-                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.7s' }}
+                                        className="group-hover:scale-105"
                                         loading="eager"
                                         fetchPriority="high"
                                     />
-                                    <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(18, 18, 18, 0.95) 0%, rgba(18, 18, 18, 0.5) 50%, transparent 100%)', zIndex: 1 }}></div>
+                                    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(to top, rgba(18, 18, 18, 0.95) 0%, rgba(18, 18, 18, 0.5) 50%, transparent 100%)', zIndex: 1 }}></div>
                                 </Link>
 
                                 <div className="relative" style={{ zIndex: 2, padding: 'var(--spacing-xl)' }}>
