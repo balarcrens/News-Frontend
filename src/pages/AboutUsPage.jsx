@@ -38,7 +38,7 @@ const AboutUsPage = () => {
                 {/* Hero Section */}
                 <div className="mb-32">
                     <div className="flex flex-col md:flex-row gap-xl items-center">
-                        <div className="md:w-3/5">
+                        <div className="md:w-3/5 animate-in fade-up">
                             <span className="inline-block px-4 py-1 rounded-full bg-accent/10 text-accent font-semibold text-sm mb-6 uppercase tracking-wider">Our Story</span>
                             <h1 className="text-5xl md:text-7xl font-serif mb-8 text-black leading-tight">
                                 Journalism for a <span className="text-accent italic">Better Informed</span> World.
@@ -50,7 +50,7 @@ const AboutUsPage = () => {
                                 Since our founding nearly a century ago, we have stood at the forefront of global events, documenting history as it happens with a commitment to accuracy that has never wavered.
                             </p>
                         </div>
-                        <div className="relative">
+                        <div className="relative animate-in fade-in" style={{ animationDelay: '200ms' }}>
                             <div className="rounded-lg overflow-hidden shadow-2xl">
                                 <img src={aboutHero} alt="Our Newsroom" className="w-full h-auto" />
                             </div>

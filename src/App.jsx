@@ -20,6 +20,8 @@ const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 const CookiePolicy = lazy(() => import('./pages/CookiePolicy'));
 const Disclaimer = lazy(() => import('./pages/Disclaimer'));
+const AuthorPage = lazy(() => import('./pages/AuthorPage'));
+const TagPage = lazy(() => import('./pages/TagPage'));
 const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
 const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
@@ -60,6 +62,8 @@ const publicRoutes = [
     { path: "disclaimer", element: <Disclaimer /> },
     { path: "forgot-password", element: <ForgotPasswordPage /> },
     { path: "reset-password/:token", element: <ResetPasswordPage /> },
+    { path: "author/:id", element: <AuthorPage /> },
+    { path: "tag/:slug", element: <TagPage /> },
     { path: "*", element: <NotFoundPage /> },
 ];
 

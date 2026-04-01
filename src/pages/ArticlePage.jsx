@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
@@ -16,6 +17,7 @@ import {
     Clock
 } from 'lucide-react';
 import { format } from 'date-fns';
+import Breadcrumbs from '../components/Breadcrumbs';
 import SEO from '../components/SEO';
 import ErrorState from '../components/ErrorState';
 import EmptyState from '../components/EmptyState';
@@ -207,9 +209,12 @@ const ArticlePage = () => {
             />
 
             <div style={{ marginBottom: 'var(--spacing-xl)' }}>
-                <Link to="/" className="btn btn-outline flex items-center gap-sm" style={{ padding: '0.5rem 1rem', fontSize: '0.85rem', width: 'fit-content', borderRadius: '30px' }}>
-                    <ArrowLeft size={16} /> Back to News
-                </Link>
+                <Breadcrumbs 
+                    items={[
+                        { label: article?.category?.name || 'News', link: article?.category?.slug ? `/category/${article.category.slug}` : '/' },
+                        { label: article?.title || 'Article' }
+                    ]} 
+                />
             </div>
 
             <header className="article-header" style={{ marginBottom: 'var(--spacing-2xl)' }}>
@@ -245,20 +250,36 @@ const ArticlePage = () => {
                         <Skeleton width="80%" height="1.2rem" />
                     </div>
                 ) : (
-                    <p className="article-excerpt" style={{ fontSize: 'clamp(1.1rem, 4vw, 1.35rem)', lineHeight: '1.6', color: 'var(--color-text-muted)', marginBottom: 'var(--spacing-xl)', maxWidth: '900px', borderLeft: '4px solid var(--color-accent)', paddingLeft: 'var(--spacing-lg)', fontStyle: 'italic' }}>
-                        {article.summary}
-                    </p>
+                    <div className="article-excerpt-container animate-in stagger-2" style={{ marginBottom: 'var(--spacing-2xl)', maxWidth: '900px' }}>
+                        <p className="article-excerpt" style={{ fontSize: 'clamp(1.1rem, 4vw, 1.35rem)', lineHeight: '1.6', color: 'var(--color-text-muted)', marginBottom: 'var(--spacing-lg)', borderLeft: '4px solid var(--color-accent)', paddingLeft: 'var(--spacing-lg)', fontStyle: 'italic' }}>
+                            {article.summary}
+                        </p>
+                        
+                        {/* Quick Highlights for AdSense Contentability */}
+                        <div className="glass p-lg rounded-lg border-l-4 border-accent bg-slate-50/50" style={{ marginTop: 'var(--spacing-xl)' }}>
+                            <h4 className="text-xs uppercase font-bold text-accent tracking-widest mb-sm">Key Takeaways</h4>
+                            <ul className="flex flex-col gap-xs" style={{ listStyle: 'none', fontSize: '0.95rem', color: 'var(--color-text-main)' }}>
+                                {article.content && typeof article.content === 'string' ? (
+                                    article.content.split('.').slice(0, 3).map((sentence, i) => (
+                                        sentence.trim() && <li key={i} className="flex gap-sm items-start"><span className="text-accent mt-1">•</span> {sentence.trim()}.</li>
+                                    ))
+                                ) : (
+                                    <li className="flex gap-sm items-start"><span className="text-accent mt-1">•</span> Deep-dive analysis on the latest global developments.</li>
+                                )}
+                            </ul>
+                        </div>
+                    </div>
                 )}
 
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-xl py-lg border-t border-b" style={{ borderColor: 'var(--color-border)' }}>
                     <div className="flex items-center gap-md">
-                        <div style={{ width: '56px', height: '56px', borderRadius: '50%', overflow: 'hidden', border: '2px solid var(--color-border)', padding: '2px' }}>
+                        <Link to={`/author/${article?.author?._id || '#'}`} style={{ width: '56px', height: '56px', borderRadius: '50%', overflow: 'hidden', border: '2px solid var(--color-accent)', padding: '2px' }}>
                             {loading ? (
                                 <Skeleton variant="circular" width="100%" height="100%" />
                             ) : (
                                 <img src={article.author?.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=Journalist"} alt="Author" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
                             )}
-                        </div>
+                        </Link>
                         <div>
                             {loading ? (
                                 <div className="flex flex-col gap-xs">
@@ -267,9 +288,9 @@ const ArticlePage = () => {
                                 </div>
                             ) : (
                                 <>
-                                    <p style={{ fontWeight: '800', color: 'var(--color-primary)', fontSize: '1.1rem' }}>
+                                    <Link to={`/author/${article?.author?._id || '#'}`} className="hover:text-accent transition-colors" style={{ fontWeight: '800', color: 'var(--color-primary)', fontSize: '1.1rem' }}>
                                         {article.customAuthor?.name || article.author?.name || 'Editorial Board'}
-                                    </p>
+                                    </Link>
                                     <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', marginTop: '2px' }}>
                                         {article.publishedAt ? format(new Date(article.publishedAt), 'MMMM d, yyyy • h:mm a') : 'Unpublished Draft'}
                                     </p>
@@ -319,7 +340,7 @@ const ArticlePage = () => {
                         className="article-hero-image shadow-2xl"
                         style={{ width: '100%', borderRadius: 'var(--radius-lg)', maxHeight: '600px', objectFit: 'cover' }}
                         loading="eager"
-                        fetchpriority="high"
+                        fetchPriority="high"
                     />
                 )}
                 {!loading && article?.media?.imageAlt && (
@@ -382,10 +403,34 @@ const ArticlePage = () => {
                     <div className="flex items-center gap-sm flex-wrap">
                         <span style={{ fontWeight: '800', textTransform: 'uppercase', fontSize: '0.75rem', color: 'var(--color-text-muted)', letterSpacing: '0.1em' }}>Filed Under:</span>
                         {article.tags.map((tag, i) => (
-                            <span key={tag._id || i} style={{ backgroundColor: 'var(--color-hover-bg)', padding: '6px 16px', borderRadius: '30px', fontSize: '0.8rem', fontWeight: '600', color: 'var(--color-primary)', border: '1px solid var(--color-border)' }}>
+                            <Link key={tag._id || i} to={`/tag/${tag.slug || tag.name?.toLowerCase()}`} className="hover:scale-105 transition-transform" style={{ backgroundColor: 'var(--color-hover-bg)', padding: '6px 16px', borderRadius: '30px', fontSize: '0.8rem', fontWeight: '600', color: 'var(--color-primary)', border: '1px solid var(--color-border)' }}>
                                 #{tag.name}
-                            </span>
+                            </Link>
                         ))}
+                    </div>
+                </div>
+            )}
+
+            {/* Author Bio Card for AdSense E-E-A-T */}
+            {!loading && article?.author && (
+                <div className="animate-in fade-up" style={{ maxWidth: '800px', margin: 'var(--spacing-3xl) auto 0' }}>
+                    <div className="p-xl rounded-2xl flex flex-col md:flex-row items-center gap-lg border-2 border-accent/20">
+                        <Link to={`/author/${article.author._id}`} style={{ flexShrink: 0 }}>
+                            <img 
+                                src={article.author.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=Journalist"} 
+                                alt={article.author.name} 
+                                style={{ width: '80px', height: '80px', borderRadius: '50%', border: '2px solid white' }} 
+                            />
+                        </Link>
+                        <div className="text-center md:text-left">
+                            <h4 className="font-bold text-lg mb-xs">Written by <Link to={`/author/${article.author._id}`} className="text-accent underline">{article.author.name}</Link></h4>
+                            <p className="text-slate-300 text-sm leading-relaxed mb-md">
+                                {article.author.bio || "NexoraNews senior editorial contributor specializing in global news and technological insights. Committed to delivering independent journalism."}
+                            </p>
+                            <Link to={`/author/${article.author._id}`} className="btn btn-primary" style={{ padding: '6px 16px', fontSize: '0.75rem', borderRadius: 'var(--radius-full)' }}>
+                                All stories by {article.author.name.split(' ')[0]}
+                            </Link>
+                        </div>
                     </div>
                 </div>
             )}

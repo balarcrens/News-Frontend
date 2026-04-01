@@ -5,19 +5,24 @@ import api from '../api/axios';
 
 const Footer = () => {
     const [categories, setCategories] = useState([]);
+    const [tags, setTags] = useState([]);
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        const fetchCategories = async () => {
+        const fetchData = async () => {
             try {
-                const { data } = await api.get('/api/categories');
-                setCategories(data.filter(c => c.isActive !== false).slice(0, 10));
+                const [catRes, tagRes] = await Promise.all([
+                    api.get('/api/categories'),
+                    api.get('/api/tags')
+                ]);
+                setCategories(catRes.data.filter(c => c.isActive !== false).slice(0, 10));
+                setTags(Array.isArray(tagRes.data) ? tagRes.data.slice(0, 12) : []);
             } catch (err) {
-                console.error('Footer category fetch failed', err);
+                console.error('Footer data fetch failed', err);
             }
         };
-        fetchCategories();
+        fetchData();
     }, []);
 
     const handleJoin = async () => {
@@ -113,6 +118,19 @@ const Footer = () => {
                                 {loading ? '...' : 'Join'}
                             </button>
                         </div>
+
+                        {tags.length > 0 && (
+                            <div className="mt-xl">
+                                <h4 className="footer-heading" style={{ color: 'white', fontWeight: '800', textTransform: 'uppercase', fontSize: '0.7rem', letterSpacing: '0.1em', marginBottom: '1rem' }}>Popular Tags</h4>
+                                <div className="flex flex-wrap gap-xs">
+                                    {tags.map(tag => (
+                                        <Link key={tag._id} to={`/tag/${tag.slug}`} style={{ fontSize: '0.7rem', color: '#64748b', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)' }} className="hover:text-accent hover:border-accent transition-all">
+                                            #{tag.name}
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
 

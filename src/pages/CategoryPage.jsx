@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../api/axios';
+import Breadcrumbs from '../components/Breadcrumbs';
 import ArticleCard from '../components/ArticleCard';
 import ArticleSidebarItem from '../components/ArticleSidebarItem';
 import Pagination from '../components/Pagination';
@@ -104,6 +105,7 @@ const CategoryPage = () => {
             {/* Premium Category Header */}
             <header className="py-2xl border-b mb-3xl">
                 <div className="container">
+                    <Breadcrumbs items={[{ label: category.name }]} />
                     <div className="flex flex-col items-center text-center">
                         <span style={{ color: 'var(--color-accent)', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.2em', fontSize: '0.875rem', marginBottom: '1rem' }}>
                             The Archive

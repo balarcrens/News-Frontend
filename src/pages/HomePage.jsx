@@ -270,7 +270,7 @@ const HomePage = () => {
                         <button className="view-all-link">View All</button>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg animate-in fade-up">
                         {loading ? (
                             Array(6).fill(0).map((_, i) => (
                                 <div key={i}>

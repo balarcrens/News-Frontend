@@ -49,10 +49,10 @@ const Navbar = () => {
                                 <button className="icon-btn mobile-menu-btn mobile-only" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
                                     {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                                 </button>
-                                <Link to="/" className="navbar-brand">Nexora<span style={{ fontSize: "20px" }}>News</span></Link>
+                                <Link to="/" className="navbar-brand text-gradient">NexoraNews</Link>
                             </div>
 
-                            <div className="navbar-links">
+                            <div className="navbar-links" style={{ color: 'var(--color-black)' }} >
                                 <Link to="/" className="navbar-link">Home</Link>
 
                                 {/* Categories Dropdown */}

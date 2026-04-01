@@ -13,6 +13,15 @@ const SEO = ({ title, description, ogTitle, ogDescription, keywords, ogImage, og
   const currentUrl = canonicalUrl || (typeof window !== 'undefined' ? window.location.href : 'https://nexoranews.dpdns.org/');
   const defaultImage = "https://nexoranews.dpdns.org/preview.jpg";
 
+  // Generate hreflang tags for supported languages (assuming en, hi, etc.)
+  const languages = ['en', 'hi', 'gu', 'mr', 'ta']; // Common languages supported
+  const baseUrl = 'https://nexoranews.dpdns.org';
+  const path = typeof window !== 'undefined' ? window.location.pathname : '';
+  
+  // Helper to remove any existing lang prefix from path
+  const clearPath = path.replace(/^\/(en|hi|gu|mr|ta)\//, '/').replace(/^\/(en|hi|gu|mr|ta)$/, '/');
+
+
   return (
     <Helmet key={fullTitle}>
       {/* Basic Metadata */}
@@ -20,6 +29,17 @@ const SEO = ({ title, description, ogTitle, ogDescription, keywords, ogImage, og
       <meta name="description" content={description || defaultDescription} />
       <meta name="keywords" content={Array.isArray(keywords) ? keywords.join(', ') : (keywords || "NexoraNews, breaking news, world news, technology insights, business headlines, independent journalism, global events")} />
       <link rel="canonical" href={currentUrl} />
+      
+      {/* Multilingual SEO (Hreflang) */}
+      <link rel="alternate" href={`${baseUrl}${clearPath}`} hrefLang="x-default" />
+      {languages.map(lang => (
+        <link 
+          key={lang} 
+          rel="alternate" 
+          href={`${baseUrl}/${lang}${clearPath === '/' ? '' : clearPath}`} 
+          hrefLang={lang} 
+        />
+      ))}
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={ogType || 'website'} />
