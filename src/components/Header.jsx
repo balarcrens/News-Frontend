@@ -57,7 +57,7 @@ const Navbar = ({ isScrolled = false, onMenuOpen, user, logout, categories = [] 
                     </Link>
                 </div>
 
-                <div className="hidden md:flex flex-1 justify-center items-center space-x-8 text-[11px] font-bold uppercase tracking-[0.2em] text-gray-600">
+                <div className="hidden md:flex justify-center items-center space-x-8 text-[11px] font-bold uppercase tracking-[0.2em] text-gray-600">
                     <div
                         className="relative h-full flex items-center group cursor-pointer"
                         onMouseEnter={() => setIsCategoryHovered(true)}
