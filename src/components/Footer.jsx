@@ -1,227 +1,56 @@
-import { Link } from 'react-router-dom';
-import { Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import api from '../api/axios';
+import React from 'react';
+import { Globe, Instagram, Github, Twitter, Linkedin } from 'lucide-react';
 
-const Footer = () => {
-    const [categories, setCategories] = useState([]);
-    const [tags, setTags] = useState([]);
-    const [email, setEmail] = useState('');
-    const [loading, setLoading] = useState(false);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [catRes, tagRes] = await Promise.all([
-                    api.get('/api/categories'),
-                    api.get('/api/tags')
-                ]);
-                setCategories(catRes.data.filter(c => c.isActive !== false).slice(0, 10));
-                setTags(Array.isArray(tagRes.data) ? tagRes.data.slice(0, 12) : []);
-            } catch (err) {
-                console.error('Footer data fetch failed', err);
-            }
-        };
-        fetchData();
-    }, []);
-
-    const handleJoin = async () => {
-        if (!email) return alert('Please enter an email address');
-        setLoading(true);
-        try {
-            const { data } = await api.post('/api/subscriptions', { email });
-            alert(data.message || 'Thank you for subscribing!');
-            setEmail('');
-        } catch (err) {
-            alert(err.response?.data?.message || 'Subscription failed. Please try again.');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    return (
-        <footer className="footer" style={{
-            background: '#0f172a',
-            borderTop: '1px solid rgba(255,255,255,0.05)',
-            padding: '5rem 0 2rem'
-        }}>
-            <div className="container">
-                <div className="footer-grid" style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-                    gap: '3rem',
-                    marginBottom: '4rem'
-                }}>
-                    {/* Brand Section */}
-                    <div className="footer-brand-col">
-                        <h3 className="font-serif italic text-3xl text-white mb-md" style={{ letterSpacing: '-0.02em' }}>NexoraNews</h3>
-                        <p className="text-slate-400 mb-lg leading-relaxed" style={{ fontSize: '0.95rem' }}>
-                            Delivering high-impact journalism and real-time insights to a global audience. Stay informed with NexoraNews.
-                        </p>
-                        <div className="flex gap-md">
-                            <a href="#" className="social-link-circle flex" style={{ alignItems: "center" }}><Facebook size={18} /></a>
-                            <a href="#" className="social-link-circle flex" style={{ alignItems: "center" }}><Twitter size={18} /></a>
-                            <a href="#" className="social-link-circle flex" style={{ alignItems: "center" }}><Instagram size={18} /></a>
-                            <a href="#" className="social-link-circle flex" style={{ alignItems: "center" }}><Youtube size={18} /></a>
-                        </div>
-                    </div>
-
-                    {/* Dynamic Categories Section */}
-                    <div>
-                        <h4 className="footer-heading" style={{ color: 'white', fontWeight: '800', textTransform: 'uppercase', fontSize: '0.8rem', letterSpacing: '0.1em', marginBottom: '1.5rem' }}>Trending Sections</h4>
-                        <div style={{
-                            display: 'grid',
-                            gridTemplateColumns: '1fr 1fr',
-                            gap: '0.75rem'
-                        }}>
-                            {categories.length > 0 ? categories.map(cat => (
-                                <Link key={cat._id} to={`/category/${cat.slug}`} className="footer-link-modern">
-                                    {cat.name}
-                                </Link>
-                            )) : (
-                                <>
-                                    <Link to="/category/World" className="footer-link-modern">World</Link>
-                                    <Link to="/category/Politics" className="footer-link-modern">Politics</Link>
-                                    <Link to="/category/Tech" className="footer-link-modern">Tech</Link>
-                                    <Link to="/category/Business" className="footer-link-modern">Business</Link>
-                                </>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Quick Links */}
-                    <div>
-                        <h4 className="footer-heading" style={{ color: 'white', fontWeight: '800', textTransform: 'uppercase', fontSize: '0.8rem', letterSpacing: '0.1em', marginBottom: '1.5rem' }}>The Newsroom</h4>
-                        <ul className="footer-links-list">
-                            <li><Link to="/about">About Us</Link></li>
-                            <li><Link to="/contact">Contact</Link></li>
-                            <li><Link to="/privacy-policy">Privacy Policy</Link></li>
-                            <li><Link to="/terms-of-service">Terms of Service</Link></li>
-                            <li><Link to="/cookie-policy">Cookies</Link></li>
-                            <li><Link to="/disclaimer">Disclaimer</Link></li>
-                        </ul>
-                    </div>
-
-                    {/* Newsletter / Contact */}
-                    <div>
-                        <h4 className="footer-heading" style={{ color: 'white', fontWeight: '800', textTransform: 'uppercase', fontSize: '0.8rem', letterSpacing: '0.1em', marginBottom: '1.5rem' }}>Subscribe</h4>
-                        <p className="text-slate-500 text-sm mb-md">Get the daily briefing in your inbox.</p>
-                        <div className="newsletter-box">
-                            <input 
-                                type="email" 
-                                placeholder="Email address" 
-                                className="footer-input" 
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                            <button className="footer-btn" onClick={handleJoin} disabled={loading}>
-                                {loading ? '...' : 'Join'}
-                            </button>
-                        </div>
-
-                        {tags.length > 0 && (
-                            <div className="mt-xl">
-                                <h4 className="footer-heading" style={{ color: 'white', fontWeight: '800', textTransform: 'uppercase', fontSize: '0.7rem', letterSpacing: '0.1em', marginBottom: '1rem' }}>Popular Tags</h4>
-                                <div className="flex flex-wrap gap-xs">
-                                    {tags.map(tag => (
-                                        <Link key={tag._id} to={`/tag/${tag.slug}`} style={{ fontSize: '0.7rem', color: '#64748b', padding: '4px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)' }} className="hover:text-accent hover:border-accent transition-all">
-                                            #{tag.name}
-                                        </Link>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
+const Footer = () => (
+    <footer className="bg-[#111111] text-white pt-20 pb-10 border-t border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                <div className="space-y-6">
+                    <h2 className="text-2xl font-black font-serif italic tracking-tighter">Nexora News</h2>
+                    <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
+                        Elevating the standard of digital journalism through deep analysis and aesthetic clarity.
+                    </p>
+                    <div className="flex space-x-5 text-gray-500">
+                        <a href="#" className="hover:text-white transition-colors"><Globe size={18} /></a>
+                        <a href="#" className="hover:text-white transition-colors"><Instagram size={18} /></a>
+                        <a href="#" className="hover:text-white transition-colors"><Twitter size={18} /></a>
                     </div>
                 </div>
 
-                <div className="footer-bottom" style={{
-                    borderTop: '1px solid rgba(255,255,255,0.05)',
-                    paddingTop: '2.5rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: '1.5rem'
-                }}>
-                    <div className="flex gap-xl flex-wrap justify-center">
-                        <span style={{ color: '#64748b', fontSize: '0.85rem' }}>© {new Date().getFullYear()} NexoraNews Media Group. All rights reserved.</span>
-                    </div>
+                <div>
+                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-8 text-gray-500">Sections</h3>
+                    <ul className="space-y-4 text-sm text-gray-400 font-medium">
+                        <li><a href="#" className="hover:text-white transition-colors">World</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Politics</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Economy</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Technology</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Culture</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-8 text-gray-500">Company</h3>
+                    <ul className="space-y-4 text-sm text-gray-400 font-medium">
+                        <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Newsletter</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-8 text-gray-500">Legal</h3>
+                    <ul className="space-y-4 text-sm text-gray-400 font-medium">
+                        <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+                        <li className="pt-4 text-xs tracking-wide">
+                            © 2024 Nexora News. All rights reserved. High-End Editorial Standards.
+                        </li>
+                    </ul>
                 </div>
             </div>
-
-            <style>{`
-        .footer-link-modern {
-          color: #94a3b8;
-          text-decoration: none;
-          font-size: 0.9rem;
-          transition: all 0.2s ease;
-          display: block;
-        }
-        .footer-link-modern:hover {
-          color: var(--color-accent);
-          transform: translateX(4px);
-        }
-        .social-link-circle {
-          width: 38px;
-          height: 38px;
-          border-radius: 50%;
-          background: rgba(255,255,255,0.05);
-          display: flex;
-          alignItems: center;
-          justify-content: center;
-          color: #94a3b8;
-          transition: all 0.3s ease;
-        }
-        .social-link-circle:hover {
-          background: var(--color-accent);
-          color: white;
-          transform: translateY(-3px);
-        }
-        .footer-links-list {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-          display: flex;
-          flex-direction: column;
-          gap: 0.75rem;
-        }
-        .footer-links-list a {
-          color: #94a3b8;
-          text-decoration: none;
-          font-size: 0.9rem;
-          transition: 0.2s;
-        }
-        .footer-links-list a:hover {
-          color: white;
-        }
-        .newsletter-box {
-          display: flex;
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.1);
-          border-radius: 4px;
-          overflow: hidden;
-        }
-        .footer-input {
-          background: transparent;
-          border: none;
-          padding: 0.75rem 1rem;
-          color: white;
-          width: 100%;
-          font-size: 0.85rem;
-        }
-        .footer-input:focus { outline: none; }
-        .footer-btn {
-          background: var(--color-accent);
-          color: white;
-          border: none;
-          padding: 0 1.25rem;
-          font-weight: 700;
-          font-size: 0.75rem;
-          text-transform: uppercase;
-          cursor: pointer;
-        }
-      `}</style>
-        </footer>
-    );
-};
+        </div>
+    </footer>
+);
 
 export default Footer;

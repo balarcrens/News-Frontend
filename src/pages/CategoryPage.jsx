@@ -1,184 +1,249 @@
-import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import api from '../api/axios';
-import Breadcrumbs from '../components/Breadcrumbs';
-import ArticleCard from '../components/ArticleCard';
-import ArticleSidebarItem from '../components/ArticleSidebarItem';
-import Pagination from '../components/Pagination';
-import SEO from '../components/SEO';
-import EmptyState from '../components/EmptyState';
-import { Newspaper, Layers, Layout, TrendingUp } from 'lucide-react';
-import LoadingState from '../components/LoadingState';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
+import { categoryService } from '../api/categoryService';
+import { articleService } from '../api/articleService';
+import CategoryHeader from '../components/category/CategoryHeader';
+import CategorySidebar from '../components/category/CategorySidebar';
+import { ChevronLeft, ChevronRight, Bookmark } from 'lucide-react';
+import { format } from 'date-fns';
 
-const CategoryPage = () => {
-    const { slug } = useParams();
-    const [articles, setArticles] = useState([]);
-    const [category, setCategory] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [filterType, setFilterType] = useState('all');
-    const [currentPage, setCurrentPage] = useState(1);
-    const [pagination, setPagination] = useState({ totalPages: 1 });
-    const [error, setError] = useState(false);
+const Pagination = ({ pagination, onPageChange }) => {
+    if (!pagination || pagination.totalPages <= 1) return null;
 
-    useEffect(() => {
-        const fetchCategoryData = async () => {
-            setLoading(true);
-            setError(false);
-            try {
-                // 1. Fetch category details
-                const { data: categories } = await api.get('/api/categories');
-                const currentCat = categories.find(c => c.slug === slug);
+    const { currentPage, totalPages } = pagination;
+    const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
-                if (currentCat) {
-                    setCategory(currentCat);
+    return (
+        <div className="flex items-center justify-center space-x-2 pt-12 border-t border-gray-100 mt-16">
+            <button
+                onClick={() => onPageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="p-2 text-gray-400 hover:text-red-700 disabled:opacity-30 disabled:hover:text-gray-400 transition-colors"
+            >
+                <ChevronLeft size={20} />
+            </button>
 
-                    // 2. Fetch articles for this category with pagination
-                    const params = {
-                        category: currentCat._id,
-                        page: currentPage,
-                        limit: 10
-                    };
-                    if (filterType !== 'all') params.type = filterType;
+            {pages.map(page => (
+                <button
+                    key={page}
+                    onClick={() => onPageChange(page)}
+                    className={`w-10 h-10 text-[11px] font-bold uppercase transition-all ${currentPage === page ? 'bg-red-700 text-white' : 'text-slate-600 hover:bg-gray-50'}`}
+                >
+                    {page}
+                </button>
+            ))}
 
-                    const { data } = await api.get('/api/articles', { params });
-                    setArticles(data.articles || []);
-                    setPagination(data.pagination || { totalPages: 1 });
-                } else {
-                    setCategory(null);
-                }
-            } catch (error) {
-                console.error('Failed to fetch category articles', error);
-                setError(true);
-            } finally {
-                setLoading(false);
-            }
-        };
+            <button
+                onClick={() => onPageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="p-2 text-gray-400 hover:text-red-700 disabled:opacity-30 disabled:hover:text-gray-400 transition-colors"
+            >
+                <ChevronRight size={20} />
+            </button>
+        </div>
+    );
+};
 
-        fetchCategoryData();
-    }, [slug, filterType, currentPage]);
-
-    // Reset to page 1 when filter or category changes
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [slug, filterType]);
-
-    if (loading) {
-        return <LoadingState message={`Opening ${category?.name || slug} section...`} />;
-    }
-
-    if (error) {
+const ArticleCard = ({ article, isFeatured = false }) => {
+    if (isFeatured) {
         return (
-            <div className="container py-3xl">
-                <SEO title="Error | NexoraNews" />
-                <ErrorState
-                    title="Channel Access Error"
-                    description="We couldn't load the articles for this channel. Our editorial team has been notified."
-                    onRetry={() => window.location.reload()}
-                />
+            <div className="relative group mb-20">
+                <div className="relative aspect-[21/9] overflow-hidden mb-10">
+                    <img
+                        src={article.media?.featuredImage || 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=2072&auto=format&fit=crop'}
+                        loading='eager'
+                        alt={article.title}
+                        className="w-full h-full object-cover will-change-transform transition-all duration-700 blur-md group-hover:scale-105"
+                        onLoad={(e) => {
+                            e.currentTarget.classList.remove('blur-md');
+                        }}
+                    />
+                    <div className="absolute top-6 left-6 space-x-3 flex">
+                        <span className="bg-red-700 text-white text-[8px] font-bold uppercase tracking-[0.2em] px-3 py-1.5">
+                            Breaking
+                        </span>
+                        <span className="bg-white/90 backdrop-blur-md text-slate-900 text-[8px] font-bold uppercase tracking-[0.2em] px-3 py-1.5">
+                            {article.category?.name} — {article.readingTime || '10'} Min Read
+                        </span>
+                    </div>
+                </div>
+
+                <div className="max-w-4xl">
+                    <h2 className="text-5xl md:text-6xl font-black font-serif italic tracking-tighter text-slate-900 mb-8 leading-[1.05] group-hover:text-red-700 transition-colors">
+                        <Link to={`/article/${article.slug}`}>{article.title}</Link>
+                    </h2>
+                    <p className="text-xl font-serif text-gray-500 mb-10 leading-relaxed italic max-w-3xl line-clamp-2">
+                        {article.summary}
+                    </p>
+
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                            <img
+                                src={article.author?.avatar || 'https://www.citypng.com/public/uploads/preview/hd-man-user-illustration-icon-transparent-png-701751694974843ybexneueic.png'}
+                                alt={article.author?.name}
+                                className="w-10 h-10 rounded-full object-cover"
+                            />
+                            <div>
+                                <p className="text-[11px] font-bold text-slate-900 uppercase tracking-widest">{article.author?.name}</p>
+                                <p className="text-[9px] font-medium text-gray-400 uppercase tracking-[0.2em] font-serif italic">Senior Correspondent</p>
+                            </div>
+                        </div>
+                        <button className="p-2 text-gray-300 hover:text-red-700 transition-colors">
+                            <Bookmark size={20} />
+                        </button>
+                    </div>
+                </div>
             </div>
         );
     }
 
-    if (!category) {
-        return (
-            <EmptyState
-                icon={Layers}
-                title="Category Not Found"
-                description="The category you are looking for doesn't exist or has been removed."
-                actionText="Go Home"
-                actionLink="/"
-            />
-        );
+    return (
+        <div className="group">
+            <div className="relative aspect-[16/10] overflow-hidden mb-6">
+                <img
+                    src={article.media?.featuredImage || 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=2072&auto=format&fit=crop'}
+                    loading='eager'
+                    alt={article.title}
+                    className="w-full h-full object-cover will-change-transform transition-all duration-700 blur-md group-hover:scale-110"
+                    onLoad={(e) => {
+                        e.currentTarget.classList.remove('blur-md');
+                    }}
+                />
+                <div className="absolute top-4 left-4">
+                    <span className="bg-white/95 backdrop-blur-md text-slate-900 text-[7px] font-bold uppercase tracking-[0.2em] px-2 py-1">
+                        {article.category?.name} — {article.readingTime || '6'} Min Read
+                    </span>
+                </div>
+            </div>
+            <h3 className="text-lg md:text-xl font-black font-serif italic tracking-tight text-slate-900 mb-4 leading-tight group-hover:text-red-700 transition-colors line-clamp-2">
+                <Link to={`/article/${article.slug}`}>{article.title}</Link>
+            </h3>
+            <p className="text-sm font-serif text-gray-500 mb-6 line-clamp-2 italic leading-relaxed">
+                {article.summary}
+            </p>
+            <p className="text-[9px] font-bold text-gray-300 uppercase tracking-widest">
+                {article.createdAt ? format(new Date(article.createdAt), 'MMMM dd, yyyy') : 'May 14, 2026'}
+            </p>
+        </div>
+    );
+};
+
+const CategoryPage = () => {
+    const { slug } = useParams();
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const [category, setCategory] = useState(null);
+    const [categories, setCategories] = useState([]);
+    const [articles, setArticles] = useState([]);
+    const [pagination, setPagination] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    // Filter states
+    const [filters, setFilters] = useState({
+        sortBy: searchParams.get('sort') || 'newest',
+        timePeriod: searchParams.get('time') || 'all',
+        page: parseInt(searchParams.get('page')) || 1
+    });
+
+    const fetchData = useCallback(async () => {
+        setLoading(true);
+        try {
+            const [catInfo, allCats] = await Promise.all([
+                categoryService.getBySlug(slug),
+                categoryService.getAll()
+            ]);
+
+            setCategory(catInfo);
+            setCategories(allCats);
+
+            // Fetch articles for this category
+            const params = {
+                category: catInfo._id,
+                sortBy: filters.sortBy === 'newest' ? 'createdAt' : filters.sortBy,
+                page: filters.page,
+                limit: 5 // 1 featured + 4 grid
+            };
+
+            const articlesData = await articleService.getArticles(params);
+            setArticles(articlesData.articles);
+            setPagination(articlesData.pagination);
+
+        } catch (error) {
+            console.error("Error fetching category data:", error);
+        } finally {
+            setLoading(false);
+        }
+    }, [slug, filters]);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
+
+    const handleSortChange = (val) => setFilters(prev => ({ ...prev, sortBy: val, page: 1 }));
+    const handleTimeChange = (val) => setFilters(prev => ({ ...prev, timePeriod: val, page: 1 }));
+    const handlePageChange = (p) => {
+        setFilters(prev => ({ ...prev, page: p }));
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const applyFilters = () => {
+        setSearchParams({
+            sort: filters.sortBy,
+            time: filters.timePeriod,
+            page: filters.page
+        });
+    };
+
+    if (loading && !category) {
+        return <div className="max-w-7xl mx-auto px-4 py-20 text-center font-serif italic text-gray-400">Curating archive...</div>;
     }
 
-    const sidebarArticles = articles.slice(0, 5); // Reuse some for trending sidebar
+    const featuredArticle = articles[0];
+    const gridArticles = articles.slice(1);
 
     return (
-        <div className="category-page animate-in fade-in">
-            <SEO
-                title={category.seo?.metaTitle || `${category.name} News & Analysis`}
-                description={category.seo?.metaDescription || category.description}
-                keywords={category.seo?.keywords || `${category.name}, news, ${category.name} reports, latest stories`}
-                ogImage={articles?.media?.featuredImage}
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-12">
+            <CategoryHeader
+                title={category?.name}
+                description={category?.description}
             />
 
-            {/* Premium Category Header */}
-            <header className="py-2xl border-b mb-3xl">
-                <div className="container">
-                    <Breadcrumbs items={[{ label: category.name }]} />
-                    <div className="flex flex-col items-center text-center">
-                        <span style={{ color: 'var(--color-accent)', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.2em', fontSize: '0.875rem', marginBottom: '1rem' }}>
-                            The Archive
-                        </span>
-                        <h1 className="page-title text-black font-serif" style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>{category.name}</h1>
-                        {category.description && (
-                            <p className="max-w-2xl opacity-80 leading-relaxed text-sm">
-                                {category.description}
-                            </p>
-                        )}
-                        <div className="mt-xl flex gap-md">
-                            <button onClick={() => setFilterType('all')} className={`filter-chip ${filterType === 'all' ? 'active' : ''}`} style={{ borderColor: 'gray', color: filterType === 'all' ? 'white' : 'black' }}>All Stories</button>
-                            <button onClick={() => setFilterType('news')} className={`filter-chip ${filterType === 'news' ? 'active' : ''}`} style={{ borderColor: 'gray', color: filterType === 'news' ? 'white' : 'black' }}>News Briefs</button>
-                            <button onClick={() => setFilterType('blog')} className={`filter-chip ${filterType === 'blog' ? 'active' : ''}`} style={{ borderColor: 'gray', color: filterType === 'blog' ? 'white' : 'black' }}>Opinion</button>
-                        </div>
-                    </div>
-                </div>
-            </header>
+            <div className="flex flex-col lg:flex-row gap-16">
+                {/* Sidebar */}
+                <CategorySidebar
+                    categories={categories}
+                    activeSlug={slug}
+                    sortBy={filters.sortBy}
+                    timePeriod={filters.timePeriod}
+                    onSortChange={handleSortChange}
+                    onTimeChange={handleTimeChange}
+                    onApply={applyFilters}
+                />
 
-            <div className="container">
-                <div className="grid lg:grid-cols-12 gap-2xl">
+                {/* Main Content */}
+                <div className="flex-1">
+                    {articles.length > 0 ? (
+                        <>
+                            {featuredArticle && filters.page === 1 && (
+                                <ArticleCard article={featuredArticle} isFeatured={true} />
+                            )}
 
-                    {/* Main Content Area */}
-                    <div className="lg:col-span-8">
-                        {articles.length > 0 ? (
-                            <div className="grid md:grid-cols-2 gap-xl">
-                                {articles.map(article => (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
+                                {(filters.page === 1 ? gridArticles : articles).map(article => (
                                     <ArticleCard key={article._id} article={article} />
                                 ))}
                             </div>
-                        ) : (
-                            !articles && (
-                                <EmptyState
-                                    icon={Newspaper}
-                                    title="No articles found"
-                                    description="Adjust your filters or check back later for updates."
-                                    actionText="View All"
-                                    onActionClick={() => setFilterType('all')}
-                                />
-                            )
-                        )}
 
-                        <Pagination
-                            currentPage={currentPage}
-                            totalPages={pagination.totalPages}
-                            onPageChange={(p) => {
-                                setCurrentPage(p);
-                                window.scrollTo({ top: 300, behavior: 'smooth' });
-                            }}
-                        />
-                    </div>
-
-                    {/* Sidebar Area */}
-                    <div className="lg:col-span-4">
-                        <div className="sticky top-24">
-                            <div className="section-heading mb-xl">
-                                <TrendingUp size={20} className="text-accent" />
-                                <h2 className="heading-text" style={{ paddingLeft: '10px' }}>Trending in {category.name}</h2>
-                            </div>
-                            <div className="flex flex-col">
-                                {sidebarArticles.map((art, i) => (
-                                    <ArticleSidebarItem key={`side-${art._id}`} article={art} index={i} />
-                                ))}
-                            </div>
-
-                            <div className="mt-xl p-xl rounded-lg" style={{ borderTop: "4px solid var(--color-accent)" }}>
-                                <h3 className="font-serif text-xl mb-md">Newsletter</h3>
-                                <p className="text-sm text-muted mb-lg">Get the latest {category.name} updates in your inbox.</p>
-                                <input type="email" placeholder="Email" className="form-input mb-sm" />
-                                <button className="btn btn-primary w-full">Join Now</button>
-                            </div>
+                            <Pagination
+                                pagination={pagination}
+                                onPageChange={handlePageChange}
+                            />
+                        </>
+                    ) : (
+                        <div className="py-20 text-center">
+                            <h3 className="text-2xl font-serif italic text-gray-300">No stories found in this section.</h3>
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
         </div>
@@ -186,5 +251,3 @@ const CategoryPage = () => {
 };
 
 export default CategoryPage;
-
-
