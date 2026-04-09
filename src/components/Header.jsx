@@ -103,7 +103,7 @@ const Navbar = ({ isScrolled = false, onMenuOpen, user, logout, categories = [] 
                     </Link>
                 </div>
 
-                <div className="flex-1 flex items-center justify-end space-x-2 md:space-x-5">
+                <div className="flex items-center justify-end space-x-2 md:space-x-5">
                     <form onSubmit={handleSearchSubmit} className="relative group hidden lg:block">
                         <input
                             type="text"
