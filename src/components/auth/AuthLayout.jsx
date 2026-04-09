@@ -1,4 +1,5 @@
 import React from 'react';
+import nexoraNewsAuthHero from '/assets/nexoranews_auth_hero.png'
 
 const AuthLayout = ({ children }) => {
     return (
@@ -7,7 +8,7 @@ const AuthLayout = ({ children }) => {
                 <div
                     className="absolute inset-0 bg-cover bg-center opacity-10"
                     style={{
-                        backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuC43Er1MqfJb0IkHSaJPxu9R8NlCLwr7I54v98fV3nFYgEH2dJQzhWjNNZa6zlztrFCyYm_y8XUHMDyZHWKmdELCiO8J9WtQVFNn1Kky6YCsQExgWuWN2zqsqfsdJU7fIZMSx0sbU1FhbU6CP4aP1FMBrtsXTfyTNjl_HnmqlLQViWDGUQRkRxB0b4FUEr6UhKiFOM7TZDrGBJwe6ZEdn8On10RloimxQOLuZu0d1Pz5ORJXbtQgSRWygv5KT7c4iNwrjDjNVDJmi_9')"
+                        backgroundImage: `url(${nexoraNewsAuthHero ? nexoraNewsAuthHero : 'https://lh3.googleusercontent.com/aida-public/AB6AXuC43Er1MqfJb0IkHSaJPxu9R8NlCLwr7I54v98fV3nFYgEH2dJQzhWjNNZa6zlztrFCyYm_y8XUHMDyZHWKmdELCiO8J9WtQVFNn1Kky6YCsQExgWuWN2zqsqfsdJU7fIZMSx0sbU1FhbU6CP4aP1FMBrtsXTfyTNjl_HnmqlLQViWDGUQRkRxB0b4FUEr6UhKiFOM7TZDrGBJwe6ZEdn8On10RloimxQOLuZu0d1Pz5ORJXbtQgSRWygv5KT7c4iNwrjDjNVDJmi_9'})`
                     }}
                 ></div>
 
@@ -40,7 +41,7 @@ const AuthLayout = ({ children }) => {
                     {children}
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

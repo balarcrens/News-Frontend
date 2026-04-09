@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Globe, Instagram, Github, Twitter, Linkedin } from 'lucide-react';
 
 const Footer = () => (
@@ -41,8 +42,8 @@ const Footer = () => (
                 <div>
                     <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-8 text-gray-500">Legal</h3>
                     <ul className="space-y-4 text-sm text-gray-400 font-medium">
-                        <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+                        <li><Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+                        <li><Link to="/terms-conditions" className="hover:text-white transition-colors">Terms of Service</Link></li>
                         <li className="pt-4 text-xs tracking-wide">
                             © 2024 Nexora News. All rights reserved. High-End Editorial Standards.
                         </li>

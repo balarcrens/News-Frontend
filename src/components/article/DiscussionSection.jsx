@@ -1,7 +1,9 @@
 /* eslint-disable react-hooks/purity */
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { MessageSquare, Send, Reply, Heart, MoreHorizontal, User } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import useAuth from '../../context/useAuth';
 
 const Comment = ({ comment, onReply }) => (
     <div className="group">
@@ -47,30 +49,36 @@ const Comment = ({ comment, onReply }) => (
             </div>
         </div>
         
-        {/* Mock Nested Response */}
-        {comment.userName === 'Julian Pierce' && (
-            <div className="ml-14 mt-8 pt-8 border-l border-gray-50 pl-8">
-                <div className="flex space-x-4">
-                    <div className="w-8 h-8 bg-red-50 rounded-full flex items-center justify-center text-red-700">
-                        <User size={14} />
-                    </div>
-                    <div>
-                        <div className="flex items-center space-x-3 mb-1">
-                            <h4 className="text-[10px] font-bold text-slate-900 uppercase tracking-widest">Sarah Jenkins</h4>
-                            <span className="text-[8px] font-medium text-gray-400 uppercase tracking-tighter">12m ago</span>
+        {/* Nested Responses (to be implemented with real data) */}
+        {comment.replies && comment.replies.length > 0 && (
+            <div className="ml-14 mt-8 pt-8 border-l border-gray-50 pl-8 space-y-8">
+                {comment.replies.map(reply => (
+                    <div key={reply._id} className="flex space-x-4">
+                        <div className="w-8 h-8 bg-gray-50 rounded-full flex items-center justify-center text-gray-400">
+                            <User size={14} />
                         </div>
-                        <p className="text-[13px] font-serif text-slate-500 leading-relaxed italic">
-                            Agreed - though I'd wonder if this 'quiet diplomacy' isn't just a merit, but an essential evolution.
-                        </p>
+                        <div>
+                            <div className="flex items-center space-x-3 mb-1">
+                                <h4 className="text-[10px] font-bold text-slate-900 uppercase tracking-widest">{reply.userName}</h4>
+                                <span className="text-[8px] font-medium text-gray-400 uppercase tracking-tighter">
+                                    {formatDistanceToNow(new Date(reply.createdAt), { addSuffix: true })}
+                                </span>
+                            </div>
+                            <p className="text-[13px] font-serif text-slate-500 leading-relaxed italic">
+                                {reply.comment}
+                            </p>
+                        </div>
                     </div>
-                </div>
+                ))}
             </div>
         )}
     </div>
 );
 
-const DiscussionSection = ({ comments = [], totalComments = 12 }) => {
+const DiscussionSection = ({ comments = [] }) => {
+    const { user } = useAuth();
     const [newComment, setNewComment] = useState('');
+    const totalComments = comments.length;
 
     return (
         <section className="max-w-4xl mx-auto pt-20 border-t border-gray-100 mt-20">
@@ -80,53 +88,70 @@ const DiscussionSection = ({ comments = [], totalComments = 12 }) => {
                 </h3>
                 <div className="flex items-center space-x-3 text-[10px] font-bold uppercase tracking-widest text-gray-400">
                     <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                    <span>42 Reading Now</span>
+                    <span>{Math.floor(Math.random() * 50) + 10} Reading Now</span>
                 </div>
             </div>
 
             {/* Post Comment */}
-            <div className="mb-20">
-                <div className="flex space-x-5 mb-6">
-                    <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center border-2 border-gray-100 text-gray-300">
-                        <User size={24} />
+            {user ? (
+                <div className="mb-20">
+                    <div className="flex space-x-5 mb-6">
+                        <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center border-2 border-gray-100 text-gray-300">
+                            {user.avatar ? (
+                                <img src={user.avatar} className="w-full h-full rounded-full" />
+                            ) : (
+                                <User size={24} />
+                            )}
+                        </div>
+                        <textarea 
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)}
+                            placeholder="JOIN THE CONVERSATION..."
+                            className="flex-1 bg-gray-50/50 border-none p-6 text-sm font-serif italic text-slate-900 min-h-[140px] focus:ring-1 focus:ring-red-700/20 outline-none transition-all placeholder:text-gray-300"
+                        />
                     </div>
-                    <textarea 
-                        value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)}
-                        placeholder="JOIN THE CONVERSATION..."
-                        className="flex-1 bg-gray-50/50 border-none p-6 text-sm font-serif italic text-slate-900 min-h-[140px] focus:ring-1 focus:ring-red-700/20 outline-none transition-all placeholder:text-gray-300"
-                    />
+                    <div className="flex justify-end">
+                        <button className="bg-red-700 hover:bg-red-800 text-white px-10 py-4 text-[11px] font-bold uppercase tracking-[0.3em] transition-all shadow-xl shadow-red-700/10 flex items-center space-x-3">
+                            <Send size={14} />
+                            <span>Post Comment</span>
+                        </button>
+                    </div>
                 </div>
-                <div className="flex justify-end">
-                    <button className="bg-red-700 hover:bg-red-800 text-white px-10 py-4 text-[11px] font-bold uppercase tracking-[0.3em] transition-all shadow-xl shadow-red-700/10 flex items-center space-x-3">
-                        <Send size={14} />
-                        <span>Post Comment</span>
-                    </button>
+            ) : (
+                <div className="mb-20 bg-[#F9F9F9] border border-gray-100 p-12 text-center rounded-xl">
+                    <div className="max-w-md mx-auto">
+                        <h4 className="text-2xl font-black font-serif italic text-slate-900 mb-4 tracking-tight">Voices of Authority</h4>
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] leading-relaxed mb-8">
+                            NEXORA NEWS REQUIRES A VERIFIED PROFILE TO PARTICIPATE IN HIGH-LEVEL DISCOURSE.
+                        </p>
+                        <Link 
+                            to="/auth" 
+                            className="inline-block bg-slate-900 text-white px-10 py-4 text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-red-700 transition-all shadow-xl"
+                        >
+                            Authorize Identity
+                        </Link>
+                    </div>
                 </div>
-            </div>
+            )}
 
             {/* Comments List */}
             <div className="space-y-16">
                 {comments.length > 0 ? (
-                    comments.map(c => (
-                        <Comment key={c._id} comment={c} onReply={() => {}} />
-                    ))
-                ) : (
-                    // Initial Mock Comments matching the prestige image
-                    <div className="space-y-16">
-                        <Comment 
-                            comment={{
-                                _id: '1',
-                                userName: 'Julian Pierce',
-                                comment: 'Incredible dive. The tension between democratic transparency and diplomatic efficacy is perhaps our greatest challenge for modern governance. This capture represents it perfectly.',
-                                createdAt: new Date(Date.now() - 3600000),
-                                likes: 42
-                            }} 
-                            onReply={() => {}}
-                        />
+                    <>
+                        {comments.map(c => (
+                            <Comment key={c._id} comment={c} onReply={() => {}} />
+                        ))}
                         <button className="w-full py-6 text-[10px] font-bold uppercase tracking-[0.4em] text-gray-400 border border-dashed border-gray-100 hover:border-gray-300 hover:text-slate-900 transition-all">
                             Load More Comments
                         </button>
+                    </>
+                ) : (
+                    <div className="py-20 text-center border-2 border-dashed border-gray-100 rounded-2xl bg-gray-50/30">
+                        <MessageSquare size={40} className="mx-auto text-gray-200 mb-6" />
+                        <h4 className="text-xl font-serif italic text-slate-900 mb-2">The floor is yours.</h4>
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">
+                            NO COMMENTS YET. BE THE FIRST TO SHARE YOUR PERSPECTIVE.
+                        </p>
                     </div>
                 )}
             </div>

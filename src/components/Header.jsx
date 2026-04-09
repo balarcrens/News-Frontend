@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Search, User, Menu, X, ArrowRight, LogOut, Settings } from 'lucide-react';
+import { Search, User, Menu, X, ArrowRight, LogOut, Settings, ChevronDown, ArrowDown } from 'lucide-react';
 import { articleService } from '../api/articleService';
 import { categoryService } from '../api/categoryService';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '../context/useAuth';
 
 const TopTicker = ({ headlines = [], isScrolled = false }) => (
@@ -28,10 +28,23 @@ const TopTicker = ({ headlines = [], isScrolled = false }) => (
 
 const Navbar = ({ isScrolled = false, onMenuOpen, user, logout, categories = [] }) => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const [isCategoryHovered, setIsCategoryHovered] = useState(false);
+    const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const navigate = useNavigate();
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+            setSearchQuery('');
+            setIsMobileSearchOpen(false);
+        }
+    };
 
     return (
         <nav className={`bg-white/95 backdrop-blur-md border-b border-gray-100 transition-all duration-500 ${isScrolled ? 'py-2 shadow-sm' : 'py-4 md:py-6'}`}>
-            <div className="max-w-7xl mx-auto px-4 md:px-6 flex items-center gap-2 justify-between">
+            <div className="max-w-7xl mx-auto px-4 md:px-6 flex items-center gap-2 justify-between relative">
                 <div className="flex-1 flex items-center">
                     <button
                         onClick={onMenuOpen}
@@ -39,39 +52,84 @@ const Navbar = ({ isScrolled = false, onMenuOpen, user, logout, categories = [] 
                     >
                         <Menu size={22} />
                     </button>
-                    <Link to="/" className={`font-black font-serif italic tracking-tighter text-slate-900 cursor-pointer transition-all duration-500 ${isScrolled ? 'text-xl' : 'text-25xl md:text-3xl'}`}>
+                    <Link to="/" className={`font-black font-serif italic tracking-tighter text-slate-900 cursor-pointer transition-all duration-500 ${isScrolled ? 'text-xl' : 'text-2xl md:text-3xl'}`}>
                         Nexora News
                     </Link>
                 </div>
 
-                <div className="hidden md:flex flex-1 justify-center space-x-8 text-[11px] font-bold uppercase tracking-[0.2em] text-gray-600">
-                    {categories.slice(0, 5).map(cat => (
-                        <Link 
-                            key={cat._id} 
-                            to={`/category/${cat.slug}`} 
-                            className="hover:text-red-700 transition-colors"
-                        >
-                            {cat.name}
-                        </Link>
-                    ))}
+                <div className="hidden md:flex flex-1 justify-center items-center space-x-8 text-[11px] font-bold uppercase tracking-[0.2em] text-gray-600">
+                    <div
+                        className="relative h-full flex items-center group cursor-pointer"
+                        onMouseEnter={() => setIsCategoryHovered(true)}
+                        onMouseLeave={() => setIsCategoryHovered(false)}
+                    >
+                        <span className="group-hover:text-red-700 transition-colors flex items-center">
+                            Categories
+                            <ChevronDown size={12} className={`ml-1 transition-transform duration-300 ${isCategoryHovered ? 'rotate-180' : ''}`} />
+                        </span>
+
+                        <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-6 transition-all duration-300 z-50 ${isCategoryHovered ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}`}>
+                            <div className="bg-white shadow-2xl border border-gray-100 w-[600px] p-8 rounded-none grid grid-cols-3 gap-x-8 gap-y-6">
+                                <div className="col-span-3 pb-4 border-b border-gray-50 mb-2">
+                                    <p className="text-[10px] font-bold text-red-700 uppercase tracking-[0.3em]">Editorial Sections</p>
+                                </div>
+                                {categories.map(cat => (
+                                    <Link
+                                        key={cat._id}
+                                        to={`/category/${cat.slug}`}
+                                        className="flex items-center space-x-3 group/item"
+                                        onClick={() => setIsCategoryHovered(false)}
+                                    >
+                                        <div className="w-1.5 h-1.5 bg-gray-200 group-hover/item:bg-red-700 transition-colors"></div>
+                                        <span className="hover:text-red-700 transition-colors font-serif italic text-sm normal-case tracking-normal text-slate-800">
+                                            {cat.name}
+                                        </span>
+                                    </Link>
+                                ))}
+                                <div className="col-span-3 pt-4 border-t border-gray-50 mt-2">
+                                    <Link to="/" className="text-[9px] text-gray-400 hover:text-slate-900 transition-colors flex items-center uppercase py-2">
+                                        Browse all intelligence reports <ArrowRight size={10} className="ml-2" />
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <Link to="/about" className="hover:text-red-700 transition-colors">
+                        About
+                    </Link>
+                    <Link to="/contact" className="hover:text-red-700 transition-colors">
+                        Contact
+                    </Link>
                 </div>
 
-                <div className="flex-1 flex items-center justify-end space-x-3 md:space-x-5">
-                    <div className="relative group hidden lg:block">
+                <div className="flex-1 flex items-center justify-end space-x-2 md:space-x-5">
+                    <form onSubmit={handleSearchSubmit} className="relative group hidden lg:block">
                         <input
                             type="text"
-                            placeholder="Search..."
-                            className={`pl-4 pr-10 bg-gray-50 border-none rounded-full text-xs focus:ring-1 focus:ring-gray-200 outline-none transition-all duration-500 ${isScrolled ? 'py-1.5 w-32 focus:w-48' : 'py-2 w-32 md:w-48 focus:w-64'}`}
+                            placeholder="Find reports..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className={`pl-4 pr-10 bg-white border border-gray-100 rounded-none text-[10px] font-bold uppercase tracking-widest focus:ring-1 focus:ring-red-700/20 focus:border-red-700 outline-none transition-all duration-500 ${isScrolled ? 'py-1.5 w-40 focus:w-56' : 'py-2.5 w-48 focus:w-72'}`}
                         />
-                        <Search size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                    </div>
+                        <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-700 transition-colors">
+                            <Search size={14} />
+                        </button>
+                    </form>
+
+                    <button
+                        onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
+                        className="lg:hidden p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
+                    >
+                        {isMobileSearchOpen ? <X size={20} /> : <Search size={20} />}
+                    </button>
 
                     <div className="flex items-center space-x-2 md:space-x-4">
                         {user ? (
                             <div className="relative">
                                 <button
                                     onClick={() => setIsProfileOpen(!isProfileOpen)}
-                                    className="p-1 px-3 border border-gray-100 rounded-full flex items-center space-x-2 hover:bg-gray-50 transition-colors"
+                                    className="py-2 px-3 border border-gray-100 flex items-center space-x-2 hover:bg-gray-50 transition-colors"
                                 >
                                     <span className="text-[10px] font-bold uppercase tracking-widest text-gray-600 hidden sm:block">
                                         {user.name.split(' ')[0]}
@@ -112,75 +170,150 @@ const Navbar = ({ isScrolled = false, onMenuOpen, user, logout, categories = [] 
                     </div>
                 </div>
             </div>
+
+            <div className={`lg:hidden overflow-hidden transition-all duration-300 bg-white border-b border-gray-50 ${isMobileSearchOpen ? 'max-h-20 opacity-100 py-4' : 'max-h-0 opacity-0'}`}>
+                <div className="max-w-7xl mx-auto px-4">
+                    <form onSubmit={handleSearchSubmit} className="relative">
+                        <input
+                            type="text"
+                            placeholder="Search articles..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full pl-4 pr-12 py-3 bg-gray-50 border-transparent focus:bg-white focus:border-red-700 rounded-none text-sm outline-none transition-all"
+                        />
+                        <button type="submit" className="absolute right-4 top-1/2 -translate-y-1/2 text-red-700">
+                            <Search size={18} />
+                        </button>
+                    </form>
+                </div>
+            </div>
         </nav>
     );
 };
 
-const MobileDrawer = ({ isOpen, onClose, user, logout, categories = [] }) => (
-    <>
-        <div
-            className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-[60] transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-            onClick={onClose}
-        />
-        <div className={`fixed top-0 left-0 h-full w-[80%] max-w-sm bg-white z-[100] shadow-2xl transition-transform duration-500 ease-out border-r border-gray-100 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-            <div className="flex items-center justify-between p-6 border-b border-gray-100">
-                <h2 className="text-xl font-black font-serif italic tracking-tighter text-slate-900">Nexora News</h2>
-                <button onClick={onClose} className="p-2 text-gray-400 hover:text-red-700 transition-colors">
-                    <X size={24} />
-                </button>
-            </div>
+const MobileDrawer = ({ isOpen, onClose, user, logout, categories = [] }) => {
+    const [isCategoriesExpanded, setIsCategoriesExpanded] = useState(false);
 
-            <div className="p-8">
-                <div className="mb-10 border-b border-gray-50">
-                    {user ? (
-                        <div className="space-y-6">
-                            <div className="flex items-center space-x-4">
-                                <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center text-red-700 font-black">
-                                    {user.name[0]}
-                                </div>
-                                <div>
-                                    <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Welcome back</p>
-                                    <p className="text-sm font-serif font-bold text-slate-900">{user.name}</p>
-                                </div>
-                            </div>
-                            <button
-                                onClick={() => { logout(); onClose(); }}
-                                className="w-full flex items-center justify-center space-x-2 border border-red-100 bg-red-50 text-red-700 py-4 text-[10px] font-bold uppercase tracking-widest hover:bg-red-100 transition-colors"
-                            >
-                                <LogOut size={14} />
-                                <span>Sign Out</span>
-                            </button>
-                        </div>
-                    ) : (
-                        <div className="space-y-4">
-                            <Link to="/auth" onClick={onClose} className="w-full block text-center bg-slate-900 text-white font-bold py-4 text-[10px] uppercase tracking-widest hover:bg-slate-800 transition-colors">
-                                Login to account
-                            </Link>
-                            <Link to="/auth" onClick={onClose} className="w-full block text-center border-2 border-slate-900 text-slate-900 font-bold py-4 text-[10px] uppercase tracking-widest hover:bg-slate-50 transition-colors">
-                                Create Account
-                            </Link>
-                        </div>
-                    )}
+    return (
+        <>
+            <div
+                className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-[60] transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                onClick={onClose}
+            />
+            <div className={`fixed top-0 left-0 h-full w-[80%] max-w-sm bg-white z-[100] shadow-2xl transition-transform duration-500 ease-out border-r border-gray-100 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+                <div className="flex items-center justify-between p-6 border-b border-gray-100">
+                    <h2 className="text-xl font-black font-serif italic tracking-tighter text-slate-900">Nexora News</h2>
+                    <button onClick={onClose} className="p-2 text-gray-400 hover:text-red-700 transition-colors">
+                        <X size={24} />
+                    </button>
                 </div>
 
-                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-8">Main Sections</h3>
-                <nav className="space-y-6">
-                    {categories.map((cat) => (
-                        <Link
-                            key={cat._id}
-                            to={`/category/${cat.slug}`}
-                            className="flex items-center justify-between text-lg font-bold font-serif text-slate-800 hover:text-red-700 transition-colors group"
-                            onClick={onClose}
-                        >
-                            {cat.name}
-                            <ArrowRight size={16} className="opacity-0 -translate-x-2 transition-all group-hover:opacity-100 group-hover:translate-x-0 text-red-700" />
-                        </Link>
-                    ))}
-                </nav>
+                <div className="p-8">
+                    <div className="mb-8 relative group">
+                        <form onSubmit={(e) => {
+                            e.preventDefault();
+                            const q = e.target.search.value;
+                            if (q) {
+                                window.location.href = `/search?q=${encodeURIComponent(q)}`;
+                                onClose();
+                            }
+                        }}>
+                            <input
+                                name="search"
+                                type="text"
+                                placeholder="Search..."
+                                className="w-full pl-4 pr-10 py-3 bg-gray-50 border-none text-sm focus:ring-1 focus:ring-red-700 outline-none transition-all"
+                            />
+                            <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-700">
+                                <Search size={16} />
+                            </button>
+                        </form>
+                    </div>
+
+                    <div className="mb-10 border-b border-gray-50">
+                        {user ? (
+                            <div className="space-y-6">
+                                <div className="flex items-center space-x-4">
+                                    <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center text-red-700 font-black">
+                                        {user.name[0]}
+                                    </div>
+                                    <div>
+                                        <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Welcome back</p>
+                                        <p className="text-sm font-serif font-bold text-slate-900">{user.name}</p>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => { logout(); onClose(); }}
+                                    className="w-full flex items-center justify-center space-x-2 border border-red-100 bg-red-50 text-red-700 py-4 text-[10px] font-bold uppercase tracking-widest hover:bg-red-100 transition-colors"
+                                >
+                                    <LogOut size={14} />
+                                    <span>Sign Out</span>
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="space-y-4">
+                                <Link to="/auth" onClick={onClose} className="w-full block text-center bg-slate-900 text-white font-bold py-4 text-[10px] uppercase tracking-widest hover:bg-slate-800 transition-colors">
+                                    Login to account
+                                </Link>
+                                <Link to="/auth" onClick={onClose} className="w-full block text-center border-2 border-slate-900 text-slate-900 font-bold py-4 text-[10px] uppercase tracking-widest hover:bg-slate-50 transition-colors">
+                                    Create Account
+                                </Link>
+                            </div>
+                        )}
+                    </div>
+
+                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-8">Navigation</h3>
+                    <nav className="space-y-6">
+                        <div>
+                            <button
+                                onClick={() => setIsCategoriesExpanded(!isCategoriesExpanded)}
+                                className="w-full flex items-center justify-between text-lg font-bold font-serif text-slate-800 hover:text-red-700 transition-colors group"
+                            >
+                                <span>Categories</span>
+                                <ChevronDown size={18} className={`transition-transform duration-300 ${isCategoriesExpanded ? 'rotate-180 text-red-700' : 'text-gray-400'}`} />
+                            </button>
+
+                            <div className={`overflow-hidden relative custom-scrollbar transition-all duration-500 ease-in-out ${isCategoriesExpanded ? 'max-h-[200px] mt-6 opacity-100 overflow-y-auto' : 'max-h-0 opacity-0'}`}>
+                                <div className="grid grid-cols-1 gap-4 pl-4 border-l border-gray-50">
+                                    {categories.map((cat) => (
+                                        <Link
+                                            key={cat._id}
+                                            to={`/category/${cat.slug}`}
+                                            className="flex items-center space-x-3 text-sm font-bold font-serif text-gray-500 hover:text-red-700 transition-colors group/item"
+                                            onClick={onClose}
+                                        >
+                                            <div className="w-1.5 h-1.5 bg-gray-200 group-hover/item:bg-red-700 transition-colors"></div>
+                                            <span>{cat.name}</span>
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="border-t border-gray-50 space-y-6">
+                            <Link
+                                to="/about"
+                                className="flex items-center justify-between text-lg font-bold font-serif text-slate-800 hover:text-red-700 transition-colors group"
+                                onClick={onClose}
+                            >
+                                About
+                                <ArrowRight size={16} className="opacity-0 -translate-x-2 transition-all group-hover:opacity-100 group-hover:translate-x-0 text-red-700" />
+                            </Link>
+                            <Link
+                                to="/contact"
+                                className="flex items-center justify-between text-lg font-bold font-serif text-slate-800 hover:text-red-700 transition-colors group"
+                                onClick={onClose}
+                            >
+                                Contact Us
+                                <ArrowRight size={16} className="opacity-0 -translate-x-2 transition-all group-hover:opacity-100 group-hover:translate-x-0 text-red-700" />
+                            </Link>
+                        </div>
+                    </nav>
+                </div>
             </div>
-        </div>
-    </>
-);
+        </>
+    )
+};
 
 const Header = () => {
     const [headlines, setHeadlines] = useState([]);

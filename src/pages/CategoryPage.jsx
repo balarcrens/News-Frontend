@@ -8,7 +8,7 @@ import { ChevronLeft, ChevronRight, Bookmark } from 'lucide-react';
 import { format } from 'date-fns';
 
 const Pagination = ({ pagination, onPageChange }) => {
-    if (!pagination || pagination.totalPages <= 1) return null;
+    if (!pagination || pagination.totalPages < 1) return null;
 
     const { currentPage, totalPages } = pagination;
     const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -69,10 +69,10 @@ const ArticleCard = ({ article, isFeatured = false }) => {
                 </div>
 
                 <div className="max-w-4xl">
-                    <h2 className="text-5xl md:text-6xl font-black font-serif italic tracking-tighter text-slate-900 mb-8 leading-[1.05] group-hover:text-red-700 transition-colors">
+                    <h2 className="text-3xl md:text-6xl font-black font-serif italic tracking-tighter text-slate-900 mb-8 leading-[1.05] group-hover:text-red-700 transition-colors">
                         <Link to={`/article/${article.slug}`}>{article.title}</Link>
                     </h2>
-                    <p className="text-xl font-serif text-gray-500 mb-10 leading-relaxed italic max-w-3xl line-clamp-2">
+                    <p className="text-md sm:text-xl font-serif text-gray-500 mb-10 leading-relaxed italic max-w-3xl line-clamp-2">
                         {article.summary}
                     </p>
 

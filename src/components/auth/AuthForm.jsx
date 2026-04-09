@@ -160,19 +160,6 @@ const AuthForm = () => {
                     </div>
                 </div>
 
-                {mode === 'signin' && (
-                    <div className="flex items-center space-x-3 pt-2">
-                        <input
-                            type="checkbox"
-                            id="remember"
-                            className="w-4 h-4 appearance-none bg-white border border-gray-300 rounded checked:bg-red-700 checked:border-red-700 cursor-pointer"
-                        />
-                        <label htmlFor="remember" className="text-[11px] font-medium text-gray-500 tracking-tight cursor-pointer">
-                            Keep me signed in for 30 days
-                        </label>
-                    </div>
-                )}
-
                 <button
                     type="submit"
                     disabled={loading}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { articleService } from '../api/articleService';
 import { commentService } from '../api/commentService';
@@ -10,8 +10,8 @@ import DiscussionSection from '../components/article/DiscussionSection';
 const RelatedArticleCard = ({ article }) => (
     <div className="group cursor-pointer">
         <div className="relative aspect-[16/10] overflow-hidden mb-6 bg-gray-50">
-            <img 
-                src={article.media?.featuredImage || 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=2072&auto=format&fit=crop'} 
+            <img
+                src={article.media?.featuredImage || 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=2072&auto=format&fit=crop'}
                 alt={article.title}
                 className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
             />
@@ -31,31 +31,46 @@ const ArticlePage = () => {
     const [comments, setComments] = useState([]);
     const [related, setRelated] = useState([]);
     const [loading, setLoading] = useState(true);
+    const viewRecordedRef = useRef(null);
 
     useEffect(() => {
         const fetchArticleData = async () => {
             setLoading(true);
+
             try {
                 const data = await articleService.getArticleBySlug(slug);
                 setArticle(data);
-                
-                // Fetch comments and related articles
+
                 const [commentsData, relatedData] = await Promise.all([
                     commentService.getByArticle(data._id),
-                    articleService.getArticles({ category: data.category?._id, limit: 3 })
+                    articleService.getArticles({
+                        category: data.category?._id,
+                        limit: 3
+                    })
                 ]);
-                
+
                 setComments(commentsData);
-                // Filter out current article from related
-                setRelated(relatedData.articles.filter(a => a._id !== data._id).slice(0, 3));
-                
+                setRelated(
+                    relatedData.articles
+                        .filter(a => a._id !== data._id)
+                        .slice(0, 3)
+                );
+
+                if (viewRecordedRef.current !== data._id) {
+                    viewRecordedRef.current = data._id;
+                    await articleService.recordView(data._id);
+                    console.log('view called once');
+                }
+
                 window.scrollTo(0, 0);
+
             } catch (error) {
-                console.error("Error fetching article page data:", error);
+                console.error(error);
             } finally {
                 setLoading(false);
             }
         };
+
         fetchArticleData();
     }, [slug]);
 
@@ -72,18 +87,19 @@ const ArticlePage = () => {
 
     return (
         <article className="bg-white">
-            {/* Top Meta & Title */}
             <div className="max-w-7xl mx-auto px-4 md:px-6 pt-16 md:pt-24">
                 <ArticleHero article={article} />
             </div>
 
-            {/* Main Featured Image */}
-            <div className="max-w-7xl mx-auto px-4 md:px-6 mb-16">
-                <div className="relative aspect-[21/9] overflow-hidden shadow-2xl">
-                    <img 
-                        src={article.media?.featuredImage || 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=2072&auto=format&fit=crop'} 
+            <div className="max-w-7xl mx-auto px-4 md:px-6 lg:mb-16">
+                <div className="relative aspect-[15/10] sm:aspect-[21/9] overflow-hidden shadow-2xl">
+                    <img
+                        src={article.media?.featuredImage || 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=2072&auto=format&fit=crop'}
                         alt={article.title}
-                        className="w-full h-full object-cover"
+                        loading='lazy'
+                        className="w-full h-full object-cover blur-md transition-all duration-600 will-change-transform"
+                        onLoad={(e) => e.currentTarget.classList.remove('blur-md')}
+                        onError={(e) => e.target.src = 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=2072&auto=format&fit=crop'}
                     />
                 </div>
                 <p className="mt-4 text-[9px] font-medium text-gray-400 uppercase tracking-widest text-center">
@@ -91,33 +107,35 @@ const ArticlePage = () => {
                 </p>
             </div>
 
-            {/* Content Layout */}
-            <div className="max-w-7xl mx-auto px-4 md:px-6 flex flex-col lg:flex-row gap-16 relative pb-20">
-                {/* Left - Sharing Tools */}
-                <FloatingActions commentCount={comments.length || 12} />
+            <div className="max-w-7xl mx-auto px-4 md:px-6 flex flex-col lg:flex-row lg:gap-16 relative pb-20">
+                <FloatingActions
+                    articleId={article._id}
+                    commentCount={comments.length}
+                    articleTitle={article.title}
+                    initialLikes={article.engagement?.likes || 0}
+                    initialIsLiked={article.isLiked}
+                />
 
-                {/* Center - Body Content */}
                 <div className="flex-1 max-w-2xl mx-auto lg:mx-0 article-content">
                     <div className="prose prose-slate max-w-none">
                         {article.content && Array.isArray(article.content) ? (
                             article.content.map((block, index) => {
-                                // Find the first text block to apply drop-cap
                                 const firstTextBlockIndex = article.content.findIndex(b => b.type === 'text');
                                 const isFirstTextBlock = index === firstTextBlockIndex;
 
                                 if (block.type === 'heading') {
                                     return (
-                                        <h2 key={index} className="text-3xl md:text-4xl font-black font-serif italic tracking-tight text-slate-900 mb-8 mt-16 leading-tight">
+                                        <h2 key={index} className="text-2xl md:text-4xl font-black font-serif italic tracking-tight text-slate-900 mb-8 mt-16 leading-tight">
                                             {block.value}
                                         </h2>
                                     );
                                 }
-                                
+
                                 if (block.type === 'text') {
                                     return (
-                                        <p 
-                                            key={index} 
-                                            className={`${isFirstTextBlock ? 'drop-cap' : ''} text-xl font-serif text-slate-700 leading-relaxed mb-10`}
+                                        <p
+                                            key={index}
+                                            className={`${isFirstTextBlock ? 'drop-cap' : ''} text-md md:text-xl font-serif text-slate-700 leading-9 sm:leading-10 mb-10`}
                                         >
                                             {block.value}
                                         </p>
@@ -128,10 +146,14 @@ const ArticlePage = () => {
                                     return (
                                         <figure key={index} className="my-16 space-y-4">
                                             <div className="relative overflow-hidden shadow-xl aspect-video bg-gray-50 border border-gray-100">
-                                                <img 
-                                                    src={block.value} 
+                                                <img
+                                                    src={block.value}
                                                     alt={block.caption || 'Article media'}
-                                                    className="w-full h-full object-cover transition-transform duration-1000 hover:scale-105"
+                                                    className="w-full h-full object-cover will-change-transform transition-all duration-700 hover:scale-105 blur-sm"
+                                                    onLoad={(e) => {
+                                                        e.currentTarget.classList.remove('blur-sm');
+                                                    }}
+                                                    onError={(e) => e.target.src = 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=2072&auto=format&fit=crop'}
                                                 />
                                             </div>
                                             {block.caption && (
@@ -171,10 +193,14 @@ const ArticlePage = () => {
                                 <div className="grid grid-cols-2 gap-4">
                                     {article.media.gallery.map((img, i) => (
                                         <div key={i} className={`relative overflow-hidden bg-gray-50 ${i === 0 ? 'col-span-2 aspect-[21/9]' : 'aspect-square'}`}>
-                                            <img 
-                                                src={img} 
-                                                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                                            <img
+                                                src={img}
+                                                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all blur-sm duration-700"
                                                 alt={`Gallery ${i}`}
+                                                onLoad={(e) => {
+                                                    e.currentTarget.classList.remove('blur-sm');
+                                                }}
+                                                onError={(e) => e.target.src = 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=2072&auto=format&fit=crop'}
                                             />
                                         </div>
                                     ))}
@@ -186,39 +212,32 @@ const ArticlePage = () => {
 
                 {/* Right - Insights Sidebar */}
                 <div className="lg:w-80 shrink-0">
-                    <ArticleSidebar />
+                    <ArticleSidebar article={article} />
                 </div>
             </div>
 
             {/* More From Grid */}
-            <div className="bg-[#FBFBFB] py-24 border-y border-gray-100">
-                <div className="max-w-7xl mx-auto px-4 md:px-6">
-                    <div className="flex items-center justify-between mb-16 px-2">
-                        <div>
-                            <p className="text-red-700 text-[10px] font-bold uppercase tracking-[0.3em] mb-3">CURATED READING</p>
-                            <h2 className="text-3xl md:text-5xl font-black font-serif italic tracking-tighter text-slate-900">
-                                More from The Daily Pulse
-                            </h2>
+            {related.length > 0 && (
+                <div className="bg-[#FBFBFB] py-24 border-y border-gray-100">
+                    <div className="max-w-7xl mx-auto px-4 md:px-6">
+                        <div className="flex items-center justify-between mb-16 px-2">
+                            <div>
+                                <p className="text-red-700 text-[10px] font-bold uppercase tracking-[0.3em] mb-3">CURATED READING</p>
+                                <h2 className="text-3xl md:text-5xl font-black font-serif italic tracking-tighter text-slate-900">
+                                    More from The Daily Pulse
+                                </h2>
+                            </div>
+                            <Link to="/" className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 hover:text-red-700 transition-colors border-b-2 border-transparent hover:border-red-700 pb-1">
+                                View All Stories
+                            </Link>
                         </div>
-                        <Link to="/" className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 hover:text-red-700 transition-colors border-b-2 border-transparent hover:border-red-700 pb-1">
-                            View All Stories
-                        </Link>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-                        {related.length > 0 ? (
-                            related.map(a => <RelatedArticleCard key={a._id} article={a} />)
-                        ) : (
-                            // Mock Related matching image
-                            <>
-                                <RelatedArticleCard article={{ title: 'The De-Globalization Fallacy: Why Markets Are More Intertwined Than Ever', category: { name: 'ECONOMY' }, slug: 'de-globalization-fallacy' }} />
-                                <RelatedArticleCard article={{ title: 'Beyond the Algorithm: The Human Cost of Automated Ethics', category: { name: 'TECHNOLOGY' }, slug: 'beyond-the-algorithm' }} />
-                                <RelatedArticleCard article={{ title: 'The New Minimalism: How Scarcity Became the Ultimate Luxury', category: { name: 'CULTURE' }, slug: 'new-minimalism' }} />
-                            </>
-                        )}
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+                            {related.map(a => <RelatedArticleCard key={a._id} article={a} />)}
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
 
             {/* Discussion Section */}
             <div className="max-w-7xl mx-auto px-4 md:px-6 pb-24">

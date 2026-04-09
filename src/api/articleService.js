@@ -57,5 +57,28 @@ export const articleService = {
   getCategories: async () => {
     const { data } = await api.get('/api/categories');
     return data;
+  },
+
+  // Like or unlike an article
+  likeArticle: async (id) => {
+    try {
+      const { data } = await api.post(`/api/articles/${id}/like`);
+      return data;
+    } catch (error) {
+      console.error(`Error liking article with id ${id}:`, error);
+      throw error;
+    }
+  },
+
+  // Record a unique view for an article
+  recordView: async (id) => {
+    try {
+      const { data } = await api.post(`/api/views/${id}`);
+      return data;
+    } catch (error) {
+      console.error(`Error recording view for article with id ${id}:`, error);
+      // We don't throw here to avoid interrupting the user's reading experience
+      return null;
+    }
   }
 };
