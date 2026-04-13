@@ -1,8 +1,12 @@
 User-agent: *
 Allow: /
 
-# Block admin or private routes
-Disallow: /admin/
+# Exclude admin and auth pages from indexing
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /login
+Disallow: /register
+Disallow: /callback/*
 
-# Sitemap
+# Sitemap reference
 Sitemap: https://nexoranews.dpdns.org/sitemap.xml

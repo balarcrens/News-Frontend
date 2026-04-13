@@ -7,6 +7,7 @@ import ArticleSidebar from '../components/article/ArticleSidebar';
 import FloatingActions from '../components/article/FloatingActions';
 import DiscussionSection from '../components/article/DiscussionSection';
 import SEO from '../components/common/SEO';
+import Breadcrumbs from '../components/common/Breadcrumbs';
 
 const RelatedArticleCard = ({ article }) => (
     <div className="group cursor-pointer">
@@ -103,6 +104,12 @@ const ArticlePage = () => {
                 canonicalUrl={article.seo?.canonicalUrl}
             />
             <div className="max-w-7xl mx-auto px-4 md:px-6 pt-16 md:pt-24">
+                <Breadcrumbs 
+                    items={[
+                        { label: article.category?.name || 'News', link: `/category/${article.category?.slug}` },
+                        { label: article.title }
+                    ]} 
+                />
                 <ArticleHero article={article} />
             </div>
 

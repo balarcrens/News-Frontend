@@ -21,21 +21,21 @@ const Footer = () => (
                 <div>
                     <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-8 text-gray-500">Sections</h3>
                     <ul className="space-y-4 text-sm text-gray-400 font-medium">
-                        <li><a href="#" className="hover:text-white transition-colors">World</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Politics</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Economy</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Technology</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Culture</a></li>
+                        <li><Link to="/category/world" className="hover:text-white transition-colors">World</Link></li>
+                        <li><Link to="/category/politics" className="hover:text-white transition-colors">Politics</Link></li>
+                        <li><Link to="/category/economy" className="hover:text-white transition-colors">Economy</Link></li>
+                        <li><Link to="/category/technology" className="hover:text-white transition-colors">Technology</Link></li>
+                        <li><Link to="/category/culture" className="hover:text-white transition-colors">Culture</Link></li>
                     </ul>
                 </div>
 
                 <div>
                     <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-8 text-gray-500">Company</h3>
                     <ul className="space-y-4 text-sm text-gray-400 font-medium">
-                        <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Newsletter</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
+                        <li><Link to="/about" className="hover:text-white transition-colors">About Us</Link></li>
+                        <li><Link to="/contact" className="hover:text-white transition-colors">Contact</Link></li>
+                        <li><Link to="/newsletter" className="hover:text-white transition-colors">Newsletter</Link></li>
+                        <li><Link to="/careers" className="hover:text-white transition-colors">Careers</Link></li>
                     </ul>
                 </div>
 
