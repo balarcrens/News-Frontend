@@ -26,7 +26,7 @@ const buildUrl = (base, path) => {
 
 exports.handler = async () => {
     const baseUrl = process.env.FRONTEND_URL || 'https://nexoranews.dpdns.org';
-    const apiUrl = process.env.VITE_BACKEND_URL || 'https://news-backend-rh42.onrender.com';
+    const apiUrl = process.env.VITE_VERCEL_BACKEND_URL || 'https://nexora-service.vercel.app';
 
     try {
         console.log('Generating dynamic sitemap...');
