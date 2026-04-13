@@ -12,6 +12,7 @@ import {
     ArrowRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import SEO from '../../components/common/SEO';
 
 const SidebarLink = ({ href, children }) => (
     <li>
@@ -86,6 +87,10 @@ const CookieToggle = ({ label, description, status, alwaysActive = false }) => (
 const PrivacyPolicy = () => {
     return (
         <div className="bg-white min-h-screen pt-32 pb-20">
+            <SEO 
+                title="Privacy Policy"
+                description="Our commitment to your data security and privacy at Nexora News."
+            />
             <div className="fixed inset-0 pointer-events-none opacity-[0.03] z-0 overflow-hidden">
                 <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-red-700 rounded-full blur-[150px]"></div>
                 <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-slate-950 rounded-full blur-[150px]"></div>

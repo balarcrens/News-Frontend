@@ -13,6 +13,7 @@ import {
     Globe,
     Cpu
 } from 'lucide-react';
+import SEO from '../../components/common/SEO';
 
 const SidebarLink = ({ href, children }) => (
     <li>
@@ -64,6 +65,10 @@ const TermsCard = ({ icon: Icon, title, description }) => (
 const TermsConditions = () => {
     return (
         <div className="bg-white min-h-screen pt-32 pb-20">
+            <SEO 
+                title="Terms & Conditions"
+                description="The legal framework and terms governing your use of the Nexora News platform."
+            />
             {/* Background Aesthetic Elements */}
             <div className="fixed inset-0 pointer-events-none opacity-[0.03] z-0 overflow-hidden">
                 <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-red-700 rounded-full blur-[150px]"></div>

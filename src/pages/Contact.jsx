@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send, MessageSquare, Globe, Shield, Instagram, Twitter, Linkedin } from 'lucide-react';
 import contactHero from "/assets/nexoranews_contact_hero.png";
+import SEO from '../components/common/SEO';
 
 const InquiryCard = ({ icon: Icon, title, description, email }) => (
     <div className="group border-b border-gray-100 py-10 hover:bg-gray-50/50 transition-all duration-500 px-6">
@@ -40,6 +41,10 @@ const Contact = () => {
 
     return (
         <div className="bg-white">
+            <SEO 
+                title="Contact Our Newsroom"
+                description="Connect with Nexora News. Submit tips, inquiries, or feedback to our editorial team."
+            />
             {/* Direct Channel Hero */}
             <section className="relative h-[60vh] flex items-center overflow-hidden">
                 <img

@@ -156,10 +156,7 @@ const Navbar = ({ isScrolled = false, onMenuOpen, user, logout, categories = [] 
                                             </button>
                                         )}
                                         <button
-                                            onClick={() => {
-                                                logout;
-                                                setIsProfileOpen(false);
-                                            }}
+                                            onClick={logout}
                                             className="w-full text-left px-6 py-2 text-xs font-bold text-red-700 hover:bg-red-50 transition-all flex items-center space-x-3"
                                         >
                                             <LogOut size={14} />

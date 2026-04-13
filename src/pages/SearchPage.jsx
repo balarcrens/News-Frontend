@@ -14,6 +14,7 @@ import {
 import { articleService } from '../api/articleService';
 import { categoryService } from '../api/categoryService';
 import { format } from 'date-fns';
+import SEO from '../components/common/SEO';
 
 const SearchPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -105,6 +106,10 @@ const SearchPage = () => {
 
     return (
         <div className="min-h-screen bg-white">
+            <SEO 
+                title={query ? `Search: ${query}` : 'Search News'}
+                description={`Explore search results for "${query}" on Nexora News.`}
+            />
             <div className="pt-32 pb-12 border-b border-gray-100">
                 <div className="max-w-7xl mx-auto px-4 md:px-6">
                     <form onSubmit={handleSearchSubmit} className="max-w-3xl mb-8 relative">

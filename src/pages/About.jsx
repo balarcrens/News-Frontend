@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import { Globe, Shield, Zap, Target, BookOpen, Users } from 'lucide-react';
+import SEO from '../components/common/SEO';
 import intelligenceMap from "/assets/nexoranews_intelligence_map.png";
 import nexoraNewsAboutHero from "/assets/nexoranews_about_hero.png";
 
@@ -21,6 +22,10 @@ const ValueCard = ({ icon: Icon, title, description }) => (
 const About = () => {
     return (
         <div className="bg-white">
+            <SEO 
+                title="About Us"
+                description="Learn about Nexora News, our mission for editorial excellence, and the team behind the pulse of global journalism."
+            />
             <section className="relative h-[70vh] md:h-[85vh] flex items-center overflow-hidden">
                 <img
                     src={nexoraNewsAboutHero}

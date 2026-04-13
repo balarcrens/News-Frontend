@@ -5,6 +5,7 @@ import { articleService } from '../api/articleService';
 import CategoryHeader from '../components/category/CategoryHeader';
 import CategorySidebar from '../components/category/CategorySidebar';
 import { ChevronLeft, ChevronRight, Bookmark, Filter, X } from 'lucide-react';
+import SEO from '../components/common/SEO';
 import { format } from 'date-fns';
 
 const Pagination = ({ pagination, onPageChange }) => {
@@ -205,6 +206,11 @@ const CategoryPage = () => {
 
     return (
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-12">
+            <SEO 
+                title={`${category?.name} News`}
+                description={category?.description || `Explore the latest ${category?.name} news, analysis and reports on Nexora News.`}
+                ogType="website"
+            />
             <CategoryHeader
                 title={category?.name}
                 description={category?.description}

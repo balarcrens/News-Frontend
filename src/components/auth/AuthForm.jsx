@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowRight, Loader2, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import useAuth from '../../context/useAuth';
 import { useNavigate } from 'react-router-dom';
@@ -20,6 +20,7 @@ const AuthForm = () => {
     const [showPassword, setShowPassword] = useState(false);
     const { login, register, loading, error, setError, googleLogin } = useAuth();
     const navigate = useNavigate();
+    const googleInitialized = useRef(false);
 
     useEffect(() => {
         setError(null);
@@ -27,12 +28,16 @@ const AuthForm = () => {
 
     // Initialize Google (NO renderButton)
     useEffect(() => {
-        if (!window.google) return;
+        if (!window.google || googleInitialized.current) return;
 
         window.google.accounts.id.initialize({
             client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
             callback: handleGoogleSuccess,
+            auto_select: false,
+            cancel_on_tap_outside: true,
         });
+
+        googleInitialized.current = true;
     }, []);
 
     const handleSubmit = async (e) => {
@@ -116,7 +121,12 @@ const AuthForm = () => {
 
             <div className="grid grid-cols-2 gap-4">
                 <button
-                    onClick={() => window.google.accounts.id.prompt()}
+                    onClick={() => {
+                        if (!window.google) return;
+
+                        window.google.accounts.id.cancel();
+                        window.google.accounts.id.prompt();
+                    }}
                     className="flex items-center justify-center space-x-3 cursor-pointer py-4 border border-gray-100 bg-white hover:bg-gray-50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/5 group/g"
                 >
                     <div className="group-hover/g:scale-110 transition-transform duration-300">

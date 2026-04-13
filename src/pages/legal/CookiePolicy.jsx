@@ -12,6 +12,7 @@ import {
     Clock
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import SEO from '../../components/common/SEO';
 
 const SidebarLink = ({ href, children }) => (
     <li>
@@ -80,6 +81,10 @@ const CookiePolicy = () => {
 
     return (
         <div className="bg-white min-h-screen pt-14 md:pt-32 pb-20">
+            <SEO 
+                title="Cookie Policy"
+                description="Information about how we use cookies and tracking technologies to enhance your experience."
+            />
             <div className="fixed inset-0 pointer-events-none opacity-[0.03] z-0 overflow-hidden">
                 <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-red-700 rounded-full blur-[150px]"></div>
                 <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-slate-950 rounded-full blur-[150px]"></div>

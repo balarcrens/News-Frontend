@@ -3,6 +3,7 @@ import HeroSection from '../components/home/HeroSection';
 import NewsSection from '../components/home/NewsSection';
 import Sidebar from '../components/home/Sidebar';
 import { articleService } from '../api/articleService';
+import SEO from '../components/common/SEO';
 
 const Home = () => {
     const [data, setData] = useState({
@@ -38,6 +39,11 @@ const Home = () => {
 
     return (
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-10">
+            <SEO 
+                title="Nexora News | Premium Global News Network"
+                description="Stay ahead with Nexora News. Deep insights into world politics, business, technology, and culture. Experience journalism refined."
+                keywords={['news', 'global news', 'politics', 'business', 'technology', 'editorial', 'Nexora']}
+            />
             <div className="flex flex-col lg:flex-row gap-10 md:gap-12">
                 {/* Main Content */}
                 <div className="lg:w-2/3">

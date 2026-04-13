@@ -6,6 +6,7 @@ import ArticleHero from '../components/article/ArticleHero';
 import ArticleSidebar from '../components/article/ArticleSidebar';
 import FloatingActions from '../components/article/FloatingActions';
 import DiscussionSection from '../components/article/DiscussionSection';
+import SEO from '../components/common/SEO';
 
 const RelatedArticleCard = ({ article }) => (
     <div className="group cursor-pointer">
@@ -87,6 +88,20 @@ const ArticlePage = () => {
 
     return (
         <article className="bg-white">
+            <SEO 
+                title={article.seo?.metaTitle || article.title}
+                description={article.seo?.metaDescription || article.summary}
+                keywords={article.seo?.keywords || article.tags}
+                ogTitle={article.seo?.ogTitle || article.title}
+                ogDescription={article.seo?.ogDescription || article.summary}
+                ogImage={article.seo?.ogImage || article.media?.featuredImage}
+                ogType="article"
+                author={article.author?.name || article.customAuthor?.name}
+                publishedTime={article.publishedAt || article.createdAt}
+                modifiedTime={article.updatedAt}
+                category={article.category?.name}
+                canonicalUrl={article.seo?.canonicalUrl}
+            />
             <div className="max-w-7xl mx-auto px-4 md:px-6 pt-16 md:pt-24">
                 <ArticleHero article={article} />
             </div>
