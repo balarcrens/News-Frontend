@@ -1,7 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
-import { Apple, ArrowRight, Loader2, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { ArrowRight, Loader2, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import useAuth from '../../context/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const GoogleIcon = () => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -16,12 +18,22 @@ const AuthForm = () => {
     const [mode, setMode] = useState('signin'); // 'signin' or 'create'
     const [formData, setFormData] = useState({ name: '', email: '', password: '' });
     const [showPassword, setShowPassword] = useState(false);
-    const { login, register, loading, error, setError } = useAuth();
+    const { login, register, loading, error, setError, googleLogin } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
         setError(null);
     }, [mode, setError]);
+
+    // Initialize Google (NO renderButton)
+    useEffect(() => {
+        if (!window.google) return;
+
+        window.google.accounts.id.initialize({
+            client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+            callback: handleGoogleSuccess,
+        });
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -34,12 +46,33 @@ const AuthForm = () => {
         }
 
         if (result.success) {
+            toast.success(mode === 'signin' ? 'Welcome back to Nexora.' : 'Account created successfully.');
             navigate('/');
+        } else if (result.error) {
+            toast.error(result.error);
         }
     };
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleGoogleSuccess = async (res) => {
+        const result = await googleLogin(res.credential);
+        if (result.success) {
+            toast.success('Successfully authenticated with Google.');
+            navigate('/');
+        } else if (result.error) {
+            toast.error(result.error);
+        }
+    };
+
+    const handleGitHubLogin = () => {
+        const clientId = import.meta.env.VITE_GITHUB_CLIENT_ID;
+        const redirectUri = `${window.location.origin}/auth/github/callback`;
+
+        window.location.href =
+            `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=user:email`;
     };
 
     return (
@@ -82,21 +115,41 @@ const AuthForm = () => {
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-                <button className="flex items-center justify-center space-x-3 py-4 border border-gray-100 bg-white hover:bg-gray-50 transition-colors shadow-sm">
-                    <GoogleIcon />
+                <button
+                    onClick={() => window.google.accounts.id.prompt()}
+                    className="flex items-center justify-center space-x-3 cursor-pointer py-4 border border-gray-100 bg-white hover:bg-gray-50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/5 group/g"
+                >
+                    <div className="group-hover/g:scale-110 transition-transform duration-300">
+                        <GoogleIcon />
+                    </div>
                     <span className="text-xs font-bold text-gray-700">Google</span>
                 </button>
-                <button className="flex items-center justify-center space-x-3 py-4 bg-[#1A1A1A] hover:bg-black transition-colors text-white shadow-sm">
-                    <Apple size={20} fill="white" />
-                    <span className="text-xs font-bold">Apple</span>
+
+                <button
+                    onClick={handleGitHubLogin}
+                    className="flex items-center justify-center space-x-3 cursor-pointer py-4 bg-slate-900 border border-slate-900 hover:bg-black text-white shadow-sm transition-all duration-300 hover:shadow-lg hover:shadow-black/10 group/gh"
+                >
+                    <div className="group-hover/gh:scale-110 transition-transform duration-300">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            width="20"
+                            height="20"
+                            fill="currentColor"
+                        >
+                            <path d="M12 .5C5.73.5.5 5.73.5 12a11.5 11.5 0 0 0 7.86 10.94c.58.11.79-.25.79-.56v-2.02c-3.2.7-3.88-1.54-3.88-1.54-.53-1.33-1.3-1.68-1.3-1.68-1.06-.72.08-.7.08-.7 1.17.08 1.79 1.2 1.79 1.2 1.04 1.78 2.73 1.27 3.4.97.1-.76.4-1.27.72-1.56-2.55-.29-5.23-1.27-5.23-5.66 0-1.25.45-2.27 1.19-3.07-.12-.29-.52-1.45.11-3.03 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.8 0c2.2-1.5 3.17-1.18 3.17-1.18.63 1.58.23 2.74.11 3.03.74.8 1.19 1.82 1.19 3.07 0 4.4-2.69 5.36-5.25 5.64.41.35.77 1.04.77 2.1v3.11c0 .31.21.68.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z" />
+                        </svg>
+                    </div>
+
+                    <span className="text-xs font-bold">GitHub</span>
                 </button>
             </div>
 
             <div className="relative flex items-center justify-center py-4">
                 <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-100"></div>
+                    <div className="w-full border-t border-gray-300"></div>
                 </div>
-                <span className="relative z-10 bg-white px-6 text-[8px] font-bold uppercase tracking-[0.3em] text-gray-300">
+                <span className="relative z-10 bg-white px-6 text-[8px] font-bold uppercase tracking-[0.3em] text-gray-400">
                     Or continue with email
                 </span>
             </div>
@@ -150,7 +203,7 @@ const AuthForm = () => {
                             minLength={6}
                             className="w-full bg-gray-50/50 border-none p-5 pr-14 text-sm font-medium focus:ring-1 focus:ring-red-700/20 outline-none transition-all placeholder:text-gray-400/50"
                         />
-                        <button 
+                        <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
                             className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-700 transition-colors p-1"

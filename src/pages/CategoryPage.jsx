@@ -4,7 +4,7 @@ import { categoryService } from '../api/categoryService';
 import { articleService } from '../api/articleService';
 import CategoryHeader from '../components/category/CategoryHeader';
 import CategorySidebar from '../components/category/CategorySidebar';
-import { ChevronLeft, ChevronRight, Bookmark } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Bookmark, Filter, X } from 'lucide-react';
 import { format } from 'date-fns';
 
 const Pagination = ({ pagination, onPageChange }) => {
@@ -137,6 +137,7 @@ const CategoryPage = () => {
     const [articles, setArticles] = useState([]);
     const [pagination, setPagination] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     // Filter states
     const [filters, setFilters] = useState({
@@ -192,6 +193,7 @@ const CategoryPage = () => {
             time: filters.timePeriod,
             page: filters.page
         });
+        setIsSidebarOpen(false); // Close sidebar on mobile after applying
     };
 
     if (loading && !category) {
@@ -208,17 +210,39 @@ const CategoryPage = () => {
                 description={category?.description}
             />
 
+            {/* Mobile Filter Toggle */}
+            <div className="lg:hidden flex justify-end mb-8">
+                <button
+                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                    className="flex items-center space-x-2 bg-white border border-gray-100 px-6 py-3 shadow-sm hover:shadow-md transition-all active:scale-95"
+                >
+                    {isSidebarOpen ? (
+                        <>
+                            <X size={16} className="text-red-700" />
+                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-900">Close Filters</span>
+                        </>
+                    ) : (
+                        <>
+                            <Filter size={16} className="text-red-700" />
+                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-900">Refine Results</span>
+                        </>
+                    )}
+                </button>
+            </div>
+
             <div className="flex flex-col lg:flex-row gap-16">
                 {/* Sidebar */}
-                <CategorySidebar
-                    categories={categories}
-                    activeSlug={slug}
-                    sortBy={filters.sortBy}
-                    timePeriod={filters.timePeriod}
-                    onSortChange={handleSortChange}
-                    onTimeChange={handleTimeChange}
-                    onApply={applyFilters}
-                />
+                <div className={`${isSidebarOpen ? 'block animate-in fade-in slide-in-from-top-4 duration-300' : 'hidden lg:block'}`}>
+                    <CategorySidebar
+                        categories={categories}
+                        activeSlug={slug}
+                        sortBy={filters.sortBy}
+                        timePeriod={filters.timePeriod}
+                        onSortChange={handleSortChange}
+                        onTimeChange={handleTimeChange}
+                        onApply={applyFilters}
+                    />
+                </div>
 
                 {/* Main Content */}
                 <div className="flex-1">

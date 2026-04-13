@@ -36,7 +36,7 @@ const AuthLayout = ({ children }) => {
                 <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-gray-100/20 to-transparent"></div>
             </div>
 
-            <div className="flex-1 flex flex-col items-center justify-center p-8 md:p-12 lg:p-20 bg-white min-h-[70vh]">
+            <div className="flex-1 flex flex-col items-center justify-center p-8 py-12 md:p-12 lg:p-20 bg-white min-h-[70vh]">
                 <div className="w-full max-w-md">
                     {children}
                 </div>

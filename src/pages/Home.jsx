@@ -17,35 +17,14 @@ const Home = () => {
         const fetchHomeData = async () => {
             setLoading(true);
             try {
-                // Fetch basic global data
-                const [allCategories, featured, latest, popular] = await Promise.all([
-                    articleService.getCategories(),
-                    articleService.getFeaturedArticles(3),
-                    articleService.getLatestNews(10),
-                    articleService.getPopularNews(5)
-                ]);
-
-                // For each category, fetch its latest 2 articles
-                // This ensures we show "all news not only blogs" for each category
-                const categorySectionsData = await Promise.all(
-                    allCategories.map(async (cat) => {
-                        const articles = await articleService.getArticlesByCategory(cat._id, 2);
-                        return {
-                            id: cat._id,
-                            name: cat.name,
-                            articles: articles
-                        };
-                    })
-                );
-
-                // Filter out categories with no articles to keep the home page clean
-                const activeCategories = categorySectionsData.filter(section => section.articles.length > 0);
+                // Fetch all data in ONE optimized call
+                const homeData = await articleService.getHomeData();
 
                 setData({
-                    featured,
-                    categories: activeCategories,
-                    latest: latest.slice(0, 5),
-                    popular
+                    featured: homeData.featured,
+                    categories: homeData.categories,
+                    latest: homeData.latest.slice(0, 5),
+                    popular: homeData.popular
                 });
             } catch (error) {
                 console.error("Error fetching home data:", error);

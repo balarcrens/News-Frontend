@@ -143,12 +143,23 @@ const Navbar = ({ isScrolled = false, onMenuOpen, user, logout, categories = [] 
                                             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Account</p>
                                             <p className="text-xs font-bold text-slate-900 truncate">{user.email}</p>
                                         </div>
-                                        <button className="w-full text-left px-6 py-2 text-xs font-bold text-gray-600 hover:text-red-700 hover:bg-gray-50 transition-all flex items-center space-x-3">
-                                            <Settings size={14} />
-                                            <span>Dashboard</span>
-                                        </button>
+                                        {user?.role === 'admin' && (
+                                            <button
+                                                onClick={() => {
+                                                    navigate('/admin');
+                                                    setIsProfileOpen(false);
+                                                }}
+                                                className="w-full text-left px-6 py-2 text-xs font-bold text-gray-600 hover:text-red-700 hover:bg-gray-50 transition-all flex items-center space-x-3"
+                                            >
+                                                <Settings size={14} />
+                                                <span>Dashboard</span>
+                                            </button>
+                                        )}
                                         <button
-                                            onClick={logout}
+                                            onClick={() => {
+                                                logout;
+                                                setIsProfileOpen(false);
+                                            }}
                                             className="w-full text-left px-6 py-2 text-xs font-bold text-red-700 hover:bg-red-50 transition-all flex items-center space-x-3"
                                         >
                                             <LogOut size={14} />
@@ -193,6 +204,7 @@ const Navbar = ({ isScrolled = false, onMenuOpen, user, logout, categories = [] 
 
 const MobileDrawer = ({ isOpen, onClose, user, logout, categories = [] }) => {
     const [isCategoriesExpanded, setIsCategoriesExpanded] = useState(false);
+    const navigate = useNavigate();
 
     return (
         <>
@@ -200,7 +212,7 @@ const MobileDrawer = ({ isOpen, onClose, user, logout, categories = [] }) => {
                 className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-[60] transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
                 onClick={onClose}
             />
-            <div className={`fixed top-0 left-0 h-full w-[80%] max-w-sm bg-white z-[100] shadow-2xl transition-transform duration-500 ease-out border-r border-gray-100 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+            <div className={`fixed top-0 left-0 h-full w-[80%] max-w-sm bg-white z-[100] overflow-y-auto shadow-2xl transition-transform duration-500 ease-out border-r border-gray-100 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                 <div className="flex items-center justify-between p-6 border-b border-gray-100">
                     <h2 className="text-xl font-black font-serif italic tracking-tighter text-slate-900">Nexora News</h2>
                     <button onClick={onClose} className="p-2 text-gray-400 hover:text-red-700 transition-colors">
@@ -230,7 +242,7 @@ const MobileDrawer = ({ isOpen, onClose, user, logout, categories = [] }) => {
                         </form>
                     </div>
 
-                    <div className="mb-10 border-b border-gray-50">
+                    <div className="mb-10 border-b border-gray-50 pb-8">
                         {user ? (
                             <div className="space-y-6">
                                 <div className="flex items-center space-x-4">
@@ -238,17 +250,30 @@ const MobileDrawer = ({ isOpen, onClose, user, logout, categories = [] }) => {
                                         {user.name[0]}
                                     </div>
                                     <div>
-                                        <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Welcome back</p>
+                                        <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Identity Verified</p>
                                         <p className="text-sm font-serif font-bold text-slate-900">{user.name}</p>
                                     </div>
                                 </div>
-                                <button
-                                    onClick={() => { logout(); onClose(); }}
-                                    className="w-full flex items-center justify-center space-x-2 border border-red-100 bg-red-50 text-red-700 py-4 text-[10px] font-bold uppercase tracking-widest hover:bg-red-100 transition-colors"
-                                >
-                                    <LogOut size={14} />
-                                    <span>Sign Out</span>
-                                </button>
+
+                                <div className="space-y-3">
+                                    {user?.role === 'admin' && (
+                                        <button
+                                            onClick={() => { navigate('/admin'); onClose(); }}
+                                            className="w-full flex items-center justify-center space-x-2 bg-slate-900 text-white py-4 text-[10px] font-bold uppercase tracking-widest hover:bg-black transition-colors"
+                                        >
+                                            <Settings size={14} />
+                                            <span>Admin Dashboard</span>
+                                        </button>
+                                    )}
+
+                                    <button
+                                        onClick={() => { logout(); onClose(); }}
+                                        className="w-full flex items-center justify-center space-x-2 border border-red-100 bg-red-50 text-red-700 py-4 text-[10px] font-bold uppercase tracking-widest hover:bg-red-100 transition-colors"
+                                    >
+                                        <LogOut size={14} />
+                                        <span>Sign Out</span>
+                                    </button>
+                                </div>
                             </div>
                         ) : (
                             <div className="space-y-4">

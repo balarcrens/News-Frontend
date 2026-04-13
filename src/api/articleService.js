@@ -13,6 +13,12 @@ export const articleService = {
     return data.articles;
   },
 
+  // Fetch all home data in one unified call (Optimized)
+  getHomeData: async () => {
+    const { data } = await api.get('/api/articles/home');
+    return data;
+  },
+
   // Fetch articles by category
   getArticlesByCategory: async (categoryId, limit = 4) => {
     const { data } = await api.get(`/api/articles?category=${categoryId}&limit=${limit}`);
@@ -70,6 +76,50 @@ export const articleService = {
     }
   },
 
+  // Admin: Fetch article by ID
+  getArticleById: async (id) => {
+    try {
+      const { data } = await api.get(`/api/articles/id/${id}`);
+      return data; 
+    } catch (error) {
+      console.error(`Error fetching article with ID ${id}:`, error);
+      throw error;
+    }
+  },
+
+  // Admin: Create new article
+  createArticle: async (articleData) => {
+    try {
+      const { data } = await api.post('/api/articles', articleData);
+      return data;
+    } catch (error) {
+      console.error("Error creating article:", error);
+      throw error;
+    }
+  },
+
+  // Admin: Update existing article
+  updateArticle: async (id, articleData) => {
+    try {
+      const { data } = await api.put(`/api/articles/${id}`, articleData);
+      return data;
+    } catch (error) {
+      console.error(`Error updating article with ID ${id}:`, error);
+      throw error;
+    }
+  },
+
+  // Admin: Delete article
+  deleteArticle: async (id) => {
+    try {
+      const { data } = await api.delete(`/api/articles/${id}`);
+      return data;
+    } catch (error) {
+      console.error(`Error deleting article with ID ${id}:`, error);
+      throw error;
+    }
+  },
+
   // Record a unique view for an article
   recordView: async (id) => {
     try {
@@ -82,3 +132,4 @@ export const articleService = {
     }
   }
 };
+

@@ -44,6 +44,7 @@ const Footer = () => (
                     <ul className="space-y-4 text-sm text-gray-400 font-medium">
                         <li><Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
                         <li><Link to="/terms-conditions" className="hover:text-white transition-colors">Terms of Service</Link></li>
+                        <li><Link to="/cookie-policy" className="hover:text-white transition-colors">Cookie Policy</Link></li>
                         <li className="pt-4 text-xs tracking-wide">
                             © 2024 Nexora News. All rights reserved. High-End Editorial Standards.
                         </li>
