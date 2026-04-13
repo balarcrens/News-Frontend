@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 const STATIC_PAGES = [
     { path: '', priority: '1.0', changefreq: 'daily' },
@@ -10,15 +9,28 @@ const STATIC_PAGES = [
     { path: 'search', priority: '0.4', changefreq: 'daily' },
 ];
 
-exports.handler = async (event, context) => {
-    // Determine base URLs from environment or defaults
+// Escape XML safely
+const escapeXml = (unsafe = '') => {
+    return String(unsafe)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;');
+};
+
+// Safe URL builder (avoids double slash)
+const buildUrl = (base, path) => {
+    return path ? `${base}/${path}` : base;
+};
+
+exports.handler = async () => {
     const baseUrl = process.env.FRONTEND_URL || 'https://nexoranews.dpdns.org';
     const apiUrl = process.env.VITE_BACKEND_URL || 'https://news-backend-rh42.onrender.com';
 
     try {
         console.log('Generating dynamic sitemap...');
 
-        // 1. Fetch articles and categories in parallel for efficiency
         const [articlesRes, categoriesRes] = await Promise.all([
             fetch(`${apiUrl}/api/articles?limit=5000`),
             fetch(`${apiUrl}/api/categories`)
@@ -35,60 +47,66 @@ exports.handler = async (event, context) => {
 
         let xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml"
         xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">`;
 
-        // --- 1. Static Pages ---
+        // --- Static Pages ---
         STATIC_PAGES.forEach(page => {
             xml += `
   <url>
-    <loc>${baseUrl}/${page.path}</loc>
+    <loc>${escapeXml(buildUrl(baseUrl, page.path))}</loc>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
   </url>`;
         });
 
-        // --- 2. Categories ---
+        // --- Categories ---
         categories.forEach(category => {
-            const lastMod = category.updatedAt ? category.updatedAt.split('T')[0] : new Date().toISOString().split('T')[0];
+            const lastMod = category.updatedAt
+                ? category.updatedAt.split('T')[0]
+                : new Date().toISOString().split('T')[0];
+
             xml += `
   <url>
-    <loc>${baseUrl}/category/${category.slug}</loc>
+    <loc>${escapeXml(buildUrl(baseUrl, `category/${category.slug}`))}</loc>
     <lastmod>${lastMod}</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>`;
         });
 
-        // --- 3. Articles (Standard Sitemap + Google News) ---
+        // --- Articles ---
         articles.forEach(article => {
-            const lastMod = article.updatedAt ? article.updatedAt.split('T')[0] : (article.createdAt ? article.createdAt.split('T')[0] : new Date().toISOString().split('T')[0]);
+            const lastMod = article.updatedAt
+                ? article.updatedAt.split('T')[0]
+                : article.createdAt
+                    ? article.createdAt.split('T')[0]
+                    : new Date().toISOString().split('T')[0];
+
             const pubDate = article.publishedAt || article.createdAt || new Date().toISOString();
-            
+            const pubDateObj = new Date(pubDate);
+
             xml += `
   <url>
-    <loc>${baseUrl}/article/${article.slug}</loc>
+    <loc>${escapeXml(buildUrl(baseUrl, `article/${article.slug}`))}</loc>
     <lastmod>${lastMod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>`;
 
-            // Add Image Sitemap Info
+            // Image sitemap
             if (article.media?.featuredImage) {
                 xml += `
     <image:image>
-      <image:loc>${article.media.featuredImage}</image:loc>
-      <image:title>${article.title.replace(/[<&">']/g, '')}</image:title>
+      <image:loc>${escapeXml(article.media.featuredImage)}</image:loc>
+      <image:title>${escapeXml(article.title || 'Nexora News')}</image:title>
     </image:image>`;
             }
 
-            // Google News Sitemap (Only for recent articles - last 2 days is standard, but we'll include more)
-            // Note: Google News sitemaps should only include articles published in the last 2 days.
+            // Google News sitemap (last 2 days only)
             const twoDaysAgo = new Date();
             twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-            const pubDateObj = new Date(pubDate);
 
-            if (pubDateObj > twoDaysAgo) {
+            if (!isNaN(pubDateObj) && pubDateObj > twoDaysAgo) {
                 xml += `
     <news:news>
       <news:publication>
@@ -96,7 +114,7 @@ exports.handler = async (event, context) => {
         <news:language>en</news:language>
       </news:publication>
       <news:publication_date>${pubDateObj.toISOString()}</news:publication_date>
-      <news:title>${article.title.replace(/[<&">']/g, '')}</news:title>
+      <news:title>${escapeXml(article.title || 'Nexora News')}</news:title>
     </news:news>`;
             }
 
@@ -115,23 +133,26 @@ exports.handler = async (event, context) => {
             },
             body: xml,
         };
+
     } catch (error) {
         console.error('Sitemap generation error:', error);
-        
-        // Fallback sitemap with just static pages if API fails
+
+        // Safe fallback
         let fallbackXml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
+
         STATIC_PAGES.forEach(page => {
             fallbackXml += `
   <url>
-    <loc>${baseUrl}/${page.path}</loc>
+    <loc>${escapeXml(buildUrl(baseUrl, page.path))}</loc>
     <priority>${page.priority}</priority>
   </url>`;
         });
+
         fallbackXml += `\n</urlset>`;
 
         return {
-            statusCode: 200, // Return 200 with fallback to avoid SEO 500 error
+            statusCode: 200,
             headers: {
                 'Content-Type': 'application/xml',
                 'Cache-Control': 'no-cache'
