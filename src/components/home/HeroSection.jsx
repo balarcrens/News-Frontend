@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -18,10 +17,10 @@ const CardLarge = ({ category, title, summary, time, image, slug }) => (
             <span className="inline-block px-3 py-1 bg-red-700 text-[10px] font-bold text-white uppercase tracking-widest mb-4">
                 {category}
             </span>
-            <h2 className="text-3xl md:text-5xl font-black font-serif italic tracking-tighter text-white mb-6 leading-[1.1]">
+            <h2 className="text-3xl md:text-5xl font-black font-serif italic tracking-tighter text-white mb-6 line-clamp-2 leading-[1.1]">
                 {title}
             </h2>
-            <p className="text-gray-300 text-sm md:text-base leading-relaxed mb-8 hidden md:block line-clamp-2">
+            <p className="text-gray-300 line-clamp-2 text-sm md:text-base mb-8 hidden md:block tracking-tighter">
                 {summary}
             </p>
             <div className="flex items-center space-x-6">

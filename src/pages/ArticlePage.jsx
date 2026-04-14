@@ -89,7 +89,7 @@ const ArticlePage = () => {
 
     return (
         <article className="bg-white">
-            <SEO 
+            <SEO
                 title={article.seo?.metaTitle || article.title}
                 description={article.seo?.metaDescription || article.summary}
                 keywords={article.seo?.keywords || article.tags}
@@ -104,11 +104,11 @@ const ArticlePage = () => {
                 canonicalUrl={article.seo?.canonicalUrl}
             />
             <div className="max-w-7xl mx-auto px-4 md:px-6 pt-16 md:pt-24">
-                <Breadcrumbs 
+                <Breadcrumbs
                     items={[
-                        { label: article.category?.name || 'News', link: `/category/${article.category?.slug}` },
+                        { label: article.category?.name || 'News', link: `/category/${article.category?.name.toLowerCase()}` },
                         { label: article.title }
-                    ]} 
+                    ]}
                 />
                 <ArticleHero article={article} />
             </div>

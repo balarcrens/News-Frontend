@@ -10,7 +10,8 @@ import {
     Trash2,
     ChevronLeft,
     ChevronRight,
-    AlertCircle
+    AlertCircle,
+    Sparkles
 } from 'lucide-react';
 import { articleService } from '../../api/articleService';
 import { Link } from 'react-router-dom';
@@ -18,6 +19,7 @@ import { format } from 'date-fns';
 import { categoryService } from '../../api/categoryService';
 import { toast } from 'react-toastify';
 import { confirmDestructive } from '../../utils/swal';
+import TopicGeneratorModal from './components/TopicGeneratorModal';
 
 const AdminArticles = () => {
     const [articles, setArticles] = useState([]);
@@ -29,6 +31,7 @@ const AdminArticles = () => {
     const [categoryFilter, setCategoryFilter] = useState('');
     const [typeFilter, setTypeFilter] = useState('');
     const [categories, setCategories] = useState([]);
+    const [isAIModalOpen, setIsAIModalOpen] = useState(false);
 
     useEffect(() => {
         const loadCategories = async () => {
@@ -96,18 +99,31 @@ const AdminArticles = () => {
         <div className="max-w-7xl mx-auto pb-20">
             <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
                 <div>
-                    <h1 className="text-4xl md:text-5xl font-black font-serif italic text-slate-900 tracking-tighter leading-none mb-4">
+                    <h1 className="text-4xl md:text-5xl font-black font-serif text-slate-900 tracking-tighter leading-none mb-4">
                         Article Matrix
                     </h1>
-                    <p className="text-sm font-serif italic text-slate-500">Managing {pagination.totalItems || 0} intelligence reports across the network.</p>
+                    <p className="text-sm font-serif text-slate-500">Managing {pagination.totalItems || 0} intelligence reports across the network.</p>
                 </div>
-                <Link
-                    to="/admin/articles/new"
-                    className="flex items-center justify-center bg-red-700 text-white px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] hover:bg-slate-900 transition-all duration-500 shadow-xl shadow-red-700/10"
-                >
-                    <Plus size={16} className="mr-2" /> Publish New Report
-                </Link>
+                <div className="flex flex-col sm:flex-row items-center gap-4">
+                    <button
+                        onClick={() => setIsAIModalOpen(true)}
+                        className="flex items-center justify-center bg-white border border-red-700 text-red-700 px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] hover:bg-red-700 hover:text-white transition-all duration-500 shadow-xl shadow-red-700/10 order-2 sm:order-1 w-full sm:w-auto"
+                    >
+                        <Sparkles size={16} className="mr-2" /> AI Discover
+                    </button>
+                    <Link
+                        to="/admin/articles/new"
+                        className="flex items-center justify-center bg-red-700 text-white px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] hover:bg-slate-900 transition-all duration-500 shadow-xl shadow-red-700/10 order-1 sm:order-2 w-full sm:w-auto"
+                    >
+                        <Plus size={16} className="mr-2" /> Publish New Report
+                    </Link>
+                </div>
             </header>
+
+            <TopicGeneratorModal 
+                isOpen={isAIModalOpen} 
+                onClose={() => setIsAIModalOpen(false)} 
+            />
 
             <div className="bg-white border border-slate-100 p-4 mb-8 flex flex-col xl:flex-row gap-6 items-center justify-between shadow-sm">
                 <div className="relative w-full xl:w-50 group">
@@ -265,7 +281,7 @@ const AdminArticles = () => {
                                     <td colSpan="5" className="py-20 text-center">
                                         <div className="flex flex-col items-center justify-center text-slate-300">
                                             <AlertCircle size={48} strokeWidth={1} className="mb-4" />
-                                            <p className="text-lg font-serif italic">No intelligence reports found matching your criteria.</p>
+                                            <p className="text-lg font-serif">No intelligence reports found matching your criteria.</p>
                                         </div>
                                     </td>
                                 </tr>

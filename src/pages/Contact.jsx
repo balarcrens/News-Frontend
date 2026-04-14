@@ -229,10 +229,10 @@ const Contact = () => {
                                 <a href="#" className="p-4 rounded-full border border-white/10 hover:bg-red-700 transition-all group">
                                     <Instagram size={20} className="text-gray-400 group-hover:text-white" />
                                 </a>
-                                <a href="#" className="p-4 rounded-full border border-white/10 hover:bg-red-700 transition-all group">
+                                <a href="https://x.com/Nexora_News" target='_blank' className="p-4 rounded-full border border-white/10 hover:bg-red-700 transition-all group">
                                     <Twitter size={20} className="text-gray-400 group-hover:text-white" />
                                 </a>
-                                <a href="#" className="p-4 rounded-full border border-white/10 hover:bg-red-700 transition-all group">
+                                <a href="https://www.linkedin.com/in/nexora-news" target='_blank' className="p-4 rounded-full border border-white/10 hover:bg-red-700 transition-all group">
                                     <Linkedin size={20} className="text-gray-400 group-hover:text-white" />
                                 </a>
                             </div>

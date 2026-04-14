@@ -99,10 +99,10 @@ const AdminUsers = () => {
         <div className="max-w-7xl mx-auto pb-20">
             <header className="mb-12">
                 <p className="text-[10px] font-black text-red-700 uppercase tracking-[0.4em] mb-4">Personnel Intelligence</p>
-                <h1 className="text-5xl md:text-6xl font-black font-serif italic text-slate-900 tracking-tighter leading-none mb-4">
+                <h1 className="text-5xl md:text-6xl font-black font-serif text-slate-900 tracking-tighter leading-none mb-4">
                     User Command
                 </h1>
-                <p className="text-lg font-serif italic text-slate-500">Manage site clearance and personnel credentials.</p>
+                <p className="text-lg font-serif text-slate-500">Manage site clearance and personnel credentials.</p>
             </header>
 
             {/* Matrix Search & Filter */}
@@ -164,7 +164,7 @@ const AdminUsers = () => {
                                                     {u.avatar ? (
                                                         <img src={u.avatar} className="w-full h-full object-cover" alt="" />
                                                     ) : (
-                                                        <span className="font-serif italic font-black text-xs">{(u.name?.[0] || 'U').toUpperCase()}</span>
+                                                        <span className="font-serif font-black text-xs">{(u.name?.[0] || 'U').toUpperCase()}</span>
                                                     )}
                                                 </div>
                                                 <div>
@@ -223,7 +223,7 @@ const AdminUsers = () => {
                                     <td colSpan="5" className="py-20 text-center">
                                         <div className="flex flex-col items-center justify-center text-slate-300">
                                             <AlertCircle size={48} strokeWidth={1} className="mb-4" />
-                                            <p className="text-lg font-serif italic">Identity not found in network databases.</p>
+                                            <p className="text-lg font-serif">Identity not found in network databases.</p>
                                         </div>
                                     </td>
                                 </tr>

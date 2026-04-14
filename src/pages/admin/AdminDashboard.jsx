@@ -31,7 +31,7 @@ const StatCard = ({ title, value, icon: Icon, color, trend }) => (
         </div>
         <div>
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2">{title}</p>
-            <h3 className="text-4xl font-serif italic font-black text-slate-900 tracking-tighter">{value}</h3>
+            <h3 className="text-4xl font-serif font-black text-slate-900 tracking-tighter">{value}</h3>
         </div>
     </div>
 );
@@ -75,10 +75,10 @@ const AdminDashboard = () => {
         <div className="max-w-7xl mx-auto pb-20">
             <header className="mb-12">
                 <p className="text-[10px] font-black text-red-700 uppercase tracking-[0.4em] mb-4">Editorial Command Center</p>
-                <h1 className="text-5xl md:text-6xl font-black font-serif italic text-slate-900 tracking-tighter leading-none mb-4">
+                <h1 className="text-5xl md:text-6xl font-black font-serif text-slate-900 tracking-tighter leading-none mb-4">
                     Pulse Intelligence Dashboard
                 </h1>
-                <p className="text-lg font-serif italic text-slate-500">System overview for current editorial operations.</p>
+                <p className="text-lg font-serif text-slate-500">System overview for current editorial operations.</p>
             </header>
 
             {/* Stats Grid */}
@@ -94,7 +94,7 @@ const AdminDashboard = () => {
                     <div className="bg-white border border-slate-100 p-8">
                         <div className="flex items-center justify-between mb-10">
                             <div>
-                                <h3 className="text-xl font-black font-serif italic text-slate-900 uppercase tracking-tight">Recent Editorial Intel</h3>
+                                <h3 className="text-xl font-black font-serif text-slate-900 uppercase tracking-tight">Recent Editorial Intel</h3>
                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Last 5 stories published or modified</p>
                             </div>
                             <Link to="/admin/articles" className="text-[9px] font-bold text-red-700 uppercase tracking-widest flex items-center hover:translate-x-2 transition-transform">
@@ -144,7 +144,7 @@ const AdminDashboard = () => {
                 {/* Quick Actions / Editorial Health */}
                 <div className="lg:col-span-4">
                     <div className="bg-white border border-slate-100 p-8 h-full">
-                        <h3 className="text-xl font-black font-serif italic text-slate-900 uppercase tracking-tight mb-8">Editorial Commands</h3>
+                        <h3 className="text-xl font-black font-serif text-slate-900 uppercase tracking-tight mb-8">Editorial Commands</h3>
 
                         <div className="space-y-4">
                             <Link to="/admin/articles/new" className="flex items-center justify-between p-6 bg-slate-950 text-white hover:bg-red-700 transition-all duration-500 group">

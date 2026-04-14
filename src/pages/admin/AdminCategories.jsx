@@ -107,10 +107,10 @@ const AdminCategories = () => {
         <div className="max-w-7xl mx-auto pb-40">
             <header className="mb-12">
                 <p className="text-[10px] font-black text-red-700 uppercase tracking-[0.4em] mb-4">Content Architecture</p>
-                <h1 className="text-5xl md:text-6xl font-black font-serif italic text-slate-900 tracking-tighter leading-none mb-4">
+                <h1 className="text-5xl md:text-6xl font-black font-serif text-slate-900 tracking-tighter leading-none mb-4">
                     Sector Management
                 </h1>
-                <p className="text-lg font-serif italic text-slate-500">Organize and refine the intellectual domains of Nexora News.</p>
+                <p className="text-lg font-serif text-slate-500">Organize and refine the intellectual domains of Nexora News.</p>
             </header>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
@@ -118,7 +118,7 @@ const AdminCategories = () => {
                 <div className="lg:col-span-4">
                     <div className="bg-white border border-slate-100 p-8 sticky top-32 shadow-sm">
                         <div className="flex items-center justify-between mb-8">
-                            <h2 className="text-xl font-black font-serif italic text-slate-900 uppercase tracking-tight">
+                            <h2 className="text-xl font-black font-serif text-slate-900 uppercase tracking-tight">
                                 {editingId ? 'Refine Sector' : 'Annex New Sector'}
                             </h2>
                             {editingId && (
@@ -145,7 +145,7 @@ const AdminCategories = () => {
                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2 block">System Memo (Description)</label>
                                 <textarea 
                                     rows="4"
-                                    className="w-full bg-slate-50 border-none p-4 text-[13px] font-medium text-slate-600 focus:ring-1 focus:ring-red-100 transition-all outline-none leading-relaxed italic"
+                                    className="w-full bg-slate-50 border-none p-4 text-[13px] font-medium text-slate-600 focus:ring-1 focus:ring-red-100 transition-all outline-none leading-relaxed"
                                     placeholder="Define the scope of this intelligence sector..."
                                     value={formData.description}
                                     onChange={(e) => setFormData(p => ({ ...p, description: e.target.value }))}
@@ -216,13 +216,13 @@ const AdminCategories = () => {
                                 </div>
 
                                 <div className="mb-6">
-                                    <h3 className="text-xl font-black font-serif italic text-slate-900 uppercase tracking-tight group-hover:text-red-700 transition-colors">
+                                    <h3 className="text-xl font-black font-serif text-slate-900 uppercase tracking-tight group-hover:text-red-700 transition-colors">
                                         {cat.name}
                                     </h3>
                                     <p className="text-[10px] font-bold text-slate-400 underline decoration-slate-100 underline-offset-4 mt-2">/{cat.slug}</p>
                                 </div>
 
-                                <p className="text-[12px] text-gray-400 font-medium italic leading-relaxed mb-8 line-clamp-2">
+                                <p className="text-[12px] text-gray-400 font-medium leading-relaxed mb-8 line-clamp-2">
                                     {cat.description || 'No system memo provided for this news sector.'}
                                 </p>
 
@@ -249,7 +249,7 @@ const AdminCategories = () => {
                     {!loading && categories.length === 0 && (
                         <div className="bg-white border border-slate-100 p-20 text-center">
                             <Layers size={48} strokeWidth={1} className="mx-auto mb-6 text-slate-200" />
-                            <p className="text-xl font-serif italic text-slate-400">No content sectors detected.</p>
+                            <p className="text-xl font-serif text-slate-400">No content sectors detected.</p>
                         </div>
                     )}
                 </div>

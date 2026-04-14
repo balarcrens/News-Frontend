@@ -60,10 +60,10 @@ const AdminSettings = () => {
         <div className="max-w-7xl mx-auto pb-20">
             <header className="mb-12">
                 <p className="text-[10px] font-black text-red-700 uppercase tracking-[0.4em] mb-4">Core Configuration</p>
-                <h1 className="text-5xl md:text-6xl font-black font-serif italic text-slate-900 tracking-tighter leading-none mb-4">
+                <h1 className="text-5xl md:text-6xl font-black font-serif text-slate-900 tracking-tighter leading-none mb-4">
                     Network Settings
                 </h1>
-                <p className="text-lg font-serif italic text-slate-500">Global website information and system telemetry.</p>
+                <p className="text-lg font-serif text-slate-500">Global website information and system telemetry.</p>
             </header>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
@@ -72,7 +72,7 @@ const AdminSettings = () => {
                     <div className="bg-white border border-slate-100 p-8 md:p-12 shadow-sm">
                         <div className="flex items-center mb-10">
                             <Activity className="text-red-700 mr-4" size={24} />
-                            <h3 className="text-xl font-black font-serif italic text-slate-900 uppercase tracking-tight">System Telemetry</h3>
+                            <h3 className="text-xl font-black font-serif text-slate-900 uppercase tracking-tight">System Telemetry</h3>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {systemInfo.map((info, i) => (
@@ -85,13 +85,13 @@ const AdminSettings = () => {
                     <div className="bg-white border border-slate-100 p-8 md:p-12 shadow-sm">
                         <div className="flex items-center mb-10">
                             <Layout className="text-red-700 mr-4" size={24} />
-                            <h3 className="text-xl font-black font-serif italic text-slate-900 uppercase tracking-tight">Branding & Identity</h3>
+                            <h3 className="text-xl font-black font-serif text-slate-900 uppercase tracking-tight">Branding & Identity</h3>
                         </div>
                         <div className="space-y-8">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div>
                                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3 block">Publication Name</label>
-                                    <div className="bg-slate-50 p-4 font-serif italic font-black text-2xl text-slate-900">Nexora News</div>
+                                    <div className="bg-slate-50 p-4 font-serif font-black text-2xl text-slate-900">Nexora News</div>
                                 </div>
                                 <div>
                                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3 block">Network Domain</label>
@@ -100,7 +100,7 @@ const AdminSettings = () => {
                             </div>
                             <div>
                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3 block">Global Editorial Slogan</label>
-                                <div className="bg-slate-50 p-4 italic font-medium text-slate-600 border-l-4 border-red-700">
+                                <div className="bg-slate-50 p-4 font-medium text-slate-600 border-l-4 border-red-700">
                                     "Prestige journalism for the modern digital evolution."
                                 </div>
                             </div>
@@ -113,7 +113,7 @@ const AdminSettings = () => {
                     <div className="bg-slate-900 text-white p-8">
                         <div className="flex items-center mb-8">
                             <div className="w-12 h-12 bg-red-700 flex items-center justify-center mr-4">
-                                <span className="font-serif font-black text-xl italic">N</span>
+                                <span className="font-serif font-black text-xl">N</span>
                             </div>
                             <div>
                                 <h4 className="text-[10px] font-black uppercase tracking-widest">Nexora Admin</h4>
@@ -143,15 +143,15 @@ const AdminSettings = () => {
                             <div className="space-y-4">
                                 <div className="flex justify-between items-end border-b border-slate-50 pb-4">
                                     <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Intel Volumes</span>
-                                    <span className="text-xl font-serif italic font-black text-slate-900">{stats.totalArticles}</span>
+                                    <span className="text-xl font-serif font-black text-slate-900">{stats.totalArticles}</span>
                                 </div>
                                 <div className="flex justify-between items-end border-b border-slate-50 pb-4">
                                     <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Global Reach</span>
-                                    <span className="text-xl font-serif italic font-black text-slate-900">{stats.totalViews}</span>
+                                    <span className="text-xl font-serif font-black text-slate-900">{stats.totalViews}</span>
                                 </div>
                                 <div className="flex justify-between items-end border-b border-slate-50 pb-4">
                                     <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Personnel Count</span>
-                                    <span className="text-xl font-serif italic font-black text-slate-900">12</span>
+                                    <span className="text-xl font-serif font-black text-slate-900">12</span>
                                 </div>
                             </div>
                         )}

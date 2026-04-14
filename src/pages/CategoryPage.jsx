@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, Link, useSearchParams } from 'react-router-dom';
+import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { categoryService } from '../api/categoryService';
 import { articleService } from '../api/articleService';
 import CategoryHeader from '../components/category/CategoryHeader';
@@ -46,9 +46,10 @@ const Pagination = ({ pagination, onPageChange }) => {
 };
 
 const ArticleCard = ({ article, isFeatured = false }) => {
+    const navigate = useNavigate();
     if (isFeatured) {
         return (
-            <div className="relative group mb-20">
+            <div className="relative group mb-20 cursor-pointer" onClick={() => { navigate(`/article/${article.slug}`) }}>
                 <div className="relative aspect-[21/9] overflow-hidden mb-10">
                     <img
                         src={article.media?.featuredImage || 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=2072&auto=format&fit=crop'}
@@ -70,7 +71,7 @@ const ArticleCard = ({ article, isFeatured = false }) => {
                 </div>
 
                 <div className="max-w-4xl">
-                    <h2 className="text-3xl md:text-6xl font-black font-serif italic tracking-tighter text-slate-900 mb-8 leading-[1.05] group-hover:text-red-700 transition-colors">
+                    <h2 className="text-3xl md:text-4xl font-black font-serif italic tracking-tighter text-slate-900 mb-8 leading-[1.05] group-hover:text-red-700 transition-colors">
                         <Link to={`/article/${article.slug}`}>{article.title}</Link>
                     </h2>
                     <p className="text-md sm:text-xl font-serif text-gray-500 mb-10 leading-relaxed italic max-w-3xl line-clamp-2">
@@ -99,7 +100,7 @@ const ArticleCard = ({ article, isFeatured = false }) => {
     }
 
     return (
-        <div className="group">
+        <div className="group cursor-pointer">
             <div className="relative aspect-[16/10] overflow-hidden mb-6">
                 <img
                     src={article.media?.featuredImage || 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=2072&auto=format&fit=crop'}
@@ -206,7 +207,7 @@ const CategoryPage = () => {
 
     return (
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-12">
-            <SEO 
+            <SEO
                 title={`${category?.name} News`}
                 description={category?.description || `Explore the latest ${category?.name} news, analysis and reports on Nexora News.`}
                 ogType="website"

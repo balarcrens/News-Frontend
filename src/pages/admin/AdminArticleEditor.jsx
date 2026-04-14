@@ -1,16 +1,16 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-    ArrowLeft, 
-    Save, 
-    Eye, 
-    Plus, 
-    Type, 
-    Heading, 
-    Image as ImageIcon, 
-    Quote, 
-    Trash2, 
-    MoveUp, 
+import {
+    ArrowLeft,
+    Save,
+    Eye,
+    Plus,
+    Type,
+    Heading,
+    Image as ImageIcon,
+    Quote,
+    Trash2,
+    MoveUp,
     MoveDown,
     Loader2,
     CheckCircle2,
@@ -21,12 +21,16 @@ import {
     UserCircle,
     Clock,
     Lock,
-    Hash
+    Hash,
+    Sparkles,
+    RefreshCcw,
+    Zap
 } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { articleService } from '../../api/articleService';
 import { categoryService } from '../../api/categoryService';
 import { userService } from '../../api/userService';
+import { aiService } from '../../api/aiService';
 import api from '../../api/axios';
 import { format } from 'date-fns';
 import { toast } from 'react-toastify';
@@ -34,9 +38,9 @@ import { toast } from 'react-toastify';
 const AdminInput = ({ label, ...props }) => (
     <div className="space-y-2">
         {label && <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] block">{label}</label>}
-        <div className="bg-slate-50 border-none px-4 py-3.5 focus-within:ring-1 focus-within:ring-red-700/20 transition-all group/input">
-            <input 
-                {...props} 
+        <div className="bg-white border border-slate-200 px-4 py-3.5 focus-within:ring-1 focus-within:ring-red-700/20 transition-all group/input">
+            <input
+                {...props}
                 className="w-full bg-transparent border-none p-0 text-[12px] font-bold text-slate-900 outline-none placeholder:text-slate-200"
             />
         </div>
@@ -46,9 +50,9 @@ const AdminInput = ({ label, ...props }) => (
 const AdminTextarea = ({ label, ...props }) => (
     <div className="space-y-2">
         {label && <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] block">{label}</label>}
-        <div className="bg-slate-50 border-none px-4 py-4 focus-within:ring-1 focus-within:ring-red-700/20 transition-all">
-            <textarea 
-                {...props} 
+        <div className="bg-white border border-slate-200 px-4 py-4 focus-within:ring-1 focus-within:ring-red-700/20 transition-all">
+            <textarea
+                {...props}
                 className="w-full bg-transparent border-none p-0 text-[13px] font-medium text-slate-600 outline-none placeholder:text-slate-200 resize-none leading-relaxed"
             />
         </div>
@@ -60,7 +64,7 @@ const AdminToggle = ({ label, checked, onChange }) => (
         <span className="text-[10px] font-black text-slate-900 tracking-widest group-hover:text-red-700 transition-colors uppercase">
             {label}
         </span>
-        <div 
+        <div
             onClick={() => onChange(!checked)}
             className={`relative w-10 h-5 transition-colors duration-300 ${checked ? 'bg-red-700' : 'bg-slate-200'}`}
         >
@@ -76,10 +80,10 @@ const BlockWrapper = ({ children, onRemove, onMoveUp, onMoveDown, label }) => (
             <div className="h-4 w-px bg-slate-100 my-1"></div>
             <button onClick={onMoveDown} className="p-1.5 hover:text-red-700 transition-colors"><MoveDown size={14} /></button>
         </div>
-        
+
         <div className="flex items-center justify-between mb-6">
             <span className="text-[10px] font-black text-red-700 uppercase tracking-[0.4em]">{label}</span>
-            <button 
+            <button
                 onClick={onRemove}
                 className="p-2 text-slate-300 hover:text-red-700 hover:bg-red-50 transition-all"
             >
@@ -93,10 +97,12 @@ const BlockWrapper = ({ children, onRemove, onMoveUp, onMoveDown, label }) => (
 const AdminArticleEditor = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(id ? true : false);
     const [categories, setCategories] = useState([]);
     const [isSaving, setIsSaving] = useState(false);
+    const [isGenerating, setIsGenerating] = useState(false);
     const [activeTab, setActiveTab] = useState('editorial');
     const [slugLocked, setSlugLocked] = useState(id ? true : false);
     const [users, setUsers] = useState([]);
@@ -116,7 +122,8 @@ const AdminArticleEditor = () => {
         publishedAt: '',
         media: {
             featuredImage: '',
-            imageAlt: ''
+            imageAlt: '',
+            imagePrompt: ''
         },
         customAuthor: {
             name: '',
@@ -158,6 +165,23 @@ const AdminArticleEditor = () => {
                         author: article.author?._id || article.author || '',
                         publishedAt: article.publishedAt ? format(new Date(article.publishedAt), "yyyy-MM-dd'T'HH:mm") : ''
                     });
+                } else {
+                    // Handle query params for new article from AI Topic Discovery
+                    const searchParams = new URLSearchParams(location.search);
+                    const topicParam = searchParams.get('topic');
+                    const categoryParam = searchParams.get('category');
+                    const summaryParam = searchParams.get('summary');
+
+                    if (topicParam) {
+                        const matchedCat = cats.find(c => c.name.toLowerCase() === categoryParam?.toLowerCase());
+                        setFormData(prev => ({
+                            ...prev,
+                            title: topicParam,
+                            summary: summaryParam || '',
+                            category: matchedCat?._id || '',
+                            slug: topicParam.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')
+                        }));
+                    }
                 }
             } catch (err) {
                 console.error("Error loading editor data:", err);
@@ -167,11 +191,11 @@ const AdminArticleEditor = () => {
             }
         };
         loadInitialData();
-    }, [id]);
+    }, [id, location.search]);
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
-        
+
         // Handle nested fields (e.g., customAuthor.name)
         if (name.includes('.')) {
             const [parent, child] = name.split('.');
@@ -228,9 +252,9 @@ const AdminArticleEditor = () => {
 
     // --- Block Management ---
     const addBlock = (type) => {
-        const newBlock = { 
-            type, 
-            value: '', 
+        const newBlock = {
+            type,
+            value: '',
             id: Date.now() + Math.random(),
             ...(type === 'image' ? { caption: '' } : {})
         };
@@ -238,7 +262,7 @@ const AdminArticleEditor = () => {
             ...prev,
             content: [...prev.content, newBlock]
         }));
-        
+
         setTimeout(() => {
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }, 100);
@@ -294,6 +318,69 @@ const AdminArticleEditor = () => {
         };
     };
 
+    const handleAIGenerate = async () => {
+        if (!formData.title) {
+            toast.warning('Headline required for AI intelligence generation.');
+            return;
+        }
+
+        setIsGenerating(true);
+        try {
+            const aiData = await aiService.generateArticle(formData.title);
+
+            // Map blocks from AI response to editor internal format
+            const mappedContent = aiData.content.content.map(item => ({
+                id: Math.random() + Date.now(),
+                type: item.type === 'paragraph' ? 'text' : 'heading',
+                value: item.text,
+                ...(item.type === 'heading' ? { level: item.level } : {})
+            }));
+
+            // Try to match category ID from category name
+            const matchedCat = categories.find(c => c.name.toLowerCase() === aiData.categoryName?.toLowerCase());
+
+            setFormData(prev => ({
+                ...prev,
+                title: aiData.title || prev.title,
+                slug: aiData.slug || prev.slug,
+                summary: aiData.summary || prev.summary,
+                category: matchedCat?._id || prev.category,
+                tags: [...new Set([...prev.tags, ...(aiData.tags || [])])],
+                isBreaking: aiData.isBreaking ?? prev.isBreaking,
+                isFeatured: aiData.isFeatured ?? prev.isFeatured,
+                publishedAt: aiData.publishedAt ? format(new Date(aiData.publishedAt), "yyyy-MM-dd'T'HH:mm") : prev.publishedAt,
+                media: {
+                    ...prev.media,
+                    imageAlt: aiData.media?.imageAlt || prev.media.imageAlt,
+                    imagePrompt: aiData.media?.featuredImage || prev.media.imagePrompt,
+                },
+                content: mappedContent,
+                seo: {
+                    ...prev.seo,
+                    metaTitle: aiData.seo?.metaTitle || aiData.title,
+                    metaDescription: (aiData.seo?.metaDescription || aiData.summary)?.substring(0, 160),
+                    keywords: aiData.seo?.keywords || aiData.tags || [],
+                    canonicalUrl: aiData.seo?.canonicalUrl || prev.seo.canonicalUrl,
+                    ogTitle: aiData.seo?.ogTitle || aiData.seo?.metaTitle || aiData.title,
+                    ogDescription: (aiData.seo?.ogDescription || aiData.seo?.metaDescription || aiData.summary)?.substring(0, 160),
+                    ogImage: aiData.seo?.ogImage || prev.seo.ogImage,
+                },
+                source: {
+                    name: aiData.source?.name || '',
+                    url: aiData.source?.url || ''
+                }
+
+            }));
+
+            toast.success('AI intelligence successfully synthesized.');
+        } catch (err) {
+            console.error('AI Gen Error:', err);
+            toast.error('AI synthesis failed: ' + (err.message || 'Check API key configuration'));
+        } finally {
+            setIsGenerating(false);
+        }
+    };
+
     const handleSave = async () => {
         if (!formData.title || !formData.category) {
             toast.warning('Title and Category are required for intelligence reporting.');
@@ -339,7 +426,7 @@ const AdminArticleEditor = () => {
                         <ArrowLeft size={24} />
                     </button>
                     <div>
-                        <h1 className="text-xl font-black font-serif italic text-slate-900 uppercase tracking-tight">
+                        <h1 className="text-xl font-black font-serif text-slate-900 uppercase tracking-tight">
                             {id ? 'Refine Report' : 'New Intelligence Briefing'}
                         </h1>
                         <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">
@@ -347,7 +434,7 @@ const AdminArticleEditor = () => {
                         </p>
                     </div>
                 </div>
-                
+
                 <div className="flex items-center space-x-3">
                     <button onClick={() => window.open(id ? `/article/${formData.slug}` : '/', '_blank')} className="px-5 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-slate-900 border border-slate-100 flex items-center">
                         <Eye size={16} className="mr-2" /> Preview
@@ -381,18 +468,28 @@ const AdminArticleEditor = () => {
                         <div className="space-y-12 animate-in fade-in duration-500">
                             {/* Title & Summary */}
                             <div className="bg-white border border-slate-100 p-8 md:p-12 shadow-sm">
-                                <div className="mb-10">
-                                    <label className="text-[10px] font-black text-red-700 uppercase tracking-[0.4em] mb-4 block">Headline Presentation</label>
-                                    <input 
-                                        type="text"
-                                        name="title"
-                                        placeholder="Enter report headline..."
-                                        className="w-full text-4xl font-serif italic font-black text-slate-900 border-none p-0 focus:ring-0 placeholder:text-slate-100 outline-none"
-                                        value={formData.title}
-                                        onChange={handleInputChange}
-                                    />
+                                <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                                    <div className="flex-1">
+                                        <label className="text-[10px] font-black text-red-700 uppercase tracking-[0.4em] mb-4 block">Headline Presentation</label>
+                                        <input
+                                            type="text"
+                                            name="title"
+                                            placeholder="Enter report headline..."
+                                            className="w-full text-4xl font-serif font-black text-slate-900 border-none p-0 focus:ring-0 placeholder:text-slate-100 outline-none"
+                                            value={formData.title}
+                                            onChange={handleInputChange}
+                                        />
+                                    </div>
+                                    <button
+                                        onClick={handleAIGenerate}
+                                        disabled={isGenerating || !formData.title}
+                                        className="h-fit flex items-center justify-center bg-white border border-red-700 text-red-700 px-6 py-4 text-[9px] font-black uppercase tracking-[0.2em] hover:bg-red-700 hover:text-white transition-all duration-500 disabled:opacity-30 group"
+                                    >
+                                        {isGenerating ? <Loader2 size={14} className="mr-3 animate-spin" /> : <Sparkles size={14} className="mr-3 group-hover:animate-bounce" />}
+                                        AI Synthesize Content
+                                    </button>
                                 </div>
-                                <AdminTextarea 
+                                <AdminTextarea
                                     label="Executive Summary"
                                     name="summary"
                                     rows="4"
@@ -405,7 +502,7 @@ const AdminArticleEditor = () => {
                             {/* Blocks Editor */}
                             <div className="editorial-canvas">
                                 <div className="flex items-center justify-between mb-8 px-2">
-                                    <h2 className="text-xl font-black font-serif italic text-slate-900 uppercase tracking-tight">Briefing Flow</h2>
+                                    <h2 className="text-xl font-black font-serif text-slate-900 uppercase tracking-tight">Briefing Flow</h2>
                                     <div className="h-px bg-slate-100 flex-1 mx-6"></div>
                                     <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{formData.content.length} Blocks Recorded</span>
                                 </div>
@@ -413,20 +510,20 @@ const AdminArticleEditor = () => {
                                 {formData.content.length === 0 ? (
                                     <div className="bg-slate-50 border border-dashed border-slate-200 p-20 text-center mb-8">
                                         <Layout size={48} strokeWidth={1} className="mx-auto mb-6 text-slate-300" />
-                                        <p className="text-lg font-serif italic text-slate-400 mb-2">Editorial canvas empty.</p>
+                                        <p className="text-lg font-serif text-slate-400 mb-2">Editorial canvas empty.</p>
                                     </div>
                                 ) : (
                                     <div className="space-y-4">
                                         {formData.content.map((block, index) => (
-                                            <BlockWrapper 
-                                                key={block.id} 
+                                            <BlockWrapper
+                                                key={block.id}
                                                 label={block.type === 'text' ? 'Paragraph' : block.type === 'heading' ? 'Subtitle' : block.type}
                                                 onRemove={() => removeBlock(index)}
                                                 onMoveUp={() => moveBlock(index, -1)}
                                                 onMoveDown={() => moveBlock(index, 1)}
                                             >
                                                 {block.type === 'text' && (
-                                                    <textarea 
+                                                    <textarea
                                                         rows="5"
                                                         className="w-full text-lg font-serif text-slate-700 leading-9 md:leading-10 border-none p-0 focus:ring-0 placeholder:text-slate-100 resize-none outline-none"
                                                         placeholder="Report details..."
@@ -435,9 +532,9 @@ const AdminArticleEditor = () => {
                                                     ></textarea>
                                                 )}
                                                 {block.type === 'heading' && (
-                                                    <input 
+                                                    <input
                                                         type="text"
-                                                        className="w-full text-2xl font-black font-serif italic text-slate-900 border-none p-0 focus:ring-0 placeholder:text-slate-100 outline-none"
+                                                        className="w-full text-2xl font-black font-serif text-slate-900 border-none p-0 focus:ring-0 placeholder:text-slate-100 outline-none"
                                                         placeholder="Section subtitle..."
                                                         value={block.value}
                                                         onChange={(e) => updateBlock(index, e.target.value)}
@@ -464,11 +561,11 @@ const AdminArticleEditor = () => {
                                                                 </label>
                                                             )}
                                                         </div>
-                                                        <div className="bg-slate-50 border-none px-4 py-3 focus-within:ring-1 focus-within:ring-red-700/20 transition-all">
-                                                            <input 
+                                                        <div className="bg-white border border-slate-200 px-4 py-3 focus-within:ring-1 focus-within:ring-red-700/20 transition-all">
+                                                            <input
                                                                 type="text"
                                                                 placeholder="Add caption / Source..."
-                                                                className="w-full bg-transparent border-none text-[10px] italic font-medium text-slate-500 text-center tracking-wider outline-none"
+                                                                className="w-full bg-transparent border-none text-[10px] font-medium text-slate-500 text-center tracking-wider outline-none"
                                                                 value={block.caption}
                                                                 onChange={(e) => updateBlock(index, block.value, { caption: e.target.value })}
                                                             />
@@ -478,9 +575,9 @@ const AdminArticleEditor = () => {
                                                 {block.type === 'quote' && (
                                                     <div className="border-l-4 border-red-700 pl-8 relative">
                                                         <span className="absolute -left-3 -top-10 text-8xl text-red-700/5 font-serif leading-none select-none">“</span>
-                                                        <textarea 
+                                                        <textarea
                                                             rows="2"
-                                                            className="w-full text-3xl font-black font-serif italic text-slate-900 border-none p-0 focus:ring-0 placeholder:text-slate-100 leading-tight resize-none outline-none"
+                                                            className="w-full text-3xl font-black font-serif text-slate-900 border-none p-0 focus:ring-0 placeholder:text-slate-100 leading-tight resize-none outline-none"
                                                             placeholder="Pull quote..."
                                                             value={block.value}
                                                             onChange={(e) => updateBlock(index, e.target.value)}
@@ -503,37 +600,9 @@ const AdminArticleEditor = () => {
 
                     {activeTab === 'authorship' && (
                         <div className="space-y-12 animate-in slide-in-from-right-4 duration-500">
-                            {/* System Author */}
-                            <div className="bg-white border border-slate-100 p-8 md:p-12 shadow-sm">
-                                <h3 className="text-xl font-black font-serif italic text-slate-900 uppercase tracking-tight mb-8">Internal Verification</h3>
-                                <div className="space-y-6">
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] block">System Personnel (Author)</label>
-                                        <div className="bg-slate-50 border-none px-4 py-3.5 focus-within:ring-1 focus-within:ring-red-700/20 transition-all">
-                                            <select 
-                                                name="author"
-                                                className="w-full bg-transparent border-none p-0 text-[12px] font-bold text-slate-900 outline-none uppercase tracking-widest"
-                                                value={formData.author}
-                                                onChange={handleInputChange}
-                                            >
-                                                <option value="">Select Personnel...</option>
-                                                {users.map(u => (
-                                                    <option key={u._id} value={u._id}>{u.name} ({u.role})</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <AdminToggle 
-                                        label="Verified Intelligence Seal"
-                                        checked={formData.isVerified}
-                                        onChange={(val) => setFormData(p => ({ ...p, isVerified: val }))}
-                                    />
-                                </div>
-                            </div>
-
                             {/* Custom Author */}
                             <div className="bg-white border border-slate-100 p-8 md:p-12 shadow-sm">
-                                <h3 className="text-xl font-black font-serif italic text-slate-900 uppercase tracking-tight mb-8">Guest Reporting Profile</h3>
+                                <h3 className="text-xl font-black font-serif text-slate-900 uppercase tracking-tight mb-8">Guest Reporting Profile</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
                                     <div className="md:col-span-4">
                                         <div className="aspect-square bg-slate-50 border border-slate-100 relative group overflow-hidden">
@@ -552,14 +621,14 @@ const AdminArticleEditor = () => {
                                         </div>
                                     </div>
                                     <div className="md:col-span-8 space-y-6">
-                                        <AdminInput 
+                                        <AdminInput
                                             label="Public Display Name"
                                             name="customAuthor.name"
                                             value={formData.customAuthor.name}
                                             onChange={handleInputChange}
                                             placeholder="Guest Reporter Identity"
                                         />
-                                        <AdminTextarea 
+                                        <AdminTextarea
                                             label="Short Intelligence Bio"
                                             name="customAuthor.bio"
                                             rows="3"
@@ -573,15 +642,15 @@ const AdminArticleEditor = () => {
 
                             {/* Source */}
                             <div className="bg-white border border-slate-100 p-8 md:p-12 shadow-sm">
-                                <h3 className="text-xl font-black font-serif italic text-slate-900 uppercase tracking-tight mb-8">External Intel Source</h3>
+                                <h3 className="text-xl font-black font-serif text-slate-900 uppercase tracking-tight mb-8">External Intel Source</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                    <AdminInput 
+                                    <AdminInput
                                         label="Source Identity"
                                         name="source.name"
                                         value={formData.source.name}
                                         onChange={handleInputChange}
                                     />
-                                    <AdminInput 
+                                    <AdminInput
                                         label="Canonical Source URL"
                                         name="source.url"
                                         value={formData.source.url}
@@ -595,12 +664,12 @@ const AdminArticleEditor = () => {
                     {activeTab === 'internal' && (
                         <div className="space-y-12 animate-in slide-in-from-right-4 duration-500">
                             <div className="bg-white border border-slate-100 p-8 md:p-12 shadow-sm">
-                                <h3 className="text-xl font-black font-serif italic text-slate-900 uppercase tracking-tight mb-8">Transmission Protocols</h3>
+                                <h3 className="text-xl font-black font-serif text-slate-900 uppercase tracking-tight mb-8">Transmission Protocols</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <div className="space-y-2">
                                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] block">Publication Sector</label>
                                         <div className="bg-slate-50 border-none px-4 py-3.5 focus-within:ring-1 focus-within:ring-red-700/20 transition-all">
-                                            <select 
+                                            <select
                                                 name="category"
                                                 className="w-full bg-transparent border-none p-0 text-[12px] font-bold text-slate-900 outline-none uppercase tracking-widest"
                                                 value={formData.category}
@@ -613,17 +682,18 @@ const AdminArticleEditor = () => {
                                     </div>
                                     <div className="space-y-2">
                                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] block">Status Protocol</label>
-                                        <div className="bg-slate-50 border-none px-4 py-3.5 focus-within:ring-1 focus-within:ring-red-700/20 transition-all">
-                                            <select 
+                                        <div className="bg-white border border-slate-200 px-4 py-3.5 focus-within:ring-1 focus-within:ring-red-700/20 transition-all">
+                                            <select
                                                 name="status"
                                                 className="w-full bg-transparent border-none p-0 text-[12px] font-bold text-slate-900 outline-none uppercase tracking-widest"
                                                 value={formData.status}
                                                 onChange={handleInputChange}
                                             >
-                                                <option value="draft">Internal Draft</option>
-                                                <option value="published">Final Broadcast</option>
-                                                <option value="pending_review">Sent for Review</option>
-                                                <option value="archived">Secure Archive</option>
+                                                <option value="draft">Draft</option>
+                                                <option value="pending_review">Pending Review</option>
+                                                <option value="scheduled">Scheduled</option>
+                                                <option value="published">Published</option>
+                                                <option value="archived">Archived</option>
                                             </select>
                                         </div>
                                     </div>
@@ -631,7 +701,7 @@ const AdminArticleEditor = () => {
                                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] block">Manual Date Override</label>
                                         <div className="bg-slate-50 border-none px-4 py-3.5 focus-within:ring-1 focus-within:ring-red-700/20 transition-all flex items-center">
                                             <Clock size={16} className="text-slate-300 mr-3" />
-                                            <input 
+                                            <input
                                                 type="datetime-local"
                                                 name="publishedAt"
                                                 className="w-full bg-transparent border-none p-0 text-[12px] font-bold text-slate-900 outline-none uppercase tracking-widest"
@@ -643,22 +713,22 @@ const AdminArticleEditor = () => {
                                 </div>
 
                                 <div className="mt-12 pt-12 border-t border-slate-50 grid grid-cols-1 md:grid-cols-3 gap-8">
-                                    <AdminToggle label="Featured intel" checked={formData.isFeatured} onChange={(v) => setFormData(p => ({...p, isFeatured: v}))} />
-                                    <AdminToggle label="Breaking Bulletin" checked={formData.isBreaking} onChange={(v) => setFormData(p => ({...p, isBreaking: v}))} />
+                                    <AdminToggle label="Featured intel" checked={formData.isFeatured} onChange={(v) => setFormData(p => ({ ...p, isFeatured: v }))} />
+                                    <AdminToggle label="Breaking Bulletin" checked={formData.isBreaking} onChange={(v) => setFormData(p => ({ ...p, isBreaking: v }))} />
                                 </div>
                             </div>
 
                             {/* Tags */}
                             <div className="bg-white border border-slate-100 p-8 md:p-12 shadow-sm">
-                                <h3 className="text-xl font-black font-serif italic text-slate-900 uppercase tracking-tight mb-4">Indexing Tags</h3>
-                                <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest mb-8 italic">Type a concept and press Enter to bubble-wrap the tag.</p>
-                                
+                                <h3 className="text-xl font-black font-serif text-slate-900 uppercase tracking-tight mb-4">Indexing Tags</h3>
+                                <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest mb-8">Type a concept and press Enter to bubble-wrap the tag.</p>
+
                                 <div className="space-y-6">
                                     <div className="bg-slate-50 border-none px-4 py-3.5 focus-within:ring-1 focus-within:ring-red-700/20 transition-all flex items-center">
                                         <Hash size={16} className="text-slate-300 mr-3" />
-                                        <input 
-                                            type="text" 
-                                            placeholder="Add intel markers..." 
+                                        <input
+                                            type="text"
+                                            placeholder="Add intel markers..."
                                             className="w-full bg-transparent border-none p-0 text-[12px] font-bold text-slate-900 outline-none uppercase tracking-widest"
                                             value={tagInput}
                                             onChange={(e) => setTagInput(e.target.value)}
@@ -666,8 +736,8 @@ const AdminArticleEditor = () => {
                                         />
                                     </div>
                                     <div className="flex flex-wrap gap-2">
-                                        {formData.tags.map(tag => (
-                                            <span key={tag} className="flex items-center px-3 py-1.5 bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest group">
+                                        {formData.tags.map((tag, idx) => (
+                                            <span key={idx} className="flex items-center px-3 py-1.5 bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest group">
                                                 {tag}
                                                 <button onClick={() => removeTag(tag)} className="ml-2 hover:text-red-500 transition-colors">
                                                     <X size={12} />
@@ -683,7 +753,7 @@ const AdminArticleEditor = () => {
                     {activeTab === 'seo' && (
                         <div className="space-y-12 animate-in slide-in-from-right-4 duration-500">
                             <div className="bg-white border border-slate-100 p-8 md:p-12 shadow-sm">
-                                <h3 className="text-xl font-black font-serif italic text-slate-900 uppercase tracking-tight mb-8">Search Optimization (SEO)</h3>
+                                <h3 className="text-xl font-black font-serif text-slate-900 uppercase tracking-tight mb-8">Search Optimization (SEO)</h3>
                                 <div className="space-y-8">
                                     <div className="space-y-2">
                                         <div className="flex justify-between">
@@ -693,8 +763,8 @@ const AdminArticleEditor = () => {
                                             </span>
                                         </div>
                                         <div className="bg-slate-50 border-none px-4 py-3.5 focus-within:ring-1 focus-within:ring-red-700/20 transition-all">
-                                            <input 
-                                                type="text" 
+                                            <input
+                                                type="text"
                                                 name="metaTitle"
                                                 className="w-full bg-transparent border-none p-0 text-[12px] font-bold text-slate-900 outline-none"
                                                 value={formData.seo.metaTitle}
@@ -709,14 +779,14 @@ const AdminArticleEditor = () => {
                                                 {formData.seo.metaDescription.length} / 160
                                             </span>
                                         </div>
-                                        <AdminTextarea 
+                                        <AdminTextarea
                                             name="metaDescription"
                                             rows="4"
                                             value={formData.seo.metaDescription}
                                             onChange={handleSEOChange}
                                         />
                                     </div>
-                                    <AdminInput 
+                                    <AdminInput
                                         label="Canonical Intel URL"
                                         name="canonicalUrl"
                                         value={formData.seo.canonicalUrl}
@@ -726,7 +796,7 @@ const AdminArticleEditor = () => {
                             </div>
 
                             <div className="bg-white border border-slate-100 p-8 md:p-12 shadow-sm">
-                                <h3 className="text-xl font-black font-serif italic text-slate-900 uppercase tracking-tight mb-8">Social Graph (OG)</h3>
+                                <h3 className="text-xl font-black font-serif text-slate-900 uppercase tracking-tight mb-8">Social Graph (OG)</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <AdminInput label="OG Headline" name="ogTitle" value={formData.seo.ogTitle} onChange={handleSEOChange} />
                                     <AdminInput label="OG Visual Assets (URL)" name="ogImage" value={formData.seo.ogImage} onChange={handleSEOChange} />
@@ -758,7 +828,19 @@ const AdminArticleEditor = () => {
                                 </label>
                             )}
                         </div>
-                        <AdminInput label="Visual Alt Signature" value={formData.media.imageAlt} onChange={(e) => setFormData(p => ({...p, media: {...p.media, imageAlt: e.target.value}}))} />
+                        <AdminInput label="Visual Alt Signature" value={formData.media.imageAlt} onChange={(e) => setFormData(p => ({ ...p, media: { ...p.media, imageAlt: e.target.value } }))} />
+
+                        {formData.media.imagePrompt && (
+                            <div className="mt-6 p-5 bg-slate-50 border-l-2 border-red-700 animate-in slide-in-from-left-2 duration-700">
+                                <div className="flex items-center space-x-2 mb-3">
+                                    <Sparkles size={12} className="text-red-700" />
+                                    <span className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-400">Suggested Visual Protocol</span>
+                                </div>
+                                <p className="text-[10px] text-slate-600 leading-relaxed font-serif">
+                                    "{formData.media.imagePrompt}"
+                                </p>
+                            </div>
+                        )}
                     </div>
 
                     {/* Meta Controls */}
@@ -768,8 +850,8 @@ const AdminArticleEditor = () => {
                             <div>
                                 <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3 block">Network Broadcast Type</label>
                                 <div className="grid grid-cols-2 bg-slate-50 p-1">
-                                    <button onClick={() => setFormData(p => ({...p, type: 'news'}))} className={`py-2 text-[9px] font-black uppercase tracking-widest transition-all ${formData.type === 'news' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}>News Intel</button>
-                                    <button onClick={() => setFormData(p => ({...p, type: 'blog'}))} className={`py-2 text-[9px] font-black uppercase tracking-widest transition-all ${formData.type === 'blog' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}>Opinion Blog</button>
+                                    <button onClick={() => setFormData(p => ({ ...p, type: 'news' }))} className={`py-2 text-[9px] font-black uppercase tracking-widest transition-all ${formData.type === 'news' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}>News Intel</button>
+                                    <button onClick={() => setFormData(p => ({ ...p, type: 'blog' }))} className={`py-2 text-[9px] font-black uppercase tracking-widest transition-all ${formData.type === 'blog' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}>Opinion Blog</button>
                                 </div>
                             </div>
                         </div>

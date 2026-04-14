@@ -2,14 +2,14 @@ import React from 'react';
 import { ChevronRight, Filter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const CategorySidebar = ({ 
-    categories = [], 
-    activeSlug, 
-    onSortChange, 
-    sortBy, 
-    timePeriod, 
+const CategorySidebar = ({
+    categories = [],
+    activeSlug,
+    onSortChange,
+    sortBy,
+    timePeriod,
     onTimeChange,
-    onApply 
+    onApply
 }) => {
     return (
         <aside className="w-full lg:w-64 shrink-0 space-y-12">
@@ -19,24 +19,26 @@ const CategorySidebar = ({
                     Categories
                 </h3>
                 <nav className="space-y-3">
-                    {categories.map((cat) => (
-                        <Link 
-                            key={cat._id}
-                            to={`/category/${cat.slug}`}
-                            className={`flex items-center justify-between group transition-all ${activeSlug === cat.slug ? 'text-red-700 font-bold' : 'text-slate-600 hover:text-slate-900'}`}
-                        >
-                            <span className="text-[11px] font-bold tracking-tight uppercase group-hover:translate-x-1 transition-transform">
-                                {cat.name}
-                            </span>
-                            {activeSlug === cat.slug ? (
-                                <ChevronRight size={14} className="text-red-700" />
-                            ) : (
-                                <span className="text-[10px] text-gray-300 font-medium">
-                                    {cat.articleCount || 0}
+                    {categories.map((cat) => {
+                        return (
+                            <Link
+                                key={cat._id}
+                                to={`/category/${cat.slug}`}
+                                className={`flex items-center justify-between group transition-all ${activeSlug === cat.slug ? 'text-red-700 font-bold' : 'text-slate-600 hover:text-slate-900'}`}
+                            >
+                                <span className="text-[11px] font-bold tracking-tight uppercase group-hover:translate-x-1 transition-transform">
+                                    {cat.name}
                                 </span>
-                            )}
-                        </Link>
-                    ))}
+                                {activeSlug === cat.slug ? (
+                                    <ChevronRight size={14} className="text-red-700" />
+                                ) : (
+                                    <span className="text-[10px] text-gray-300 font-medium">
+                                        {cat.articleCount || 0}
+                                    </span>
+                                )}
+                            </Link>
+                        )
+                    })}
                 </nav>
             </div>
 
@@ -53,9 +55,9 @@ const CategorySidebar = ({
                     ].map((item) => (
                         <label key={item.id} className="flex items-center cursor-pointer group">
                             <div className="relative flex items-center justify-center">
-                                <input 
-                                    type="radio" 
-                                    name="sort" 
+                                <input
+                                    type="radio"
+                                    name="sort"
                                     checked={sortBy === item.id}
                                     onChange={() => onSortChange(item.id)}
                                     className="sr-only"
@@ -77,7 +79,7 @@ const CategorySidebar = ({
                 <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-6 border-b border-gray-100 pb-4">
                     Time Period
                 </h3>
-                <select 
+                <select
                     value={timePeriod}
                     onChange={(e) => onTimeChange(e.target.value)}
                     className="w-full bg-gray-50 border-none p-4 text-[10px] font-bold uppercase tracking-widest text-slate-900 outline-none focus:ring-1 focus:ring-red-700/20 appearance-none cursor-pointer"
@@ -91,7 +93,7 @@ const CategorySidebar = ({
             </div>
 
             {/* Apply Filters Button */}
-            <button 
+            <button
                 onClick={onApply}
                 className="w-full bg-slate-900 text-white py-4 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-black transition-all active:scale-[0.98] flex items-center justify-center space-x-2"
             >
