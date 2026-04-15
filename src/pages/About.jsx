@@ -22,7 +22,7 @@ const ValueCard = ({ icon: Icon, title, description }) => (
 const About = () => {
     return (
         <div className="bg-white">
-            <SEO 
+            <SEO
                 title="About Us"
                 description="Learn about Nexora News, our mission for editorial excellence, and the team behind the pulse of global journalism."
             />
@@ -159,7 +159,7 @@ const About = () => {
                                         placeholder="PROFESSIONAL EMAIL"
                                         className="bg-white/5 border border-white/10 p-5 font-bold text-[10px] text-white tracking-widest uppercase focus:ring-1 focus:ring-red-700 outline-none flex-1"
                                     />
-                                    <button className="bg-red-700 hover:bg-red-800 text-white px-10 py-5 text-[10px] font-bold uppercase tracking-[0.3em] transition-all">
+                                    <button className="bg-red-700 cursor-pointer hover:bg-red-800 text-white px-10 py-5 text-[10px] font-bold uppercase tracking-[0.3em] transition-all">
                                         Authorize
                                     </button>
                                 </div>

@@ -40,22 +40,6 @@ const ArticleSidebar = ({ article }) => {
                     </button>
                 </div>
             </div>
-
-            <div className="opacity-40 hover:opacity-100 transition-opacity">
-                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-6 border-b border-gray-100 pb-4">
-                    The Daily Pulse Podcast
-                </h3>
-                <div className="relative group cursor-pointer overflow-hidden aspect-[16/9] bg-slate-900">
-                    <img
-                        src="https://images.unsplash.com/photo-1478737270239-2fccd87ee078?q=80&w=2070&auto=format&fit=crop"
-                        alt="Podcast"
-                        className="absolute inset-0 w-full h-full object-cover opacity-60 transition-transform duration-1000 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                        <PlayCircle size={32} className="text-white fill-red-700" />
-                    </div>
-                </div>
-            </div>
         </aside>
     );
 };

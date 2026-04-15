@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { articleService } from '../api/articleService';
 import { commentService } from '../api/commentService';
 import ArticleHero from '../components/article/ArticleHero';
@@ -8,24 +8,29 @@ import FloatingActions from '../components/article/FloatingActions';
 import DiscussionSection from '../components/article/DiscussionSection';
 import SEO from '../components/common/SEO';
 import Breadcrumbs from '../components/common/Breadcrumbs';
+import OptimizedImage from '../components/common/OptimizedImage';
 
-const RelatedArticleCard = ({ article }) => (
-    <div className="group cursor-pointer">
-        <div className="relative aspect-[16/10] overflow-hidden mb-6 bg-gray-50">
-            <img
-                src={article.media?.featuredImage || 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=2072&auto=format&fit=crop'}
-                alt={article.title}
-                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-            />
+const RelatedArticleCard = ({ article }) => {
+    const navigate = useNavigate();
+
+    return (
+        <div className="group cursor-pointer" onClick={() => navigate(`/article/${article.slug}`)}>
+            <div className="relative aspect-[16/10] overflow-hidden mb-6 bg-gray-50 border border-gray-100">
+                <OptimizedImage
+                    src={article.media?.featuredImage}
+                    alt={article.title}
+                    className="w-full h-full"
+                />
+            </div>
+            <p className="text-[8px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-3">
+                {article.category?.name || 'Editorial'}
+            </p>
+            <h3 className="text-xl font-black font-serif italic tracking-tight text-slate-900 leading-tight group-hover:text-red-700 transition-colors line-clamp-2">
+                {article.title}
+            </h3>
         </div>
-        <p className="text-[8px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-3">
-            {article.category?.name || 'Editorial'}
-        </p>
-        <h3 className="text-xl font-black font-serif italic tracking-tight text-slate-900 leading-tight group-hover:text-red-700 transition-colors line-clamp-2">
-            <Link to={`/article/${article.slug}`}>{article.title}</Link>
-        </h3>
-    </div>
-);
+    )
+};
 
 const ArticlePage = () => {
     const { slug } = useParams();
@@ -61,7 +66,6 @@ const ArticlePage = () => {
                 if (viewRecordedRef.current !== data._id) {
                     viewRecordedRef.current = data._id;
                     await articleService.recordView(data._id);
-                    console.log('view called once');
                 }
 
                 window.scrollTo(0, 0);
@@ -78,9 +82,12 @@ const ArticlePage = () => {
 
     if (loading && !article) {
         return (
-            <div className="max-w-7xl mx-auto px-4 py-40 text-center flex flex-col items-center justify-center space-y-4">
-                <div className="w-12 h-12 border-4 border-red-700 border-t-transparent rounded-full animate-spin"></div>
-                <p className="font-serif italic text-gray-400">Loading editorial briefing...</p>
+            <div className="max-w-7xl mx-auto px-4 py-40 text-center flex flex-col items-center justify-center space-y-6">
+                <div className="relative w-16 h-16">
+                    <div className="absolute inset-0 border-2 border-red-700/10 rounded-full"></div>
+                    <div className="absolute inset-0 border-2 border-t-red-700 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
+                </div>
+                <p className="font-serif italic text-gray-400 tracking-tight animate-pulse">Consulting the archives...</p>
             </div>
         );
     }
@@ -114,18 +121,17 @@ const ArticlePage = () => {
             </div>
 
             <div className="max-w-7xl mx-auto px-4 md:px-6 lg:mb-16">
-                <div className="relative aspect-[15/10] sm:aspect-[21/9] overflow-hidden shadow-2xl">
-                    <img
-                        src={article.media?.featuredImage || 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=2072&auto=format&fit=crop'}
+                <div className="relative aspect-[15/10] sm:aspect-[21/9] overflow-hidden shadow-2xl bg-gray-50 border border-gray-100">
+                    <OptimizedImage
+                        src={article.media?.featuredImage}
                         alt={article.title}
-                        loading='lazy'
-                        className="w-full h-full object-cover blur-md transition-all duration-600 will-change-transform"
-                        onLoad={(e) => e.currentTarget.classList.remove('blur-md')}
-                        onError={(e) => e.target.src = 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=2072&auto=format&fit=crop'}
+                        priority={true}
+                        aspectRatio="h-full"
+                        className="w-full h-full"
                     />
                 </div>
                 <p className="mt-4 text-[9px] font-medium text-gray-400 uppercase tracking-widest text-center">
-                    The Hall of Mirror, Versailles. ARCHIVES OF HUMAN INGENUITY / PHOTOGRAPHY BY NEXORA NEWS AGENCY.
+                    ARCHIVES OF HUMAN INGENUITY / PHOTOGRAPHY BY NEXORA NEWS AGENCY.
                 </p>
             </div>
 
@@ -157,7 +163,7 @@ const ArticlePage = () => {
                                     return (
                                         <p
                                             key={index}
-                                            className={`${isFirstTextBlock ? 'drop-cap' : ''} text-md md:text-xl font-serif text-slate-700 leading-9 sm:leading-10 mb-10`}
+                                            className={`${isFirstTextBlock ? 'drop-cap' : ''} text-md md:text-xl font-serif text-slate-700 leading-8.5 sm:leading-10 mb-10`}
                                         >
                                             {block.value}
                                         </p>
@@ -168,14 +174,11 @@ const ArticlePage = () => {
                                     return (
                                         <figure key={index} className="my-16 space-y-4">
                                             <div className="relative overflow-hidden shadow-xl aspect-video bg-gray-50 border border-gray-100">
-                                                <img
+                                                <OptimizedImage
                                                     src={block.value}
                                                     alt={block.caption || 'Article media'}
-                                                    className="w-full h-full object-cover will-change-transform transition-all duration-700 hover:scale-105 blur-sm"
-                                                    onLoad={(e) => {
-                                                        e.currentTarget.classList.remove('blur-sm');
-                                                    }}
-                                                    onError={(e) => e.target.src = 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=2072&auto=format&fit=crop'}
+                                                    aspectRatio="h-full"
+                                                    className="w-full h-full"
                                                 />
                                             </div>
                                             {block.caption && (
@@ -214,15 +217,12 @@ const ArticlePage = () => {
                                 <h3 className="text-[10px] font-bold text-red-700 uppercase tracking-[0.3em] mb-10">Extended Visual Report</h3>
                                 <div className="grid grid-cols-2 gap-4">
                                     {article.media.gallery.map((img, i) => (
-                                        <div key={i} className={`relative overflow-hidden bg-gray-50 ${i === 0 ? 'col-span-2 aspect-[21/9]' : 'aspect-square'}`}>
-                                            <img
+                                        <div key={i} className={`relative overflow-hidden bg-gray-50 border border-gray-100 ${i === 0 ? 'col-span-2 aspect-[21/9]' : 'aspect-square'}`}>
+                                            <OptimizedImage
                                                 src={img}
-                                                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all blur-sm duration-700"
                                                 alt={`Gallery ${i}`}
-                                                onLoad={(e) => {
-                                                    e.currentTarget.classList.remove('blur-sm');
-                                                }}
-                                                onError={(e) => e.target.src = 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=2072&auto=format&fit=crop'}
+                                                aspectRatio="h-full"
+                                                className="w-full h-full grayscale hover:grayscale-0 transition-all duration-700"
                                             />
                                         </div>
                                     ))}
@@ -245,8 +245,8 @@ const ArticlePage = () => {
                         <div className="flex items-center justify-between mb-16 px-2">
                             <div>
                                 <p className="text-red-700 text-[10px] font-bold uppercase tracking-[0.3em] mb-3">CURATED READING</p>
-                                <h2 className="text-3xl md:text-5xl font-black font-serif italic tracking-tighter text-slate-900">
-                                    More from The Daily Pulse
+                                <h2 className="text-3xl md:text-4xl font-black font-serif italic tracking-tighter text-slate-900">
+                                    More from Nexora
                                 </h2>
                             </div>
                             <Link to="/" className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 hover:text-red-700 transition-colors border-b-2 border-transparent hover:border-red-700 pb-1">

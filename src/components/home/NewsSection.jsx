@@ -1,17 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import OptimizedImage from '../common/OptimizedImage';
 
 const ArticleCard = ({ category, title, summary, image, slug, type }) => (
     <Link to={`/article/${slug}`} className="group cursor-pointer block">
         <div className="overflow-hidden rounded-xl h-52 md:h-64 mb-4 md:mb-6 bg-gray-100">
-            <img
-                src={image || "https://images.unsplash.com/photo-1591453088216-30101f463300?q=80&w=2070&auto=format&fit=crop"}
+            <OptimizedImage
+                src={image}
                 alt={title}
-                loading='eager'
-                className="w-full h-full object-cover will-change-transform transition-all duration-500 blur-md group-hover:scale-105"
-                onLoad={(e) => {
-                    e.currentTarget.classList.remove('blur-md');
-                }}
+                aspectRatio="h-full"
+                className="w-full h-full"
             />
         </div>
         <div className="flex items-center space-x-2 mb-2 md:mb-3">
@@ -33,13 +31,13 @@ const CategoryRow = ({ title, articles = [], loading = false }) => (
     <div className="mb-16 md:mb-20">
         <div className="flex items-center justify-between mb-6 md:mb-8 pb-3 md:pb-4 border-b-2 border-slate-900">
             <h2 className="text-xl md:text-2xl font-black font-serif uppercase tracking-tight">{title}</h2>
-            <a href="#" className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-700 hover:opacity-70 transition-opacity">View All</a>
+            <Link to={`/category/${title.toLowerCase().replace(/\s+/g, '-')}`} className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-700 hover:opacity-70 transition-opacity">View All</Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
             {loading ? (
                 <>
-                    <div className="animate-pulse h-72 md:h-80 bg-gray-200 rounded-xl"></div>
-                    <div className="animate-pulse h-72 md:h-80 bg-gray-200 rounded-xl"></div>
+                    <div className="animate-pulse h-72 md:h-80 bg-gray-100 rounded-xl"></div>
+                    <div className="animate-pulse h-72 md:h-80 bg-gray-100 rounded-xl"></div>
                 </>
             ) : (
                 articles.length > 0 ? (

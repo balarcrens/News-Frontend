@@ -27,7 +27,6 @@ const AdminArticles = () => {
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
-    const [statusFilter, setStatusFilter] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('');
     const [typeFilter, setTypeFilter] = useState('');
     const [categories, setCategories] = useState([]);
@@ -47,7 +46,7 @@ const AdminArticles = () => {
 
     useEffect(() => {
         fetchArticles();
-    }, [page, statusFilter, categoryFilter, typeFilter]);
+    }, [page, categoryFilter, typeFilter]);
 
     const fetchArticles = async () => {
         setLoading(true);
@@ -55,7 +54,6 @@ const AdminArticles = () => {
             const params = {
                 page,
                 limit: 10,
-                status: statusFilter || undefined,
                 category: categoryFilter || undefined,
                 type: typeFilter || undefined,
                 keyword: searchTerm || undefined
@@ -126,7 +124,7 @@ const AdminArticles = () => {
             />
 
             <div className="bg-white border border-slate-100 p-4 mb-8 flex flex-col xl:flex-row gap-6 items-center justify-between shadow-sm">
-                <div className="relative w-full xl:w-50 group">
+                <div className="relative w-full xl:max-w-100 group">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-red-700 transition-colors" size={16} />
                     <input
                         type="text"
@@ -162,21 +160,6 @@ const AdminArticles = () => {
                             <option value="news">News Intel</option>
                             <option value="blog">Editorial Blog</option>
                         </select>
-                    </div>
-
-                    <div className="flex bg-slate-50 p-1">
-                        {['', 'published', 'draft'].map((status) => (
-                            <button
-                                key={status}
-                                onClick={() => { setStatusFilter(status); setPage(1); }}
-                                className={`flex-1 px-4 py-2 text-[9px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap ${statusFilter === status
-                                    ? 'bg-white text-slate-900 shadow-sm'
-                                    : 'text-slate-400 hover:text-slate-600'
-                                    }`}
-                            >
-                                {status || 'All'}
-                            </button>
-                        ))}
                     </div>
                 </div>
             </div>

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { 
     Settings, 
@@ -29,7 +30,6 @@ const InfoCard = ({ title, value, icon: Icon }) => (
 );
 
 const AdminSettings = () => {
-    const { user } = useAuth();
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -95,7 +95,7 @@ const AdminSettings = () => {
                                 </div>
                                 <div>
                                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3 block">Network Domain</label>
-                                    <div className="bg-slate-50 p-4 font-bold text-sm text-slate-900">nexoranews.network</div>
+                                    <div className="bg-slate-50 p-4 font-bold text-sm text-slate-900">nexoranews.dpdns.org</div>
                                 </div>
                             </div>
                             <div>

@@ -170,7 +170,7 @@ const Contact = () => {
 
                                     <button
                                         type="submit"
-                                        className="w-full bg-slate-900 hover:bg-red-700 text-white py-6 text-[11px] font-bold uppercase tracking-[0.4em] transition-all shadow-xl shadow-slate-900/10 flex items-center justify-center space-x-3"
+                                        className="w-full cursor-pointer bg-slate-900 hover:bg-red-700 text-white py-6 text-[11px] font-bold uppercase tracking-[0.4em] transition-all shadow-xl shadow-slate-900/10 flex items-center justify-center space-x-3"
                                     >
                                         <Send size={14} />
                                         <span>Authorize Transaction</span>

@@ -1,19 +1,19 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { 
     Gavel, 
     ShieldAlert, 
     FileSignature, 
-    Scale, 
-    UserPlus, 
+    Scale,
     AlertTriangle, 
-    Clock, 
-    CheckCircle2,
+    Clock,
     ArrowRight,
     ChevronRight,
     Globe,
     Cpu
 } from 'lucide-react';
 import SEO from '../../components/common/SEO';
+import { useNavigate } from 'react-router-dom';
 
 const SidebarLink = ({ href, children }) => (
     <li>
@@ -63,6 +63,7 @@ const TermsCard = ({ icon: Icon, title, description }) => (
 );
 
 const TermsConditions = () => {
+    const navigate = useNavigate();
     return (
         <div className="bg-white min-h-screen pt-32 pb-20">
             <SEO 
@@ -264,7 +265,7 @@ const TermsConditions = () => {
                                 <div className="relative z-10">
                                     <h3 className="text-3xl md:text-4xl font-black font-serif italic text-white mb-8">Ready to proceed with integrity?</h3>
                                     <div className="flex flex-col sm:flex-row justify-center gap-6">
-                                        <button className="bg-red-700 hover:bg-red-800 text-white px-12 py-5 text-[10px] font-bold uppercase tracking-[0.4em] transition-all">
+                                        <button onClick={() => navigate('/')} className="bg-red-700 cursor-pointer hover:bg-red-800 text-white px-12 py-5 text-[10px] font-bold uppercase tracking-[0.4em] transition-all">
                                             Return Home
                                         </button>
                                         <a href="mailto:legal@nexoranews.com" className="bg-white/5 border border-white/10 text-white px-12 py-5 text-[10px] font-bold uppercase tracking-[0.4em] hover:bg-white/10 transition-all flex items-center justify-center">

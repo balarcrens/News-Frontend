@@ -119,7 +119,7 @@ const AdminUsers = () => {
                 </div>
 
                 <div className="flex bg-slate-50 p-1 w-full md:w-auto overflow-x-auto no-scrollbar">
-                    {['', 'admin', 'editor', 'author', 'user'].map((role) => (
+                    {['', 'admin', 'user'].map((role) => (
                         <button
                             key={role}
                             onClick={() => setRoleFilter(role)}
@@ -187,8 +187,6 @@ const AdminUsers = () => {
                                                     disabled={u._id === currentUser?._id}
                                                 >
                                                     <option value="admin">ADMIN</option>
-                                                    <option value="editor">EDITOR</option>
-                                                    <option value="author">AUTHOR</option>
                                                     <option value="user">USER</option>
                                                 </select>
                                             </div>
@@ -211,7 +209,7 @@ const AdminUsers = () => {
                                             <button 
                                                 onClick={() => handleDelete(u._id)}
                                                 disabled={u._id === currentUser?._id}
-                                                className="p-2.5 text-slate-300 hover:text-red-700 hover:bg-red-50 transition-all disabled:opacity-0"
+                                                className="p-2.5 text-slate-300 cursor-pointer hover:text-red-700 hover:bg-red-50 transition-all disabled:opacity-0"
                                             >
                                                 <Trash2 size={16} />
                                             </button>

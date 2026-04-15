@@ -111,7 +111,7 @@ const DiscussionSection = ({ comments = [] }) => {
                         />
                     </div>
                     <div className="flex justify-end">
-                        <button className="bg-red-700 hover:bg-red-800 text-white px-10 py-4 text-[11px] font-bold uppercase tracking-[0.3em] transition-all shadow-xl shadow-red-700/10 flex items-center space-x-3">
+                        <button className="bg-red-700 cursor-pointer hover:bg-red-800 text-white px-10 py-4 text-[11px] font-bold uppercase tracking-[0.3em] transition-all shadow-xl shadow-red-700/10 flex items-center space-x-3">
                             <Send size={14} />
                             <span>Post Comment</span>
                         </button>

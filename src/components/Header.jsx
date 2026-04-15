@@ -5,26 +5,37 @@ import { categoryService } from '../api/categoryService';
 import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '../context/useAuth';
 
-const TopTicker = ({ headlines = [], isScrolled = false }) => (
-    <div className={`bg-white border-b border-gray-100 py-2 overflow-hidden transition-all duration-300 ${isScrolled ? 'h-0 opacity-0 -translate-y-full' : 'h-auto opacity-100 translate-y-0'}`}>
-        <div className="max-w-7xl mx-auto px-4 md:px-6 flex items-center text-[10px] font-bold uppercase tracking-widest">
-            <span className="text-red-700 flex items-center whitespace-nowrap">
-                <span className="w-1.5 h-1.5 bg-red-700 rounded-full mr-2 animate-pulse"></span>
-                Breaking News
-            </span>
-            <div className="ml-6 text-gray-500 marquee whitespace-nowrap overflow-hidden flex-1">
-                <span className="inline-block animate-marquee">
-                    {headlines.length > 0
-                        ? headlines.map(h => h.title).join(' • ')
-                        : "Global markets rally as inflation targets are met ahead of schedule • New space exploration initiative announced for 2026"}
+const TopTicker = ({ headlines = [], isScrolled = false }) => {
+    return (
+        <div className={`bg-white border-b border-gray-100 py-2 overflow-hidden transition-all duration-300 ${isScrolled ? 'h-0 opacity-0 -translate-y-full' : 'h-auto opacity-100 translate-y-0'}`}>
+            <div className="max-w-7xl mx-auto px-4 md:px-6 flex items-center text-[10px] font-bold uppercase tracking-widest">
+                <span className="text-red-700 flex items-center whitespace-nowrap">
+                    <span className="w-1.5 h-1.5 bg-red-700 rounded-full mr-2 animate-pulse"></span>
+                    Breaking News
                 </span>
-            </div>
-            <div className="ml-auto flex items-center text-gray-400 font-medium whitespace-nowrap pl-4">
-                <span>LIVE UPDATES</span>
+                <div className="ml-6 text-gray-500 marquee whitespace-nowrap overflow-hidden flex-1">
+                    <span className="inline-block animate-marquee">
+                        {headlines.length > 0 ? (
+                            headlines.map((h, index) => (
+                                <span key={h.slug}>
+                                    <Link to={`article/${h.slug}`} className="hover:underline">
+                                        {h.title}
+                                    </Link>
+                                    {index !== headlines.length - 1 && " | "}
+                                </span>
+                            ))
+                        ) : (
+                            "Global markets rally as inflation targets are met ahead of schedule • New space exploration initiative announced for 2026"
+                        )}
+                    </span>
+                </div>
+                <div className="ml-auto flex items-center text-gray-400 font-medium whitespace-nowrap pl-4">
+                    <span>LIVE UPDATES</span>
+                </div>
             </div>
         </div>
-    </div>
-);
+    )
+};
 
 const Navbar = ({ isScrolled = false, onMenuOpen, user, logout, categories = [] }) => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -44,7 +55,7 @@ const Navbar = ({ isScrolled = false, onMenuOpen, user, logout, categories = [] 
 
     return (
         <nav className={`bg-white/95 backdrop-blur-md border-b border-gray-100 transition-all duration-500 ${isScrolled ? 'py-2 shadow-sm' : 'py-4 md:py-6'}`}>
-            <div className="max-w-7xl mx-auto px-4 md:px-6 flex items-center gap-2 justify-between relative">
+            <div className="max-w-7xl mx-auto px-4 md:px-6 flex items-center gap-4 justify-between relative">
                 <div className="flex-1 flex items-center">
                     <button
                         onClick={onMenuOpen}
@@ -119,7 +130,7 @@ const Navbar = ({ isScrolled = false, onMenuOpen, user, logout, categories = [] 
 
                     <button
                         onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
-                        className="lg:hidden p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
+                        className="lg:hidden p-2 text-gray-600 hover:bg-gray-50 cursor-pointer rounded-lg transition-colors"
                     >
                         {isMobileSearchOpen ? <X size={20} /> : <Search size={20} />}
                     </button>
@@ -129,7 +140,7 @@ const Navbar = ({ isScrolled = false, onMenuOpen, user, logout, categories = [] 
                             <div className="relative">
                                 <button
                                     onClick={() => setIsProfileOpen(!isProfileOpen)}
-                                    className="py-2 px-3 border border-gray-100 flex items-center space-x-2 hover:bg-gray-50 transition-colors"
+                                    className="py-2 px-3 border cursor-pointer border-gray-100 flex items-center space-x-2 hover:bg-gray-50 transition-colors"
                                 >
                                     <span className="text-[10px] font-bold uppercase tracking-widest text-gray-600 hidden sm:block">
                                         {user.name.split(' ')[0]}
@@ -149,7 +160,7 @@ const Navbar = ({ isScrolled = false, onMenuOpen, user, logout, categories = [] 
                                                     navigate('/admin');
                                                     setIsProfileOpen(false);
                                                 }}
-                                                className="w-full text-left px-6 py-2 text-xs font-bold text-gray-600 hover:text-red-700 hover:bg-gray-50 transition-all flex items-center space-x-3"
+                                                className="w-full cursor-pointer text-left px-6 py-2 text-xs font-bold text-gray-600 hover:text-red-700 hover:bg-gray-50 transition-all flex items-center space-x-3"
                                             >
                                                 <Settings size={14} />
                                                 <span>Dashboard</span>
@@ -157,7 +168,7 @@ const Navbar = ({ isScrolled = false, onMenuOpen, user, logout, categories = [] 
                                         )}
                                         <button
                                             onClick={logout}
-                                            className="w-full text-left px-6 py-2 text-xs font-bold text-red-700 hover:bg-red-50 transition-all flex items-center space-x-3"
+                                            className="w-full cursor-pointer text-left px-6 py-2 text-xs font-bold text-red-700 hover:bg-red-50 transition-all flex items-center space-x-3"
                                         >
                                             <LogOut size={14} />
                                             <span>Sign Out</span>

@@ -155,31 +155,19 @@ const AdminLayout = ({ children }) => {
                     <div className="flex items-center">
                         <button
                             onClick={() => setCollapsed(!collapsed)}
-                            className="hidden lg:flex text-slate-400 hover:text-red-700 transition-colors mr-6"
+                            className="hidden lg:flex cursor-pointer text-slate-400 hover:text-red-700 transition-colors mr-6"
                         >
                             <Menu size={20} />
                         </button>
                         <button
                             onClick={() => setMobileMenuOpen(true)}
-                            className="lg:hidden text-slate-400 hover:text-red-700 transition-colors mr-4"
+                            className="lg:hidden cursor-pointer text-slate-400 hover:text-red-700 transition-colors mr-4"
                         >
                             <Menu size={24} />
                         </button>
-                        <div className="hidden md:flex relative group">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-red-700 transition-colors" size={16} />
-                            <input
-                                type="text"
-                                placeholder="Search Intel Articles..."
-                                className="bg-slate-50 border-none pl-10 pr-4 py-2.5 text-[11px] font-medium placeholder:text-slate-300 focus:ring-1 focus:ring-red-100 transition-all w-64 lg:w-80"
-                            />
-                        </div>
                     </div>
 
                     <div className="flex items-center space-x-6">
-                        <button className="relative p-2 text-slate-400 hover:text-red-700 transition-colors">
-                            <Bell size={20} />
-                            <span className="absolute top-2 right-2 w-2 h-2 bg-red-700 rounded-full border-2 border-white"></span>
-                        </button>
                         <div className="flex items-center pl-6 border-l border-slate-100">
                             <div className="mr-4 text-right hidden sm:block">
                                 <p className="text-[10px] font-bold text-slate-900 uppercase tracking-widest leading-none mb-1">{user?.name}</p>

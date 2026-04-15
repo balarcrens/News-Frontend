@@ -18,7 +18,7 @@ const Newsletter = () => (
                     placeholder="Email address"
                     className="w-full bg-[#1A1A1A] border border-gray-800 p-4 text-xs font-medium focus:outline-none focus:border-red-700 transition-colors"
                 />
-                <button className="w-full bg-red-700 hover:bg-red-800 text-white py-4 text-[10px] font-bold uppercase tracking-[0.2em] transition-colors">
+                <button className="w-full cursor-pointer bg-red-700 hover:bg-red-800 text-white py-4 text-[10px] font-bold uppercase tracking-[0.2em] transition-colors">
                     Subscribe Now
                 </button>
             </form>
@@ -102,9 +102,9 @@ const PopularNews = ({ articles = [], loading = false }) => {
 
 const Sidebar = ({ latestArticles = [], popularArticles = [], loading = false }) => (
     <aside>
-        <Newsletter />
         <LatestNews articles={latestArticles} loading={loading} />
         <PopularNews articles={popularArticles} loading={loading} />
+        <Newsletter />
     </aside>
 );
 

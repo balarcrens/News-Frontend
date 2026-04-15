@@ -105,14 +105,14 @@ const AuthForm = () => {
             <div className="flex space-x-8 border-b border-gray-100">
                 <button
                     onClick={() => setMode('signin')}
-                    className={`pb-4 text-[10px] font-bold uppercase tracking-[0.2em] transition-all relative ${mode === 'signin' ? 'text-red-700' : 'text-gray-400 hover:text-gray-600'}`}
+                    className={`pb-4 cursor-pointer text-[10px] font-bold uppercase tracking-[0.2em] transition-all relative ${mode === 'signin' ? 'text-red-700' : 'text-gray-400 hover:text-gray-600'}`}
                 >
                     Sign In
                     {mode === 'signin' && <div className="absolute bottom-0 left-0 w-full h-[2px] bg-red-700 shadow-[0_-2px_8px_rgba(185,28,28,0.3)]"></div>}
                 </button>
                 <button
                     onClick={() => setMode('create')}
-                    className={`pb-4 text-[10px] font-bold uppercase tracking-[0.2em] transition-all relative ${mode === 'create' ? 'text-red-700' : 'text-gray-400 hover:text-gray-600'}`}
+                    className={`pb-4 cursor-pointer text-[10px] font-bold uppercase tracking-[0.2em] transition-all relative ${mode === 'create' ? 'text-red-700' : 'text-gray-400 hover:text-gray-600'}`}
                 >
                     Create Account
                     {mode === 'create' && <div className="absolute bottom-0 left-0 w-full h-[2px] bg-red-700 shadow-[0_-2px_8px_rgba(185,28,28,0.3)]"></div>}
@@ -197,7 +197,7 @@ const AuthForm = () => {
                     <div className="flex justify-between items-center mb-3">
                         <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-gray-500">Password</label>
                         {mode === 'signin' && (
-                            <button type="button" className="text-[9px] font-bold uppercase tracking-[0.2em] text-red-700 hover:opacity-70 transition-opacity">
+                            <button type="button" className="text-[9px] cursor-pointer font-bold uppercase tracking-[0.2em] text-red-700 hover:opacity-70 transition-opacity">
                                 Forgot?
                             </button>
                         )}
@@ -216,7 +216,7 @@ const AuthForm = () => {
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-700 transition-colors p-1"
+                            className="absolute cursor-pointer right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-700 transition-colors p-1"
                         >
                             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                         </button>
@@ -226,7 +226,7 @@ const AuthForm = () => {
                 <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-red-700 hover:bg-red-800 text-white py-5 text-[11px] font-bold uppercase tracking-[0.2em] transition-all shadow-xl shadow-red-700/10 active:scale-[0.98] group disabled:opacity-70 disabled:cursor-not-allowed"
+                    className="w-full bg-red-700 cursor-pointer hover:bg-red-800 text-white py-5 text-[11px] font-bold uppercase tracking-[0.2em] transition-all shadow-xl shadow-red-700/10 active:scale-[0.98] group disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                     <span className="flex items-center justify-center">
                         {loading ? (

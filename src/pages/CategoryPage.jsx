@@ -7,6 +7,7 @@ import CategorySidebar from '../components/category/CategorySidebar';
 import { ChevronLeft, ChevronRight, Bookmark, Filter, X } from 'lucide-react';
 import SEO from '../components/common/SEO';
 import { format } from 'date-fns';
+import OptimizedImage from '../components/common/OptimizedImage';
 
 const Pagination = ({ pagination, onPageChange }) => {
     if (!pagination || pagination.totalPages < 1) return null;
@@ -50,21 +51,19 @@ const ArticleCard = ({ article, isFeatured = false }) => {
     if (isFeatured) {
         return (
             <div className="relative group mb-20 cursor-pointer" onClick={() => { navigate(`/article/${article.slug}`) }}>
-                <div className="relative aspect-[21/9] overflow-hidden mb-10">
-                    <img
-                        src={article.media?.featuredImage || 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=2072&auto=format&fit=crop'}
-                        loading='eager'
+                <div className="relative aspect-[21/9] overflow-hidden mb-10 shadow-lg bg-gray-50 border border-gray-100">
+                    <OptimizedImage
+                        src={article.media?.featuredImage}
                         alt={article.title}
-                        className="w-full h-full object-cover will-change-transform transition-all duration-700 blur-md group-hover:scale-105"
-                        onLoad={(e) => {
-                            e.currentTarget.classList.remove('blur-md');
-                        }}
+                        priority={true}
+                        aspectRatio="h-full"
+                        className="w-full h-full"
                     />
                     <div className="absolute top-6 left-6 space-x-3 flex">
-                        <span className="bg-red-700 text-white text-[8px] font-bold uppercase tracking-[0.2em] px-3 py-1.5">
+                        <span className="bg-red-700 text-white text-[8px] font-bold uppercase tracking-[0.2em] px-3 py-1.5 shadow-lg">
                             Breaking
                         </span>
-                        <span className="bg-white/90 backdrop-blur-md text-slate-900 text-[8px] font-bold uppercase tracking-[0.2em] px-3 py-1.5">
+                        <span className="bg-white/90 backdrop-blur-md text-slate-900 text-[8px] font-bold uppercase tracking-[0.2em] px-3 py-1.5 shadow-sm border border-white/20">
                             {article.category?.name} — {article.readingTime || '10'} Min Read
                         </span>
                     </div>
@@ -80,11 +79,14 @@ const ArticleCard = ({ article, isFeatured = false }) => {
 
                     <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
-                            <img
-                                src={article.author?.avatar || 'https://www.citypng.com/public/uploads/preview/hd-man-user-illustration-icon-transparent-png-701751694974843ybexneueic.png'}
-                                alt={article.author?.name}
-                                className="w-10 h-10 rounded-full object-cover"
-                            />
+                            <div className="w-10 h-10 rounded-full overflow-hidden border border-gray-100">
+                                <OptimizedImage
+                                    src={article.author?.avatar}
+                                    alt={article.author?.name}
+                                    aspectRatio="h-full"
+                                    className="w-full h-full"
+                                />
+                            </div>
                             <div>
                                 <p className="text-[11px] font-bold text-slate-900 uppercase tracking-widest">{article.author?.name}</p>
                                 <p className="text-[9px] font-medium text-gray-400 uppercase tracking-[0.2em] font-serif italic">Senior Correspondent</p>
@@ -101,18 +103,15 @@ const ArticleCard = ({ article, isFeatured = false }) => {
 
     return (
         <div className="group cursor-pointer">
-            <div className="relative aspect-[16/10] overflow-hidden mb-6">
-                <img
-                    src={article.media?.featuredImage || 'https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=2072&auto=format&fit=crop'}
-                    loading='eager'
+            <div className="relative aspect-[16/10] overflow-hidden mb-6 bg-gray-50 border border-gray-100">
+                <OptimizedImage
+                    src={article.media?.featuredImage}
                     alt={article.title}
-                    className="w-full h-full object-cover will-change-transform transition-all duration-700 blur-md group-hover:scale-110"
-                    onLoad={(e) => {
-                        e.currentTarget.classList.remove('blur-md');
-                    }}
+                    aspectRatio="h-full"
+                    className="w-full h-full"
                 />
                 <div className="absolute top-4 left-4">
-                    <span className="bg-white/95 backdrop-blur-md text-slate-900 text-[7px] font-bold uppercase tracking-[0.2em] px-2 py-1">
+                    <span className="bg-white/95 backdrop-blur-md text-slate-900 text-[7px] font-bold uppercase tracking-[0.2em] px-2 py-1 shadow-sm border border-white/20">
                         {article.category?.name} — {article.readingTime || '6'} Min Read
                     </span>
                 </div>
@@ -199,7 +198,15 @@ const CategoryPage = () => {
     };
 
     if (loading && !category) {
-        return <div className="max-w-7xl mx-auto px-4 py-20 text-center font-serif italic text-gray-400">Curating archive...</div>;
+        return (
+            <div className="max-w-7xl mx-auto px-4 py-40 text-center flex flex-col items-center justify-center space-y-6">
+                 <div className="relative w-16 h-16">
+                    <div className="absolute inset-0 border-2 border-red-700/10 rounded-full"></div>
+                    <div className="absolute inset-0 border-2 border-t-red-700 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
+                </div>
+                <p className="font-serif italic text-gray-400 animate-pulse">Consulting the archives...</p>
+            </div>
+        );
     }
 
     const featuredArticle = articles[0];

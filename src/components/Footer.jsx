@@ -12,9 +12,9 @@ const Footer = () => (
                         Elevating the standard of digital journalism through deep analysis and aesthetic clarity.
                     </p>
                     <div className="flex space-x-5 text-gray-500">
-                        <a href="https://www.linkedin.com/in/nexora-news" target='_blank' className="hover:text-white transition-colors"><Linkedin size={18} /></a>
-                        <a href="https://x.com/Nexora_News" target='_blank' className="hover:text-white transition-colors"><Twitter size={18} /></a>
-                        <a href="#" className="hover:text-white transition-colors"><Instagram size={18} /></a>
+                        <a href="https://www.linkedin.com/in/nexora-news" target='_blank' className="hover:text-white transition-colors"><Linkedin size={20} /></a>
+                        <a href="https://x.com/Nexora_News" target='_blank' className="hover:text-white transition-colors"><Twitter size={20} /></a>
+                        <a href="#" className="hover:text-white transition-colors"><Instagram size={20} /></a>
                     </div>
                 </div>
 

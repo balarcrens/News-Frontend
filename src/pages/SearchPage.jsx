@@ -15,6 +15,7 @@ import { articleService } from '../api/articleService';
 import { categoryService } from '../api/categoryService';
 import { format } from 'date-fns';
 import SEO from '../components/common/SEO';
+import OptimizedImage from '../components/common/OptimizedImage';
 
 const SearchPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -123,7 +124,7 @@ const SearchPage = () => {
                         <Search className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-400" size={28} />
                         <button
                             type="submit"
-                            className="absolute right-0 top-1/2 -translate-y-1/2 bg-red-700 text-white px-8 py-3 font-bold uppercase tracking-widest text-[10px] hover:bg-red-800 transition-colors"
+                            className="absolute right-0 top-1/2 -translate-y-1/2 bg-red-700 text-white px-8 py-3 font-bold uppercase tracking-widest text-[10px] hover:bg-red-800 transition-colors shadow-lg shadow-red-700/10"
                         >
                             Search
                         </button>
@@ -136,7 +137,7 @@ const SearchPage = () => {
 
                         <button
                             onClick={() => setIsFilterOpen(!isFilterOpen)}
-                            className="lg:hidden flex items-center space-x-2 text-slate-900 font-bold text-[10px] uppercase tracking-widest border border-gray-100 px-4 py-2 hover:bg-gray-50 transition-all"
+                            className="lg:hidden flex items-center space-x-2 text-slate-900 font-bold text-[10px] uppercase tracking-widest border border-gray-100 px-4 py-2 hover:bg-gray-50 transition-all shadow-sm"
                         >
                             <Filter size={14} />
                             <span>Filters</span>
@@ -198,7 +199,7 @@ const SearchPage = () => {
                                     <button
                                         key={opt.value}
                                         onClick={() => handleFilterChange('timeframe', opt.value)}
-                                        className={`block w-full text-left px-4 py-3 text-[11px] font-bold uppercase tracking-[0.1em] border transition-all ${timeframe === opt.value ? 'bg-red-700 text-white border-red-700' : 'bg-gray-50 text-gray-500 border-transparent hover:border-gray-200'}`}
+                                        className={`block w-full text-left px-4 py-3 text-[11px] font-bold uppercase tracking-[0.1em] border transition-all ${timeframe === opt.value ? 'bg-red-700 text-white border-red-700 shadow-md shadow-red-700/5' : 'bg-gray-50 text-gray-500 border-transparent hover:border-gray-200'}`}
                                     >
                                         {opt.label}
                                     </button>
@@ -215,7 +216,7 @@ const SearchPage = () => {
                                 <select
                                     value={sortBy}
                                     onChange={(e) => handleFilterChange('sortBy', e.target.value)}
-                                    className="w-full appearance-none bg-gray-50 border-gray-100 px-4 py-3 text-[11px] font-bold uppercase tracking-widest outline-none focus:border-red-700 transition-all pr-10 rounded-none"
+                                    className="w-full appearance-none bg-gray-50 border-gray-100 px-4 py-3 text-[11px] font-bold uppercase tracking-widest outline-none focus:border-red-700 transition-all pr-10 rounded-none shadow-sm"
                                 >
                                     <option value="relevance">Most Relevant</option>
                                     <option value="newest">Newest First</option>
@@ -233,9 +234,11 @@ const SearchPage = () => {
                         {loading ? (
                             <div className="space-y-12">
                                 {[1, 2, 3, 4].map(i => (
-                                    <div key={i} className="animate-pulse flex flex-col md:flex-row gap-8">
-                                        <div className="w-full md:w-72 h-48 bg-gray-100 rounded-lg"></div>
-                                        <div className="flex-1 space-y-4">
+                                    <div key={i} className="animate-pulse flex flex-col md:flex-row gap-8 overflow-hidden rounded-xl border border-gray-50/50">
+                                        <div className="w-full md:w-72 h-48 bg-gray-100 relative overflow-hidden">
+                                            <div className="absolute inset-0 bg-linear-to-r from-gray-100 via-gray-200 to-gray-100 animate-shimmer"></div>
+                                        </div>
+                                        <div className="flex-1 space-y-4 p-4 md:p-0">
                                             <div className="h-4 bg-gray-100 w-24"></div>
                                             <div className="h-8 bg-gray-100 w-full"></div>
                                             <div className="h-4 bg-gray-100 w-3/4"></div>
@@ -247,18 +250,18 @@ const SearchPage = () => {
                         ) : articles.length > 0 ? (
                             <div className="space-y-12">
                                 {articles.map((article, idx) => (
-                                    <article key={article._id} className="group flex flex-col md:flex-row gap-8 items-start relative">
+                                    <article key={article._id} className="group flex flex-col md:flex-row gap-8 items-start relative pb-12">
                                         {idx !== articles.length - 1 && <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gray-50"></div>}
 
-                                        <div className={`absolute z-10 left-0 top-0 w-1 h-full bg-red-700 opacity-0 group-hover:opacity-100 transition-opacity hidden md:block`}></div>
+                                        <div className={`absolute z-10 left-0 top-0 w-1 h-[calc(100%-48px)] bg-red-700 opacity-0 group-hover:opacity-100 transition-opacity hidden md:block`}></div>
 
-                                        <div className="w-full md:w-72 shrink-0 overflow-hidden relative group/img">
-                                            <img
-                                                src={article.media?.featuredImage || 'https://via.placeholder.com/800x600?text=Nexora+News'}
+                                        <div className="w-full md:w-72 shrink-0 overflow-hidden relative group/img rounded-xl border border-gray-100 shadow-sm bg-gray-50 aspect-[16/10] md:h-48">
+                                            <OptimizedImage
+                                                src={article.media?.featuredImage}
                                                 alt={article.title}
-                                                className="w-full h-48 object-cover transition-transform duration-700 group-hover/img:scale-105"
+                                                aspectRatio="h-full"
+                                                className="w-full h-full"
                                             />
-                                            <div className="absolute inset-0 bg-black/5 group-hover/img:bg-transparent transition-colors"></div>
                                         </div>
 
                                         <div className="flex-1 space-y-3">
@@ -274,18 +277,19 @@ const SearchPage = () => {
                                                 </h2>
                                             </Link>
 
-                                            <p className="text-gray-500 text-sm leading-relaxed line-clamp-2 font-medium">
+                                            <p className="text-gray-500 text-sm leading-relaxed line-clamp-2 font-medium italic">
                                                 {article.summary}
                                             </p>
 
                                             <div className="pt-4 flex items-center justify-between">
                                                 <div className="flex items-center space-x-3">
-                                                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden border border-gray-100">
-                                                        {article.author?.avatar ? (
-                                                            <img src={article.author.avatar} alt={article.author.name} className="w-full h-full object-cover" />
-                                                        ) : (
-                                                            <User size={14} className="text-gray-400" />
-                                                        )}
+                                                    <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-100 bg-gray-50">
+                                                        <OptimizedImage
+                                                            src={article.author?.avatar}
+                                                            alt={article.author?.name}
+                                                            aspectRatio="h-full"
+                                                            className="w-full h-full"
+                                                        />
                                                     </div>
                                                     <span className="text-[11px] font-bold text-slate-800 uppercase tracking-widest">
                                                         By {article.author?.name || article.customAuthor?.name || 'Editorial Staff'}
@@ -294,7 +298,7 @@ const SearchPage = () => {
 
                                                 <Link
                                                     to={`/article/${article.slug}`}
-                                                    className="flex items-center space-x-2 text-[10px] font-bold text-slate-900 uppercase tracking-widest group/link hover:text-red-700 transition-all"
+                                                    className="flex items-center space-x-2 text-[10px] font-bold text-slate-900 uppercase tracking-widest group/link hover:text-red-700 transition-all border-b-2 border-transparent hover:border-red-700 pb-0.5"
                                                 >
                                                     <span>Read Article</span>
                                                     <ArrowRight size={12} className="group-hover/link:translate-x-1 transition-transform" />
@@ -309,7 +313,7 @@ const SearchPage = () => {
                                         <button
                                             disabled={currentPage === 1}
                                             onClick={() => handleFilterChange('page', currentPage - 1)}
-                                            className="w-10 h-10 border border-gray-100 flex items-center justify-center hover:bg-gray-50 disabled:opacity-30 transition-all"
+                                            className="w-10 h-10 border border-gray-100 flex items-center justify-center hover:bg-gray-50 disabled:opacity-30 transition-all font-bold"
                                         >
                                             <ChevronRight className="rotate-180" size={16} />
                                         </button>
@@ -325,7 +329,7 @@ const SearchPage = () => {
                                                     <button
                                                         key={pageNum}
                                                         onClick={() => handleFilterChange('page', pageNum)}
-                                                        className={`w-10 h-10 text-[11px] font-bold transition-all ${currentPage === pageNum ? 'bg-red-700 text-white border-red-700' : 'border border-gray-100 hover:bg-gray-50'}`}
+                                                        className={`w-10 h-10 text-[11px] font-bold transition-all ${currentPage === pageNum ? 'bg-red-700 text-white border-red-700 shadow-md shadow-red-700/10' : 'border border-gray-100 hover:bg-gray-50'}`}
                                                     >
                                                         {pageNum}
                                                     </button>
@@ -340,7 +344,7 @@ const SearchPage = () => {
                                         <button
                                             disabled={currentPage === pagination.totalPages}
                                             onClick={() => handleFilterChange('page', currentPage + 1)}
-                                            className="w-10 h-10 border border-gray-100 flex items-center justify-center hover:bg-gray-50 disabled:opacity-30 transition-all"
+                                            className="w-10 h-10 border border-gray-100 flex items-center justify-center hover:bg-gray-50 disabled:opacity-30 transition-all font-bold"
                                         >
                                             <ChevronRight size={16} />
                                         </button>
@@ -348,11 +352,11 @@ const SearchPage = () => {
                                 )}
                             </div>
                         ) : (
-                            <div className="py-20 text-center space-y-6">
-                                <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto text-gray-300">
+                            <div className="py-20 text-center space-y-6 bg-gray-50/50 rounded-2xl border border-dashed border-gray-100">
+                                <div className="w-16 h-16 bg-white shadow-sm rounded-full flex items-center justify-center mx-auto text-gray-300">
                                     <Search size={32} />
                                 </div>
-                                <div className="space-y-2">
+                                <div className="space-y-2 px-6">
                                     <h3 className="text-xl font-serif font-bold text-slate-900 italic">No matching reports found</h3>
                                     <p className="text-sm text-gray-400 max-w-md mx-auto">
                                         We couldn't find any articles matching your search for "{query}". Try adjusting your keywords or filters.
@@ -360,7 +364,7 @@ const SearchPage = () => {
                                 </div>
                                 <button
                                     onClick={() => handleFilterChange('q', '')}
-                                    className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-700 hover:underline"
+                                    className="bg-slate-900 text-white px-8 py-3 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-red-700 transition-all shadow-lg shadow-slate-900/10"
                                 >
                                     Browse all recent intelligence
                                 </button>

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Share2, Heart, MessageSquare, Twitter, Facebook, Linkedin, AlertCircle } from 'lucide-react';
 import { articleService } from '../../api/articleService';
 import useAuth from '../../context/useAuth';
+import { toast } from 'react-toastify';
 
 const FloatingActions = ({
     articleId,
@@ -48,14 +49,30 @@ const FloatingActions = ({
         linkedin: () => {
             window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank');
         },
-        copyLink: () => {
-            navigator.clipboard.writeText(shareUrl);
-            alert('Link copied to clipboard');
+        copyLink: async () => {
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: articleTitle,
+                        text: 'Check out this article on Nexora News',
+                        url: shareUrl,
+                    });
+                } catch (err) {
+                    console.log("Share cancelled or failed:", err);
+                }
+            } else {
+                try {
+                    await navigator.clipboard.writeText(shareUrl);
+                    toast.success("Link copied to clipboard!");
+                } catch (err) {
+                    console.log("Copy failed:", err);
+                }
+            }
         }
     };
 
     return (
-        <div className="flex flex-row lg:flex-col md:gap-2 items-center lg:justify-start justify-evenly lg:sticky top-40 h-fit lg:py-6 py-2 pr-2 lg:pr-8 border-r border-gray-100 italic font-serif">
+        <div className="flex flex-row lg:flex-col flex-wrap md:gap-2 items-center lg:justify-start justify-evenly lg:sticky top-40 h-fit lg:py-6 py-2 pr-2 lg:pr-8 border-r border-gray-100 italic font-serif">
             {showLoginAlert && (
                 <div className="absolute left-full ml-4 top-0 w-48 bg-slate-900 text-white p-4 shadow-2xl animate-in fade-in slide-in-from-left-4 duration-300 z-10">
                     <div className="flex items-start space-x-3">
@@ -77,7 +94,7 @@ const FloatingActions = ({
             <div className="flex mb-0 lg:flex-col items-center lg:space-y-3 space-x-3 lg:space-x-0">
                 <button
                     onClick={shareActions.twitter}
-                    className="p-3 text-gray-400 hover:text-red-700 hover:bg-red-50 transition-all rounded-full group relative"
+                    className="p-3 text-gray-400 cursor-pointer hover:text-red-700 hover:bg-red-50 transition-all rounded-full group relative"
                 >
                     <Twitter size={18} />
                     <span className="absolute left-full md:ml-4 px-2 py-1 bg-slate-900 text-white text-[8px] font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">
@@ -86,7 +103,7 @@ const FloatingActions = ({
                 </button>
                 <button
                     onClick={shareActions.facebook}
-                    className="p-3 text-gray-400 hover:text-red-700 hover:bg-red-50 transition-all rounded-full group relative"
+                    className="p-3 text-gray-400 cursor-pointer hover:text-red-700 hover:bg-red-50 transition-all rounded-full group relative"
                 >
                     <Facebook size={18} />
                     <span className="absolute left-full md:ml-4 px-2 py-1 bg-slate-900 text-white text-[8px] font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">
@@ -95,7 +112,7 @@ const FloatingActions = ({
                 </button>
                 <button
                     onClick={shareActions.linkedin}
-                    className="p-3 text-gray-400 hover:text-red-700 hover:bg-red-50 transition-all rounded-full group relative"
+                    className="p-3 text-gray-400 cursor-pointer hover:text-red-700 hover:bg-red-50 transition-all rounded-full group relative"
                 >
                     <Linkedin size={18} />
                     <span className="absolute left-full md:ml-4 px-2 py-1 bg-slate-900 text-white text-[8px] font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">
@@ -118,7 +135,7 @@ const FloatingActions = ({
 
                 <button
                     onClick={handleLike}
-                    className={`flex flex-col items-center lg:space-y-2 group transition-all duration-500`}
+                    className={`flex flex-col items-center cursor-pointer lg:space-y-2 group transition-all duration-500`}
                 >
                     <div className={`p-3 rounded-full transition-all duration-500 ${(isLiked && user) ? 'text-red-700 bg-red-50 shadow-inner' : 'text-gray-400 hover:text-red-700 hover:bg-red-50'}`}>
                         <Heart size={18} className={isLiked ? 'fill-current' : ''} />
@@ -130,7 +147,7 @@ const FloatingActions = ({
 
                 <button
                     onClick={shareActions.copyLink}
-                    className="p-3 text-gray-400 hover:text-red-700 hover:bg-red-50 transition-all rounded-full group relative"
+                    className="p-3 text-gray-400 hover:text-red-700 cursor-pointer hover:bg-red-50 transition-all rounded-full group relative"
                 >
                     <Share2 size={18} />
                 </button>

@@ -178,7 +178,7 @@ const AdminCategories = () => {
                             <button 
                                 type="submit"
                                 disabled={isSaving}
-                                className="w-full bg-red-700 text-white px-8 py-4 text-[10px] font-black uppercase tracking-[0.3em] hover:bg-slate-950 transition-all duration-500 shadow-xl shadow-red-700/10 flex items-center justify-center disabled:opacity-50"
+                                className="w-full bg-red-700 cursor-pointer text-white px-8 py-4 text-[10px] font-black uppercase tracking-[0.3em] hover:bg-slate-950 transition-all duration-500 shadow-xl shadow-red-700/10 flex items-center justify-center disabled:opacity-50"
                             >
                                 {isSaving ? 'Processing Matrix...' : (editingId ? 'Confirm Refinement' : 'Annex to Network')}
                             </button>
@@ -202,13 +202,13 @@ const AdminCategories = () => {
                                     <div className="flex items-center space-x-2">
                                         <button 
                                             onClick={() => handleEdit(cat)} 
-                                            className="p-2 text-slate-300 hover:text-red-700 hover:bg-red-50 transition-all"
+                                            className="p-2 text-slate-300 cursor-pointer hover:text-red-700 hover:bg-red-50 transition-all"
                                         >
                                             <Edit2 size={14} />
                                         </button>
                                         <button 
                                             onClick={() => handleDelete(cat._id)} 
-                                            className="p-2 text-slate-300 hover:text-slate-900 hover:bg-slate-50 transition-all"
+                                            className="p-2 text-slate-300 cursor-pointer hover:text-slate-900 hover:bg-slate-50 transition-all"
                                         >
                                             <Trash2 size={14} />
                                         </button>

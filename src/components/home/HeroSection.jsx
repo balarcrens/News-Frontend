@@ -1,36 +1,31 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import OptimizedImage from '../common/OptimizedImage';
 
-const CardLarge = ({ category, title, summary, time, image, slug }) => (
+const CardLarge = ({ category, title, summary, image, slug }) => (
     <Link to={`/article/${slug}`} className="relative group cursor-pointer block overflow-hidden rounded-xl h-[450px] md:h-[600px] bg-gray-100">
-        <img
-            src={image || "https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=2072&auto=format&fit=crop"}
+        <OptimizedImage
+            src={image}
             alt={title}
-            loading='eager'
-            className="absolute inset-0 w-full h-full object-cover will-change-transform transition-all duration-500 group-hover:scale-105 blur-md"
-            onLoad={(e) => {
-                e.currentTarget.classList.remove('blur-md');
-            }}
+            priority={true}
+            aspectRatio="h-full"
+            className="absolute inset-0 w-full h-full"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent"></div>
         <div className="absolute bottom-0 left-0 p-8 md:p-12 w-full max-w-2xl">
             <span className="inline-block px-3 py-1 bg-red-700 text-[10px] font-bold text-white uppercase tracking-widest mb-4">
                 {category}
             </span>
-            <h2 className="text-3xl md:text-5xl font-black font-serif italic tracking-tighter text-white mb-6 line-clamp-2 leading-[1.1]">
+            <h2 className="text-2xl md:text-4xl font-black font-serif text-white mb-6 line-clamp-2 leading-[1.1]">
                 {title}
             </h2>
-            <p className="text-gray-300 line-clamp-2 text-sm md:text-base mb-8 hidden md:block tracking-tighter">
+            <p className="hidden md:line-clamp-2 text-gray-300 text-sm md:text-base mb-8 tracking-tighter">
                 {summary}
             </p>
             <div className="flex items-center space-x-6">
                 <div className="bg-red-700 hover:bg-red-800 text-white px-6 py-3 text-xs font-bold uppercase tracking-widest transition-colors rounded-none">
                     Read Full Report
                 </div>
-                <span className="text-gray-400 text-[10px] font-bold uppercase tracking-widest flex items-center">
-                    <span className="w-4 h-4 rounded-full border border-gray-600 flex items-center justify-center mr-2 text-[8px]">i</span>
-                    {time}
-                </span>
             </div>
         </div>
     </Link>
@@ -38,14 +33,11 @@ const CardLarge = ({ category, title, summary, time, image, slug }) => (
 
 const CardSmall = ({ category, title, image, slug }) => (
     <Link to={`/article/${slug}`} className="relative group cursor-pointer block overflow-hidden rounded-xl h-[215px] md:h-[290px] bg-gray-100">
-        <img
-            src={image || "https://images.unsplash.com/photo-1546422904-90eab23c3d7e?q=80&w=2072&auto=format&fit=crop"}
+        <OptimizedImage
+            src={image}
             alt={title}
-            loading='eager'
-            className="absolute inset-0 w-full h-full object-cover will-change-transform transition-all duration-500 blur-md group-hover:scale-105"
-            onLoad={(e) => {
-                e.currentTarget.classList.remove('blur-md');
-            }}
+            aspectRatio="h-full"
+            className="absolute inset-0 w-full h-full"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent"></div>
         <div className="absolute bottom-0 left-0 p-6 w-full">
@@ -61,12 +53,18 @@ const CardSmall = ({ category, title, image, slug }) => (
 
 const HeroSection = ({ articles = [], loading = false }) => {
     if (loading) return (
-        <div className="animate-pulse mb-12">
+        <div className="mb-12">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2 h-[450px] md:h-[600px] bg-gray-200 rounded-xl"></div>
+                <div className="lg:col-span-2 h-[450px] md:h-[600px] bg-gray-100 rounded-xl overflow-hidden animate-pulse">
+                     <div className="w-full h-full bg-linear-to-r from-gray-100 via-gray-200 to-gray-100 animate-shimmer"></div>
+                </div>
                 <div className="flex flex-col gap-6">
-                    <div className="h-[215px] md:h-[290px] bg-gray-200 rounded-xl"></div>
-                    <div className="h-[215px] md:h-[290px] bg-gray-200 rounded-xl"></div>
+                    <div className="h-[215px] md:h-[290px] bg-gray-100 rounded-xl overflow-hidden animate-pulse">
+                         <div className="w-full h-full bg-linear-to-r from-gray-100 via-gray-200 to-gray-100 animate-shimmer"></div>
+                    </div>
+                    <div className="h-[215px] md:h-[290px] bg-gray-100 rounded-xl overflow-hidden animate-pulse">
+                         <div className="w-full h-full bg-linear-to-r from-gray-100 via-gray-200 to-gray-100 animate-shimmer"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -84,7 +82,6 @@ const HeroSection = ({ articles = [], loading = false }) => {
                             category={mainArticle.category?.name || "Featured"}
                             title={mainArticle.title}
                             summary={mainArticle.summary}
-                            time={`${mainArticle.engagement?.views || 0} Views`}
                             image={mainArticle.media?.featuredImage}
                             slug={mainArticle.slug}
                         />
