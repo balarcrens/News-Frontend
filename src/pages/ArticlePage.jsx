@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { articleService } from '../api/articleService';
 import { commentService } from '../api/commentService';
 import ArticleHero from '../components/article/ArticleHero';
@@ -11,10 +11,8 @@ import Breadcrumbs from '../components/common/Breadcrumbs';
 import OptimizedImage from '../components/common/OptimizedImage';
 
 const RelatedArticleCard = ({ article }) => {
-    const navigate = useNavigate();
-
     return (
-        <Link 
+        <Link
             to={`/article/${article.slug}`} 
             className="group cursor-pointer block focus:outline-none focus:ring-2 focus:ring-red-700 rounded-lg p-2 -m-2"
             aria-label={`Read related article: ${article.title}`}

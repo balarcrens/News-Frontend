@@ -7,7 +7,7 @@ export const commentService = {
       const { data } = await api.get(`/api/comments/article/${articleId}`);
       return data;
     } catch (error) {
-      console.error(`Error fetching comments for article ${articleId}:`, error);
+      console.error(`Error fetching comments for article ${articleId}:`, error.message);
       throw error;
     }
   },
@@ -18,7 +18,17 @@ export const commentService = {
       const { data } = await api.post('/api/comments', commentData);
       return data;
     } catch (error) {
-      console.error("Error adding comment:", error);
+      console.error("Error adding comment:", error.message);
+      throw error;
+    }
+  },
+
+  // Delete a comment
+  delete: async (commentId) => {
+    try {
+      await api.delete(`/api/comments/${commentId}`);
+    } catch (error) {
+      console.error("Error deleting comment:", error.message);
       throw error;
     }
   }

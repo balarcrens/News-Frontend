@@ -54,8 +54,8 @@ const ArticleCard = ({ article, isFeatured = false }) => {
     const navigate = useNavigate();
     if (isFeatured) {
         return (
-            <div className="relative group mb-20 cursor-pointer" onClick={() => { navigate(`/article/${article.slug}`) }}>
-                <div className="relative aspect-[21/9] overflow-hidden mb-10 shadow-lg bg-gray-50 border border-gray-100">
+            <div className="relative group mb-15 md:mb-20 cursor-pointer" onClick={() => navigate(`/article/${article.slug}`)}>
+                <div className="relative aspect-[10/9] sm:aspect-[21/9] overflow-hidden mb-5 md:mb-10 shadow-lg bg-gray-50 border border-gray-100">
                     <OptimizedImage
                         src={article.media?.featuredImage}
                         alt={article.title}
@@ -63,7 +63,7 @@ const ArticleCard = ({ article, isFeatured = false }) => {
                         aspectRatio="h-full"
                         className="w-full h-full"
                     />
-                    <div className="absolute top-6 left-6 space-x-3 flex">
+                    <div className="absolute top-6 left-6 space-x-3 flex flex-wrap">
                         <span className="bg-red-700 text-white text-xs font-bold uppercase tracking-[0.2em] px-3 py-1.5 shadow-lg">
                             Breaking
                         </span>
@@ -74,10 +74,10 @@ const ArticleCard = ({ article, isFeatured = false }) => {
                 </div>
 
                 <div className="max-w-4xl">
-                    <h2 className="text-3xl md:text-4xl font-black font-serif italic tracking-tighter text-slate-900 mb-8 leading-[1.05] group-hover:text-red-700 transition-colors">
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-black font-serif italic tracking-tighter text-slate-900 mb-4 md:mb-8 leading-[1.05] group-hover:text-red-700 transition-colors">
                         <Link to={`/article/${article.slug}`}>{article.title}</Link>
                     </h2>
-                    <p className="text-md sm:text-xl font-serif text-gray-500 mb-10 leading-relaxed italic max-w-3xl line-clamp-2">
+                    <p className="text-md sm:text-xl font-serif text-gray-500 mb-6 md:mb-10 leading-relaxed italic max-w-3xl line-clamp-2">
                         {article.summary}
                     </p>
 
@@ -96,12 +96,6 @@ const ArticleCard = ({ article, isFeatured = false }) => {
                                 <p className="text-xs font-medium text-gray-600 uppercase tracking-[0.2em] font-serif italic">Senior Correspondent</p>
                             </div>
                         </div>
-                        <button 
-                            className="p-2 text-gray-500 hover:text-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-700 rounded-full"
-                            aria-label="Bookmark article"
-                        >
-                            <Bookmark size={20} />
-                        </button>
                     </div>
                 </div>
             </div>
@@ -109,7 +103,7 @@ const ArticleCard = ({ article, isFeatured = false }) => {
     }
 
     return (
-        <div className="group cursor-pointer">
+        <div className="group cursor-pointer" onClick={() => navigate(`/article/${article.slug}`)}>
             <div className="relative aspect-[16/10] overflow-hidden mb-6 bg-gray-50 border border-gray-100">
                 <OptimizedImage
                     src={article.media?.featuredImage}
@@ -207,7 +201,7 @@ const CategoryPage = () => {
     if (loading && !category) {
         return (
             <div className="max-w-7xl mx-auto px-4 py-40 text-center flex flex-col items-center justify-center space-y-6">
-                 <div className="relative w-16 h-16">
+                <div className="relative w-16 h-16">
                     <div className="absolute inset-0 border-2 border-red-700/10 rounded-full"></div>
                     <div className="absolute inset-0 border-2 border-t-red-700 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
                 </div>

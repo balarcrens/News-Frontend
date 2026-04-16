@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { MessageSquare, Send, Reply, Heart, MoreHorizontal, User } from 'lucide-react';
+import { MessageSquare, Send, Reply, Heart, User, Trash } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import useAuth from '../../context/useAuth';
 import { commentService } from '../../api/commentService';
+import { confirmDestructive } from '../../utils/swal';
+import { toast } from 'react-toastify';
 
-const Comment = ({ comment, onReply }) => {
+const Comment = ({ comment, onReply, onDelete }) => {
+    const { user } = useAuth();
+
     return (
         <div className="group">
             <div className="flex space-x-5">
@@ -17,7 +21,6 @@ const Comment = ({ comment, onReply }) => {
                             className="w-10 h-10 rounded-full object-cover"
                             referrerPolicy="no-referrer"
                             onError={(e) => {
-                                console.log("Image failed:", comment?.profilePicture);
                                 e.target.src = "https://www.citypng.com/public/uploads/preview/hd-man-user-illustration-icon-transparent-png-701751694974843ybexneueic.png";
                             }}
                         />
@@ -41,10 +44,6 @@ const Comment = ({ comment, onReply }) => {
                         {comment.comment}
                     </p>
                     <div className="flex items-center space-x-6 opacity-60 group-hover:opacity-100 transition-opacity">
-                        <button className="flex items-center space-x-2 text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-red-700 transition-colors">
-                            <Heart size={12} />
-                            <span>{comment.likes || 0} Likes</span>
-                        </button>
                         <button
                             onClick={() => onReply(comment)}
                             className="flex items-center space-x-2 text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-red-700 transition-colors"
@@ -52,9 +51,13 @@ const Comment = ({ comment, onReply }) => {
                             <Reply size={12} />
                             <span>Reply</span>
                         </button>
-                        <button className="text-gray-600 hover:text-slate-900">
-                            <MoreHorizontal size={14} />
-                        </button>
+                        {(user?.email === comment?.email) && <button
+                            onClick={() => onDelete(comment?._id)}
+                            className="flex items-center space-x-2 text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-red-700 transition-colors"
+                        >
+                            <Trash size={12} />
+                            <span>Delete</span>
+                        </button>}
                     </div>
                 </div>
             </div>
@@ -114,6 +117,22 @@ const DiscussionSection = ({ articleId, comments = [], onCommentAdded }) => {
         }
     };
 
+    const handleDelete = async (commentId) => {
+        if (!commentId) return
+        const result = await confirmDestructive(
+            'Delete Comment',
+            'Are you sure you want to delete comment? This action cannot be undone.'
+        );
+        if (result.isConfirmed) {
+            try {
+                await commentService.delete(commentId);
+                toast.success('Comment deleted successfully.');
+            } catch (error) {
+                console.error("Failed to post comment:", error);
+            }
+        }
+    }
+
     return (
         <section className="max-w-4xl mx-auto pt-20 border-t border-gray-100 mt-20">
             <div className="flex items-center justify-between mb-12">
@@ -130,13 +149,12 @@ const DiscussionSection = ({ articleId, comments = [], onCommentAdded }) => {
             {user ? (
                 <div className="mb-20">
                     <div className="flex space-x-5 mb-6">
-                        <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center border-2 border-gray-100 text-gray-500">
+                        <div className="w-12 h-12 bg-gray-50 overflow-hidden rounded-full flex items-center justify-center border-2 border-gray-100 text-gray-500">
                             {user?.profilePicture ? (
                                 <img
                                     src={user?.profilePicture}
                                     alt="User"
                                     onError={(e) => {
-                                        console.log("Image failed to load");
                                         e.target.src = "https://www.citypng.com/public/uploads/preview/hd-man-user-illustration-icon-transparent-png-701751694974843ybexneueic.png";
                                     }}
                                 />
@@ -148,7 +166,7 @@ const DiscussionSection = ({ articleId, comments = [], onCommentAdded }) => {
                             value={newComment}
                             onChange={(e) => setNewComment(e.target.value)}
                             placeholder="JOIN THE CONVERSATION..."
-                            className="flex-1 bg-gray-50/50 border-none p-6 text-sm font-serif italic text-slate-900 min-h-[140px] focus:ring-1 focus:ring-red-700/20 outline-none transition-all placeholder:text-gray-500"
+                            className="flex-1 bg-gray-50/50 border-none p-6 text-sm font-serif text-slate-900 min-h-[140px] focus:ring-1 focus:ring-red-700/20 outline-none transition-all placeholder:text-gray-500"
                         />
                     </div>
                     <div className="flex justify-end">
@@ -188,7 +206,7 @@ const DiscussionSection = ({ articleId, comments = [], onCommentAdded }) => {
                 {comments.length > 0 ? (
                     <>
                         {comments.map(c => (
-                            <Comment key={c._id} comment={c} onReply={() => { }} />
+                            <Comment key={c._id} comment={c} onReply={() => { }} onDelete={(commentId) => { handleDelete(commentId) }} />
                         ))}
                         <button className="w-full py-6 text-[10px] font-bold uppercase tracking-[0.4em] text-gray-600 border border-dashed border-gray-100 hover:border-gray-300 hover:text-slate-900 transition-all">
                             Load More Comments

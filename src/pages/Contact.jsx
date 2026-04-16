@@ -35,17 +35,16 @@ const Contact = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle form submission logic
         console.log("Form Submitted:", formState);
     };
 
     return (
         <div className="bg-white">
-            <SEO 
+            <SEO
                 title="Contact Our Newsroom"
                 description="Connect with Nexora News. Submit tips, inquiries, or feedback to our editorial team."
             />
-            {/* Direct Channel Hero */}
+
             <section className="relative h-[60vh] flex items-center overflow-hidden">
                 <img
                     src={contactHero}
@@ -66,7 +65,7 @@ const Contact = () => {
                     <h1 className="text-5xl md:text-8xl font-black font-serif italic text-white tracking-widest leading-tight mb-8">
                         Direct <br className="md:hidden" /> Conversations
                     </h1>
-                    <p className="text-lg font-serif text-gray-600 italic max-w-2xl mx-auto opacity-80">
+                    <p className="text-lg font-serif text-gray-400 italic max-w-2xl mx-auto opacity-80">
                         Bridging global narratives with direct editorial access. Reach our bureaus across the world.
                     </p>
                 </div>
@@ -75,8 +74,6 @@ const Contact = () => {
             <section className="py-20 md:py-32">
                 <div className="max-w-7xl mx-auto px-4 md:px-6">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-20">
-
-                        {/* Inquiry Matrix */}
                         <div className="lg:col-span-5">
                             <div className="mb-12">
                                 <p className="text-red-700 text-[10px] font-bold uppercase tracking-[0.4em] mb-6">Inquiry Matrix</p>
@@ -113,7 +110,6 @@ const Contact = () => {
                             </div>
                         </div>
 
-                        {/* Contact Form */}
                         <div className="lg:col-span-1 lg:flex items-center justify-center hidden">
                             <div className="w-px h-full bg-gray-100"></div>
                         </div>
@@ -182,7 +178,6 @@ const Contact = () => {
                 </div>
             </section>
 
-            {/* Global Bureaus */}
             <section className="py-20 md:py-32 bg-slate-900 text-white overflow-hidden relative">
                 <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
                     <div className="text-center mb-20 md:mb-32">
@@ -196,7 +191,7 @@ const Contact = () => {
                         <div className="space-y-8">
                             <div className="w-12 h-0.5 bg-red-700"></div>
                             <h3 className="text-2xl font-serif italic font-bold">New York</h3>
-                            <div className="space-y-4 text-gray-600 text-sm font-serif italic">
+                            <div className="space-y-4 text-gray-400 text-sm font-serif italic">
                                 <p className="flex items-center space-x-4">
                                     <MapPin size={16} className="text-red-700" />
                                     <span>Financial District, NY 10005, USA</span>
@@ -211,7 +206,7 @@ const Contact = () => {
                         <div className="space-y-8">
                             <div className="w-12 h-0.5 bg-red-700"></div>
                             <h3 className="text-2xl font-serif italic font-bold">London</h3>
-                            <div className="space-y-4 text-gray-600 text-sm font-serif italic">
+                            <div className="space-y-4 text-gray-400 text-sm font-serif italic">
                                 <p className="flex items-center space-x-4">
                                     <MapPin size={16} className="text-red-700" />
                                     <span>Fleet Street, London EC4Y, UK</span>
@@ -226,21 +221,20 @@ const Contact = () => {
                         <div className="space-y-8 border-t border-white/5 md:border-t-0 pt-16 md:pt-0">
                             <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-500 mb-8">Follow The Pulse</p>
                             <div className="flex space-x-8">
-                                <a href="#" className="p-4 rounded-full border border-white/10 hover:bg-red-700 transition-all group">
-                                    <Instagram size={20} className="text-gray-600 group-hover:text-white" />
-                                </a>
+                                <span className="p-4 rounded-full cursor-not-allowed border border-white/10">
+                                    <Instagram size={20} className="text-gray-400" />
+                                </span>
                                 <a href="https://x.com/Nexora_News" target='_blank' className="p-4 rounded-full border border-white/10 hover:bg-red-700 transition-all group">
-                                    <Twitter size={20} className="text-gray-600 group-hover:text-white" />
+                                    <Twitter size={20} className="text-gray-400 group-hover:text-white" />
                                 </a>
                                 <a href="https://www.linkedin.com/in/nexora-news" target='_blank' className="p-4 rounded-full border border-white/10 hover:bg-red-700 transition-all group">
-                                    <Linkedin size={20} className="text-gray-600 group-hover:text-white" />
+                                    <Linkedin size={20} className="text-gray-400 group-hover:text-white" />
                                 </a>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Decorative Element */}
                 <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-red-700/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2"></div>
             </section>
         </div>

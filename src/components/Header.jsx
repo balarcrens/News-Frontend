@@ -231,7 +231,7 @@ const MobileDrawer = ({ isOpen, onClose, user, logout, categories = [] }) => {
                 className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-[60] transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
                 onClick={onClose}
             />
-            <div className={`fixed top-0 left-0 h-full w-[80%] max-w-sm bg-white z-[100] overflow-y-auto shadow-2xl transition-transform duration-500 ease-out border-r border-gray-100 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+            <div className={`fixed top-0 left-0 h-full w-[80%] max-w-sm bg-white z-[100] overflow-y-auto hidden-scrollbar shadow-2xl transition-transform duration-500 ease-out border-r border-gray-100 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                 <div className="flex items-center justify-between p-6 border-b border-gray-100">
                     <h2 className="text-xl font-black font-serif italic tracking-tighter text-slate-900">Nexora News</h2>
                     <button 
@@ -243,7 +243,7 @@ const MobileDrawer = ({ isOpen, onClose, user, logout, categories = [] }) => {
                     </button>
                 </div>
 
-                <div className="p-8">
+                <div className="p-4 sm:p-8">
                     <div className="mb-8 relative group">
                         <form onSubmit={(e) => {
                             e.preventDefault();
@@ -269,7 +269,7 @@ const MobileDrawer = ({ isOpen, onClose, user, logout, categories = [] }) => {
                         </form>
                     </div>
 
-                    <div className="mb-10 border-b border-gray-50 pb-8">
+                    <div className="mb-8 border-b border-gray-50">
                         {user ? (
                             <div className="space-y-6">
                                 <div className="flex items-center space-x-4">
@@ -314,7 +314,7 @@ const MobileDrawer = ({ isOpen, onClose, user, logout, categories = [] }) => {
                         )}
                     </div>
 
-                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-600 mb-8">Navigation</h3>
+                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-600 mb-4">Navigation</h3>
                     <nav className="space-y-6">
                         <div>
                             <button
