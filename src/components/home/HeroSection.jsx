@@ -19,7 +19,7 @@ const CardLarge = ({ category, title, summary, image, slug }) => (
             <h2 className="text-2xl md:text-4xl font-black font-serif text-white mb-6 line-clamp-2 leading-[1.1]">
                 {title}
             </h2>
-            <p className="hidden md:line-clamp-2 text-gray-300 text-sm md:text-base mb-8 tracking-tighter">
+            <p className="hidden md:line-clamp-2 text-gray-500 text-sm md:text-base mb-8 tracking-tighter">
                 {summary}
             </p>
             <div className="flex items-center space-x-6">
@@ -41,7 +41,7 @@ const CardSmall = ({ category, title, image, slug }) => (
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent"></div>
         <div className="absolute bottom-0 left-0 p-6 w-full">
-            <span className="text-[9px] font-bold text-gray-300 uppercase tracking-widest mb-2 block">
+            <span className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block">
                 {category}
             </span>
             <h3 className="text-lg md:text-xl font-bold font-serif text-white leading-tight line-clamp-2">
@@ -86,7 +86,7 @@ const HeroSection = ({ articles = [], loading = false }) => {
                             slug={mainArticle.slug}
                         />
                     ) : (
-                        <div className="h-[450px] md:h-[600px] bg-gray-50 flex items-center justify-center rounded-xl border-2 border-dashed border-gray-200 uppercase text-xs font-bold tracking-widest text-gray-400">
+                        <div className="h-[450px] md:h-[600px] bg-gray-50 flex items-center justify-center rounded-xl border-2 border-dashed border-gray-200 uppercase text-xs font-bold tracking-widest text-gray-600">
                             Featured Spotlight
                         </div>
                     )}
@@ -104,10 +104,10 @@ const HeroSection = ({ articles = [], loading = false }) => {
                         ))
                     ) : (
                         <>
-                            <div className="h-[215px] md:h-[290px] bg-gray-50 flex items-center justify-center rounded-xl border-2 border-dashed border-gray-200 uppercase text-xs font-bold tracking-widest text-gray-400">
+                            <div className="h-[215px] md:h-[290px] bg-gray-50 flex items-center justify-center rounded-xl border-2 border-dashed border-gray-200 uppercase text-xs font-bold tracking-widest text-gray-600">
                                 Trending Topic
                             </div>
-                            <div className="h-[215px] md:h-[290px] bg-gray-50 flex items-center justify-center rounded-xl border-2 border-dashed border-gray-200 uppercase text-xs font-bold tracking-widest text-gray-400">
+                            <div className="h-[215px] md:h-[290px] bg-gray-50 flex items-center justify-center rounded-xl border-2 border-dashed border-gray-200 uppercase text-xs font-bold tracking-widest text-gray-600">
                                 Trending Topic
                             </div>
                         </>
@@ -119,3 +119,4 @@ const HeroSection = ({ articles = [], loading = false }) => {
 };
 
 export default HeroSection;
+

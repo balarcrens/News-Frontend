@@ -105,14 +105,14 @@ const AuthForm = () => {
             <div className="flex space-x-8 border-b border-gray-100">
                 <button
                     onClick={() => setMode('signin')}
-                    className={`pb-4 cursor-pointer text-[10px] font-bold uppercase tracking-[0.2em] transition-all relative ${mode === 'signin' ? 'text-red-700' : 'text-gray-400 hover:text-gray-600'}`}
+                    className={`pb-4 cursor-pointer text-[10px] font-bold uppercase tracking-[0.2em] transition-all relative ${mode === 'signin' ? 'text-red-700' : 'text-gray-600 hover:text-gray-600'}`}
                 >
                     Sign In
                     {mode === 'signin' && <div className="absolute bottom-0 left-0 w-full h-[2px] bg-red-700 shadow-[0_-2px_8px_rgba(185,28,28,0.3)]"></div>}
                 </button>
                 <button
                     onClick={() => setMode('create')}
-                    className={`pb-4 cursor-pointer text-[10px] font-bold uppercase tracking-[0.2em] transition-all relative ${mode === 'create' ? 'text-red-700' : 'text-gray-400 hover:text-gray-600'}`}
+                    className={`pb-4 cursor-pointer text-[10px] font-bold uppercase tracking-[0.2em] transition-all relative ${mode === 'create' ? 'text-red-700' : 'text-gray-600 hover:text-gray-600'}`}
                 >
                     Create Account
                     {mode === 'create' && <div className="absolute bottom-0 left-0 w-full h-[2px] bg-red-700 shadow-[0_-2px_8px_rgba(185,28,28,0.3)]"></div>}
@@ -159,7 +159,7 @@ const AuthForm = () => {
                 <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-gray-300"></div>
                 </div>
-                <span className="relative z-10 bg-white px-6 text-[8px] font-bold uppercase tracking-[0.3em] text-gray-400">
+                <span className="relative z-10 bg-white px-6 text-xs font-bold uppercase tracking-[0.3em] text-gray-600">
                     Or continue with email
                 </span>
             </div>
@@ -167,7 +167,7 @@ const AuthForm = () => {
             <form className="space-y-6" onSubmit={handleSubmit}>
                 {mode === 'create' && (
                     <div className="transition-all duration-300 animate-in fade-in slide-in-from-top-2">
-                        <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-gray-500 mb-3 block">Full Name</label>
+                        <label className="text-xs font-bold uppercase tracking-[0.2em] text-gray-500 mb-3 block">Full Name</label>
                         <input
                             type="text"
                             name="name"
@@ -175,13 +175,13 @@ const AuthForm = () => {
                             onChange={handleChange}
                             placeholder="Full Name"
                             required
-                            className="w-full bg-gray-50/50 border-none p-5 text-sm font-medium focus:ring-1 focus:ring-red-700/20 outline-none transition-all placeholder:text-gray-300"
+                            className="w-full bg-gray-50/50 border-none p-5 text-sm font-medium focus:ring-1 focus:ring-red-700/20 outline-none transition-all placeholder:text-gray-500"
                         />
                     </div>
                 )}
 
                 <div>
-                    <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-gray-500 mb-3 block">Email Address</label>
+                    <label className="text-xs font-bold uppercase tracking-[0.2em] text-gray-500 mb-3 block">Email Address</label>
                     <input
                         type="email"
                         name="email"
@@ -189,15 +189,15 @@ const AuthForm = () => {
                         onChange={handleChange}
                         placeholder="name@example.com"
                         required
-                        className="w-full bg-gray-50/50 border-none p-5 text-sm font-medium focus:ring-1 focus:ring-red-700/20 outline-none transition-all placeholder:text-gray-300"
+                        className="w-full bg-gray-50/50 border-none p-5 text-sm font-medium focus:ring-1 focus:ring-red-700/20 outline-none transition-all placeholder:text-gray-500"
                     />
                 </div>
 
                 <div>
                     <div className="flex justify-between items-center mb-3">
-                        <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-gray-500">Password</label>
+                        <label className="text-xs font-bold uppercase tracking-[0.2em] text-gray-500">Password</label>
                         {mode === 'signin' && (
-                            <button type="button" className="text-[9px] cursor-pointer font-bold uppercase tracking-[0.2em] text-red-700 hover:opacity-70 transition-opacity">
+                            <button type="button" className="text-xs cursor-pointer font-bold uppercase tracking-[0.2em] text-red-700 hover:opacity-70 transition-opacity">
                                 Forgot?
                             </button>
                         )}
@@ -211,12 +211,12 @@ const AuthForm = () => {
                             placeholder={mode === 'signin' ? "••••••••" : "Minimum 6 characters"}
                             required
                             minLength={6}
-                            className="w-full bg-gray-50/50 border-none p-5 pr-14 text-sm font-medium focus:ring-1 focus:ring-red-700/20 outline-none transition-all placeholder:text-gray-400/50"
+                            className="w-full bg-gray-50/50 border-none p-5 pr-14 text-sm font-medium focus:ring-1 focus:ring-red-700/20 outline-none transition-all placeholder:text-gray-600/50"
                         />
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute cursor-pointer right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-700 transition-colors p-1"
+                            className="absolute cursor-pointer right-5 top-1/2 -translate-y-1/2 text-gray-600 hover:text-red-700 transition-colors p-1"
                         >
                             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                         </button>
@@ -239,7 +239,7 @@ const AuthForm = () => {
                 </button>
             </form>
 
-            <p className="text-[9px] text-center text-gray-400 leading-relaxed px-10">
+            <p className="text-xs text-center text-gray-600 leading-relaxed px-10">
                 By continuing, you agree to Nexora News's <a href="#" className="underline">Terms of Service</a> and <a href="#" className="underline">Privacy Policy</a>.
             </p>
         </div>

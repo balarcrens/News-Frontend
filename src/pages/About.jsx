@@ -13,7 +13,7 @@ const ValueCard = ({ icon: Icon, title, description }) => (
         <h3 className="text-xl font-serif italic font-black text-slate-900 mb-4 tracking-tight uppercase">
             {title}
         </h3>
-        <p className="text-sm text-gray-400 font-bold uppercase tracking-[0.2em] leading-relaxed">
+        <p className="text-sm text-gray-600 font-bold uppercase tracking-[0.2em] leading-relaxed">
             {description}
         </p>
     </div>
@@ -44,13 +44,13 @@ const About = () => {
 
                 <div className="relative max-w-7xl mx-auto px-4 md:px-6 w-full">
                     <div className="max-w-3xl">
-                        <span className="inline-block px-4 py-1.5 bg-red-700 text-white text-[9px] font-bold uppercase tracking-[0.4em] mb-10 animate-in fade-in slide-in-from-left-4 duration-1000">
+                        <span className="inline-block px-4 py-1.5 bg-red-700 text-white text-xs font-bold uppercase tracking-[0.4em] mb-10 animate-in fade-in slide-in-from-left-4 duration-1000">
                             The Architecture of Intelligence
                         </span>
                         <h1 className="text-5xl md:text-8xl font-black font-serif italic text-white tracking-widest leading-none mb-10 animate-in fade-in slide-in-from-left-8 duration-1000 delay-300">
                             Nexora <br /> News
                         </h1>
-                        <p className="text-xl md:text-2xl font-serif text-gray-300 italic leading-relaxed max-w-2xl animate-in fade-in slide-in-from-left-12 duration-1000 delay-500">
+                        <p className="text-xl md:text-2xl font-serif text-gray-500 italic leading-relaxed max-w-2xl animate-in fade-in slide-in-from-left-12 duration-1000 delay-500">
                             Beyond the immediacy of the digital stream, we build the frameworks of global understanding.
                         </p>
                     </div>
@@ -58,7 +58,7 @@ const About = () => {
 
                 <div className="absolute bottom-2 sm:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center space-y-4">
                     <div>
-                        <span className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.4em] vertical-text animate-bounce">Explore</span>
+                        <span className="text-xs font-bold text-gray-600 uppercase tracking-[0.4em] vertical-text animate-bounce">Explore</span>
                     </div>
                     <div className="w-px h-12 bg-gradient-to-b from-red-700 to-transparent"></div>
                 </div>
@@ -70,7 +70,7 @@ const About = () => {
                         <div>
                             <p className="text-red-700 text-[10px] font-bold uppercase tracking-[0.4em] mb-8">Our Manifesto</p>
                             <h2 className="text-4xl md:text-6xl font-black font-serif italic text-slate-900 tracking-tighter leading-tight mb-12">
-                                In an era of velocity, we prioritize <span className="text-gray-300">depth.</span>
+                                In an era of velocity, we prioritize <span className="text-gray-500">depth.</span>
                             </h2>
                         </div>
                         <div className="space-y-10">
@@ -80,15 +80,15 @@ const About = () => {
                             <div className="flex items-center space-x-6 pt-10 border-t border-gray-100">
                                 <div className="text-center">
                                     <p className="text-3xl font-black font-serif italic text-red-700">12M+</p>
-                                    <p className="text-[9px] font-bold uppercase tracking-widest text-gray-400">Monthly Intelligence</p>
+                                    <p className="text-xs font-bold uppercase tracking-widest text-gray-600">Monthly Intelligence</p>
                                 </div>
                                 <div className="text-center">
                                     <p className="text-3xl font-black font-serif italic text-red-700">140+</p>
-                                    <p className="text-[9px] font-bold uppercase tracking-widest text-gray-400">Global Contributors</p>
+                                    <p className="text-xs font-bold uppercase tracking-widest text-gray-600">Global Contributors</p>
                                 </div>
                                 <div className="text-center">
                                     <p className="text-3xl font-black font-serif italic text-red-700">5</p>
-                                    <p className="text-[9px] font-bold uppercase tracking-widest text-gray-400">International Hubs</p>
+                                    <p className="text-xs font-bold uppercase tracking-widest text-gray-600">International Hubs</p>
                                 </div>
                             </div>
                         </div>
@@ -150,7 +150,7 @@ const About = () => {
                                 <h2 className="text-4xl md:text-6xl font-black font-serif italic text-white tracking-tighter leading-tight mb-10">
                                     Join the Global <br /> <span className="text-red-700">Intelligence Briefing.</span>
                                 </h2>
-                                <p className="text-lg font-serif text-gray-400 italic leading-relaxed mb-12 max-w-md">
+                                <p className="text-lg font-serif text-gray-600 italic leading-relaxed mb-12 max-w-md">
                                     Subscribe to our weekly editorial digest and receive the most significant reports directly to your desk.
                                 </p>
                                 <div className="flex flex-col sm:flex-row gap-4">
@@ -229,3 +229,4 @@ const About = () => {
 };
 
 export default About;
+

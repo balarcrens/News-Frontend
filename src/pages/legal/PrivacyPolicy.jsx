@@ -18,7 +18,7 @@ const SidebarLink = ({ href, children }) => (
     <li>
         <a
             href={href}
-            className="group flex items-center text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-red-700 transition-all duration-300 py-3 border-b border-gray-50 last:border-0"
+            className="group flex items-center text-[10px] font-bold uppercase tracking-[0.2em] text-gray-600 hover:text-red-700 transition-all duration-300 py-3 border-b border-gray-50 last:border-0"
         >
             <span className="w-0 group-hover:w-4 overflow-hidden transition-all duration-300 text-red-700">
                 <ChevronRight size={12} strokeWidth={3} />
@@ -30,7 +30,7 @@ const SidebarLink = ({ href, children }) => (
 
 const SectionHeader = ({ badge, title, subtitle }) => (
     <div className="mb-12">
-        <span className="inline-block px-3 py-1 bg-red-700 text-white text-[9px] font-bold uppercase tracking-[0.4em] mb-6">
+        <span className="inline-block px-3 py-1 bg-red-700 text-white text-xs font-bold uppercase tracking-[0.4em] mb-6">
             {badge}
         </span>
         <h2 className="text-4xl md:text-5xl font-black font-serif italic text-slate-900 tracking-tighter leading-tight mb-6">
@@ -59,7 +59,7 @@ const InfoCard = ({ icon: Icon, title, description, badge }) => (
             {description}
         </p>
         {badge && (
-            <span className="text-[9px] font-bold uppercase tracking-widest text-red-700 bg-red-50 px-3 py-1 group-hover:bg-red-700 group-hover:text-white transition-colors">
+            <span className="text-xs font-bold uppercase tracking-widest text-red-700 bg-red-50 px-3 py-1 group-hover:bg-red-700 group-hover:text-white transition-colors">
                 {badge}
             </span>
         )}
@@ -70,11 +70,11 @@ const CookieToggle = ({ label, description, status, alwaysActive = false }) => (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between p-6 border border-gray-100 bg-white mb-4 group hover:border-red-700 transition-all duration-500">
         <div className="mb-4 sm:mb-0">
             <h4 className="text-xs font-bold uppercase tracking-widest text-slate-900 mb-1">{label}</h4>
-            <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wider">{description}</p>
+            <p className="text-[11px] text-gray-600 font-medium uppercase tracking-wider">{description}</p>
         </div>
         <div className="flex items-center">
             {alwaysActive ? (
-                <span className="text-[9px] font-bold text-red-700 uppercase tracking-widest">Always Active</span>
+                <span className="text-xs font-bold text-red-700 uppercase tracking-widest">Always Active</span>
             ) : (
                 <div className={`w-10 h-5 rounded-full relative transition-colors duration-300 p-1 cursor-pointer ${status ? 'bg-red-700' : 'bg-gray-200'}`}>
                     <div className={`w-3 h-3 bg-white rounded-full transition-transform duration-300 ${status ? 'translate-x-5' : 'translate-x-0'}`}></div>
@@ -120,7 +120,7 @@ const PrivacyPolicy = () => {
                                 <p className="text-[11px] text-gray-500 leading-relaxed mb-6">
                                     If you have specific questions about how Nexora News protects your data, our privacy officer is available.
                                 </p>
-                                <Link to="/contact" className="text-[9px] font-bold text-red-700 uppercase tracking-widest flex items-center hover:translate-x-2 transition-transform">
+                                <Link to="/contact" className="text-xs font-bold text-red-700 uppercase tracking-widest flex items-center hover:translate-x-2 transition-transform">
                                     Contact Support <ArrowRight size={12} className="ml-2" />
                                 </Link>
                             </div>
@@ -130,13 +130,13 @@ const PrivacyPolicy = () => {
                     <main className="lg:col-span-9">
 
                         <header className="mb-20">
-                            <span className="inline-block px-4 py-1.5 bg-red-700 text-white text-[9px] font-bold uppercase tracking-[0.4em] mb-10">
+                            <span className="inline-block px-4 py-1.5 bg-red-700 text-white text-xs font-bold uppercase tracking-[0.4em] mb-10">
                                 Legal Document
                             </span>
                             <h1 className="text-6xl md:text-8xl font-black font-serif italic text-slate-900 tracking-tighter leading-none mb-12">
                                 Privacy Policy
                             </h1>
-                            <div className="flex flex-wrap items-center gap-8 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 border-t border-b border-gray-100 py-6">
+                            <div className="flex flex-wrap items-center gap-8 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-600 border-t border-b border-gray-100 py-6">
                                 <div className="flex items-center">
                                     <FileText size={14} className="mr-2 text-red-700" />
                                     <span>Last Updated: October 24, 2024</span>
@@ -182,7 +182,7 @@ const PrivacyPolicy = () => {
                             <div className="bg-slate-900 p-8 md:p-12 relative overflow-hidden group">
                                 <div className="absolute top-0 right-0 w-64 h-64 bg-red-700/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl group-hover:bg-red-700/20 transition-colors duration-1000"></div>
                                 <div className="relative z-10">
-                                    <p className="text-xl font-serif text-gray-300 leading-relaxed text-center italic">
+                                    <p className="text-xl font-serif text-gray-500 leading-relaxed text-center italic">
                                         "We never collect sensitive personal data such as political affiliations, religious beliefs, or health information without your explicit, separate consent for specific investigative features."
                                     </p>
                                 </div>
@@ -224,7 +224,7 @@ const PrivacyPolicy = () => {
                                 <div className="relative h-full flex flex-col justify-center px-8 md:px-16">
                                     <div className="w-16 h-1 bg-red-700 mb-8 animate-pulse"></div>
                                     <h3 className="text-4xl md:text-5xl font-black font-serif italic text-white mb-6">Encryption by Design</h3>
-                                    <p className="text-gray-400 font-serif italic text-lg max-w-md leading-relaxed">
+                                    <p className="text-gray-600 font-serif italic text-lg max-w-md leading-relaxed">
                                         Every byte of reader data is encrypted using military-grade AES-256 standards, ensuring your reading habits remain your business alone.
                                     </p>
                                     <div className="mt-8 flex items-center space-x-4">
@@ -235,7 +235,7 @@ const PrivacyPolicy = () => {
                                                 </div>
                                             ))}
                                         </div>
-                                        <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">End-to-End Secure Platform</span>
+                                        <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">End-to-End Secure Platform</span>
                                     </div>
                                 </div>
                                 <div className="absolute bottom-0 right-0 p-8">
@@ -284,17 +284,17 @@ const PrivacyPolicy = () => {
                                 <div className="p-10 text-center border-b md:border-b-0 md:border-r border-gray-100 hover:bg-gray-50 transition-colors group">
                                     <Download size={24} className="mx-auto mb-6 text-red-700 group-hover:scale-110 transition-transform" />
                                     <h5 className="text-[10px] font-bold uppercase tracking-widest text-slate-900 mb-2">Export</h5>
-                                    <p className="text-[11px] text-gray-400 uppercase tracking-widest font-medium">Request a copy of all data we hold about you.</p>
+                                    <p className="text-[11px] text-gray-600 uppercase tracking-widest font-medium">Request a copy of all data we hold about you.</p>
                                 </div>
                                 <div className="p-10 text-center border-b md:border-b-0 md:border-r border-gray-100 hover:bg-gray-50 transition-colors group">
                                     <RefreshCcw size={24} className="mx-auto mb-6 text-red-700 group-hover:scale-110 transition-transform" />
                                     <h5 className="text-[10px] font-bold uppercase tracking-widest text-slate-900 mb-2">Correct</h5>
-                                    <p className="text-[11px] text-gray-400 uppercase tracking-widest font-medium">Update or rectify any inaccurate personal data.</p>
+                                    <p className="text-[11px] text-gray-600 uppercase tracking-widest font-medium">Update or rectify any inaccurate personal data.</p>
                                 </div>
                                 <div className="p-10 text-center hover:bg-gray-50 transition-colors group">
                                     <Trash2 size={24} className="mx-auto mb-6 text-red-700 group-hover:scale-110 transition-transform" />
                                     <h5 className="text-[10px] font-bold uppercase tracking-widest text-slate-900 mb-2">Delete</h5>
-                                    <p className="text-[11px] text-gray-400 uppercase tracking-widest font-medium">Request permanent deletion of your profile.</p>
+                                    <p className="text-[11px] text-gray-600 uppercase tracking-widest font-medium">Request permanent deletion of your profile.</p>
                                 </div>
                             </div>
                         </section>
@@ -315,7 +315,7 @@ const PrivacyPolicy = () => {
                                     >
                                         Email Our DPO
                                     </a>
-                                    <p className="text-[9px] font-bold uppercase tracking-widest text-red-200">Response within 24 hours</p>
+                                    <p className="text-xs font-bold uppercase tracking-widest text-red-200">Response within 24 hours</p>
                                 </div>
                             </div>
                         </section>
@@ -340,3 +340,4 @@ const PrivacyPolicy = () => {
 };
 
 export default PrivacyPolicy;
+

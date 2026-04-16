@@ -27,6 +27,7 @@ const PrivacyPolicy = lazy(() => import('./pages/legal/PrivacyPolicy'));
 const TermsConditions = lazy(() => import('./pages/legal/TermsConditions'));
 const CookiePolicy = lazy(() => import('./pages/legal/CookiePolicy'));
 const GitHubCallback = lazy(() => import('./pages/callback/GitHubCallback'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -91,6 +92,9 @@ function App() {
                             <Route path="cookie-policy" element={<CookiePolicy />} />
                             <Route path="auth/github/callback" element={<GitHubCallback />} />
                         </Route>
+
+                        {/* 404 Not Found Catch-all */}
+                        <Route path="*" element={<NotFound />} />
                     </Routes>
                 </Suspense>
             </AuthProvider>
@@ -99,3 +103,4 @@ function App() {
 }
 
 export default App;
+

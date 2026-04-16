@@ -55,6 +55,7 @@ export const AuthProvider = ({ children }) => {
             });
 
             localStorage.setItem('authorization', data.token);
+            localStorage.setItem('user', JSON.stringify(data));
             setUser(data);
 
             return { success: true };

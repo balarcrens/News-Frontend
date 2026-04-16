@@ -122,7 +122,7 @@ const AdminCategories = () => {
                                 {editingId ? 'Refine Sector' : 'Annex New Sector'}
                             </h2>
                             {editingId && (
-                                <button onClick={handleCancel} className="text-slate-400 hover:text-red-700 transition-colors">
+                                <button onClick={handleCancel} className="text-slate-600 hover:text-red-700 transition-colors">
                                     <X size={16} />
                                 </button>
                             )}
@@ -130,7 +130,7 @@ const AdminCategories = () => {
 
                         <form onSubmit={handleSave} className="space-y-6">
                             <div>
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2 block">Sector Name</label>
+                                <label className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] mb-2 block">Sector Name</label>
                                 <input 
                                     type="text" 
                                     className="w-full bg-slate-50 border-none px-4 py-3 text-[11px] font-bold text-slate-900 uppercase tracking-widest focus:ring-1 focus:ring-red-100 transition-all outline-none md:p-3"
@@ -142,7 +142,7 @@ const AdminCategories = () => {
                             </div>
 
                             <div>
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2 block">System Memo (Description)</label>
+                                <label className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] mb-2 block">System Memo (Description)</label>
                                 <textarea 
                                     rows="4"
                                     className="w-full bg-slate-50 border-none p-4 text-[13px] font-medium text-slate-600 focus:ring-1 focus:ring-red-100 transition-all outline-none leading-relaxed"
@@ -154,7 +154,7 @@ const AdminCategories = () => {
 
                             <div className="grid grid-cols-2 gap-6">
                                 <div>
-                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2 block">Display Weight</label>
+                                    <label className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] mb-2 block">Display Weight</label>
                                     <input 
                                         type="number" 
                                         className="w-full bg-slate-50 border-none px-4 py-3 text-[11px] font-bold text-slate-900 focus:ring-1 focus:ring-red-100 transition-all outline-none"
@@ -196,19 +196,19 @@ const AdminCategories = () => {
                         ) : categories.map((cat) => (
                             <div key={cat._id} className="bg-white border border-slate-100 p-8 group hover:border-red-700 transition-all duration-500 relative">
                                 <div className="flex justify-between items-start mb-6">
-                                    <div className="w-10 h-10 bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-red-700 group-hover:text-white transition-all duration-500">
+                                    <div className="w-10 h-10 bg-slate-50 flex items-center justify-center text-slate-500 group-hover:bg-red-700 group-hover:text-white transition-all duration-500">
                                         <Layers size={18} />
                                     </div>
                                     <div className="flex items-center space-x-2">
                                         <button 
                                             onClick={() => handleEdit(cat)} 
-                                            className="p-2 text-slate-300 cursor-pointer hover:text-red-700 hover:bg-red-50 transition-all"
+                                            className="p-2 text-slate-500 cursor-pointer hover:text-red-700 hover:bg-red-50 transition-all"
                                         >
                                             <Edit2 size={14} />
                                         </button>
                                         <button 
                                             onClick={() => handleDelete(cat._id)} 
-                                            className="p-2 text-slate-300 cursor-pointer hover:text-slate-900 hover:bg-slate-50 transition-all"
+                                            className="p-2 text-slate-500 cursor-pointer hover:text-slate-900 hover:bg-slate-50 transition-all"
                                         >
                                             <Trash2 size={14} />
                                         </button>
@@ -219,10 +219,10 @@ const AdminCategories = () => {
                                     <h3 className="text-xl font-black font-serif text-slate-900 uppercase tracking-tight group-hover:text-red-700 transition-colors">
                                         {cat.name}
                                     </h3>
-                                    <p className="text-[10px] font-bold text-slate-400 underline decoration-slate-100 underline-offset-4 mt-2">/{cat.slug}</p>
+                                    <p className="text-[10px] font-bold text-slate-600 underline decoration-slate-100 underline-offset-4 mt-2">/{cat.slug}</p>
                                 </div>
 
-                                <p className="text-[12px] text-gray-400 font-medium leading-relaxed mb-8 line-clamp-2">
+                                <p className="text-[12px] text-gray-600 font-medium leading-relaxed mb-8 line-clamp-2">
                                     {cat.description || 'No system memo provided for this news sector.'}
                                 </p>
 
@@ -230,15 +230,15 @@ const AdminCategories = () => {
                                     <div className="flex items-center space-x-4">
                                         <div>
                                             <p className="text-[10px] font-black text-slate-900 leading-none mb-1 tabular-nums">{cat.articleCount || 0}</p>
-                                            <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Articles</p>
+                                            <p className="text-xs font-bold text-slate-600 uppercase tracking-widest">Articles</p>
                                         </div>
                                         <div className="w-px h-6 bg-slate-50"></div>
                                         <div>
                                             <p className="text-[10px] font-black text-slate-900 leading-none mb-1 tabular-nums">{cat.displayOrder}</p>
-                                            <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Weight</p>
+                                            <p className="text-xs font-bold text-slate-600 uppercase tracking-widest">Weight</p>
                                         </div>
                                     </div>
-                                    <div className={`px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.2em] ${cat.isActive ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+                                    <div className={`px-2 py-0.5 text-xs font-black uppercase tracking-[0.2em] ${cat.isActive ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
                                         {cat.isActive ? 'Online' : 'Offline'}
                                     </div>
                                 </div>
@@ -248,8 +248,8 @@ const AdminCategories = () => {
 
                     {!loading && categories.length === 0 && (
                         <div className="bg-white border border-slate-100 p-20 text-center">
-                            <Layers size={48} strokeWidth={1} className="mx-auto mb-6 text-slate-200" />
-                            <p className="text-xl font-serif text-slate-400">No content sectors detected.</p>
+                            <Layers size={48} strokeWidth={1} className="mx-auto mb-6 text-slate-500" />
+                            <p className="text-xl font-serif text-slate-600">No content sectors detected.</p>
                         </div>
                     )}
                 </div>
@@ -259,3 +259,4 @@ const AdminCategories = () => {
 };
 
 export default AdminCategories;
+

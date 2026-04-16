@@ -15,7 +15,7 @@ export const commentService = {
   // Add a new comment
   add: async (commentData) => {
     try {
-      const { data } = await api.get('/api/comments', commentData);
+      const { data } = await api.post('/api/comments', commentData);
       return data;
     } catch (error) {
       console.error("Error adding comment:", error);

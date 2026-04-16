@@ -14,7 +14,7 @@ const InquiryCard = ({ icon: Icon, title, description, email }) => (
                 <h3 className="text-lg font-serif italic font-black text-slate-900 mb-2 uppercase tracking-tight">
                     {title}
                 </h3>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 leading-relaxed">
+                <p className="text-[10px] font-bold text-gray-600 uppercase tracking-[0.2em] mb-4 leading-relaxed">
                     {description}
                 </p>
                 <a href={`mailto:${email}`} className="text-sm font-serif italic text-red-700 hover:text-red-800 transition-colors">
@@ -60,13 +60,13 @@ const Contact = () => {
                 <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[1px]"></div>
 
                 <div className="relative max-w-7xl mx-auto px-4 md:px-6 w-full text-center">
-                    <span className="inline-block px-4 py-1.5 bg-red-700 text-white text-[9px] font-bold uppercase tracking-[0.4em] mb-8">
+                    <span className="inline-block px-4 py-1.5 bg-red-700 text-white text-xs font-bold uppercase tracking-[0.4em] mb-8">
                         The Intelligence Bridge
                     </span>
                     <h1 className="text-5xl md:text-8xl font-black font-serif italic text-white tracking-widest leading-tight mb-8">
                         Direct <br className="md:hidden" /> Conversations
                     </h1>
-                    <p className="text-lg font-serif text-gray-400 italic max-w-2xl mx-auto opacity-80">
+                    <p className="text-lg font-serif text-gray-600 italic max-w-2xl mx-auto opacity-80">
                         Bridging global narratives with direct editorial access. Reach our bureaus across the world.
                     </p>
                 </div>
@@ -120,26 +120,26 @@ const Contact = () => {
 
                         <div className="lg:col-span-6">
                             <div className="bg-[#FBFBFB] p-8 md:p-16 border border-gray-100">
-                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.3em] mb-12">Authorized Communication Portal</p>
+                                <p className="text-[10px] font-bold text-gray-600 uppercase tracking-[0.3em] mb-12">Authorized Communication Portal</p>
 
                                 <form onSubmit={handleSubmit} className="space-y-8">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                         <div className="space-y-2">
-                                            <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest px-1">IDENTITY / NAME</label>
+                                            <label className="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">IDENTITY / NAME</label>
                                             <input
                                                 type="text"
                                                 required
-                                                className="w-full bg-white border-b border-gray-200 p-4 text-xs font-bold uppercase tracking-widest focus:border-red-700 focus:ring-0 outline-none transition-all placeholder:text-gray-200"
+                                                className="w-full bg-white border-b border-gray-200 p-4 text-xs font-bold uppercase tracking-widest focus:border-red-700 focus:ring-0 outline-none transition-all placeholder:text-gray-500"
                                                 placeholder="FULL NAME"
                                                 onChange={(e) => setFormState({ ...formState, name: e.target.value })}
                                             />
                                         </div>
                                         <div className="space-y-2">
-                                            <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest px-1">COMMUNICATION / EMAIL</label>
+                                            <label className="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">COMMUNICATION / EMAIL</label>
                                             <input
                                                 type="email"
                                                 required
-                                                className="w-full bg-white border-b border-gray-200 p-4 text-xs font-bold uppercase tracking-widest focus:border-red-700 focus:ring-0 outline-none transition-all placeholder:text-gray-200"
+                                                className="w-full bg-white border-b border-gray-200 p-4 text-xs font-bold uppercase tracking-widest focus:border-red-700 focus:ring-0 outline-none transition-all placeholder:text-gray-500"
                                                 placeholder="EMAIL ADDRESS"
                                                 onChange={(e) => setFormState({ ...formState, email: e.target.value })}
                                             />
@@ -147,22 +147,22 @@ const Contact = () => {
                                     </div>
 
                                     <div className="space-y-2">
-                                        <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest px-1">SUBJECT / PURPOSE</label>
+                                        <label className="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">SUBJECT / PURPOSE</label>
                                         <input
                                             type="text"
                                             required
-                                            className="w-full bg-white border-b border-gray-200 p-4 text-xs font-bold uppercase tracking-widest focus:border-red-700 focus:ring-0 outline-none transition-all placeholder:text-gray-200"
+                                            className="w-full bg-white border-b border-gray-200 p-4 text-xs font-bold uppercase tracking-widest focus:border-red-700 focus:ring-0 outline-none transition-all placeholder:text-gray-500"
                                             placeholder="GIVE BRIEF ABOUT YOUR PURPOSE"
                                             onChange={(e) => setFormState({ ...formState, subject: e.target.value })}
                                         />
                                     </div>
 
                                     <div className="space-y-2">
-                                        <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest px-1">DISCOURSE / MESSAGE</label>
+                                        <label className="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">DISCOURSE / MESSAGE</label>
                                         <textarea
                                             required
                                             rows="5"
-                                            className="w-full bg-white border border-gray-100 p-6 text-sm font-serif italic text-slate-900 focus:border-red-700/30 focus:ring-0 outline-none transition-all placeholder:text-gray-200"
+                                            className="w-full bg-white border border-gray-100 p-6 text-sm font-serif italic text-slate-900 focus:border-red-700/30 focus:ring-0 outline-none transition-all placeholder:text-gray-500"
                                             placeholder="EXPLAIN FURTHER..."
                                             onChange={(e) => setFormState({ ...formState, message: e.target.value })}
                                         ></textarea>
@@ -196,7 +196,7 @@ const Contact = () => {
                         <div className="space-y-8">
                             <div className="w-12 h-0.5 bg-red-700"></div>
                             <h3 className="text-2xl font-serif italic font-bold">New York</h3>
-                            <div className="space-y-4 text-gray-400 text-sm font-serif italic">
+                            <div className="space-y-4 text-gray-600 text-sm font-serif italic">
                                 <p className="flex items-center space-x-4">
                                     <MapPin size={16} className="text-red-700" />
                                     <span>Financial District, NY 10005, USA</span>
@@ -211,7 +211,7 @@ const Contact = () => {
                         <div className="space-y-8">
                             <div className="w-12 h-0.5 bg-red-700"></div>
                             <h3 className="text-2xl font-serif italic font-bold">London</h3>
-                            <div className="space-y-4 text-gray-400 text-sm font-serif italic">
+                            <div className="space-y-4 text-gray-600 text-sm font-serif italic">
                                 <p className="flex items-center space-x-4">
                                     <MapPin size={16} className="text-red-700" />
                                     <span>Fleet Street, London EC4Y, UK</span>
@@ -227,13 +227,13 @@ const Contact = () => {
                             <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-500 mb-8">Follow The Pulse</p>
                             <div className="flex space-x-8">
                                 <a href="#" className="p-4 rounded-full border border-white/10 hover:bg-red-700 transition-all group">
-                                    <Instagram size={20} className="text-gray-400 group-hover:text-white" />
+                                    <Instagram size={20} className="text-gray-600 group-hover:text-white" />
                                 </a>
                                 <a href="https://x.com/Nexora_News" target='_blank' className="p-4 rounded-full border border-white/10 hover:bg-red-700 transition-all group">
-                                    <Twitter size={20} className="text-gray-400 group-hover:text-white" />
+                                    <Twitter size={20} className="text-gray-600 group-hover:text-white" />
                                 </a>
                                 <a href="https://www.linkedin.com/in/nexora-news" target='_blank' className="p-4 rounded-full border border-white/10 hover:bg-red-700 transition-all group">
-                                    <Linkedin size={20} className="text-gray-400 group-hover:text-white" />
+                                    <Linkedin size={20} className="text-gray-600 group-hover:text-white" />
                                 </a>
                             </div>
                         </div>
@@ -248,3 +248,4 @@ const Contact = () => {
 };
 
 export default Contact;
+

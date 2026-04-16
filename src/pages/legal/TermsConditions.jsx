@@ -19,7 +19,7 @@ const SidebarLink = ({ href, children }) => (
     <li>
         <a 
             href={href} 
-            className="group flex items-center text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-red-700 transition-all duration-300 py-3 border-b border-gray-50 last:border-0"
+            className="group flex items-center text-[10px] font-bold uppercase tracking-[0.2em] text-gray-600 hover:text-red-700 transition-all duration-300 py-3 border-b border-gray-50 last:border-0"
         >
             <span className="w-0 group-hover:w-4 overflow-hidden transition-all duration-300 text-red-700">
                 <ChevronRight size={12} strokeWidth={3} />
@@ -31,7 +31,7 @@ const SidebarLink = ({ href, children }) => (
 
 const SectionHeader = ({ badge, title, subtitle }) => (
     <div className="mb-12">
-        <span className="inline-block px-3 py-1 bg-red-700 text-white text-[9px] font-bold uppercase tracking-[0.4em] mb-6">
+        <span className="inline-block px-3 py-1 bg-red-700 text-white text-xs font-bold uppercase tracking-[0.4em] mb-6">
             {badge}
         </span>
         <h2 className="text-4xl md:text-5xl font-black font-serif italic text-slate-900 tracking-tighter leading-tight mb-6">
@@ -99,7 +99,7 @@ const TermsConditions = () => {
                             <div className="mt-16 p-8 bg-slate-900 text-white relative overflow-hidden group">
                                 <div className="absolute inset-0 bg-red-700/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
                                 <h4 className="text-xs font-serif font-black italic uppercase tracking-widest mb-4">Legal Notice</h4>
-                                <p className="text-[11px] text-gray-400 leading-relaxed mb-6">
+                                <p className="text-[11px] text-gray-600 leading-relaxed mb-6">
                                     Nexora News operates under strict global editorial and legal frameworks.
                                 </p>
                                 <div className="w-10 h-1 bg-red-700"></div>
@@ -112,13 +112,13 @@ const TermsConditions = () => {
                         
                         {/* Header Section */}
                         <header className="mb-20">
-                            <span className="inline-block px-4 py-1.5 bg-red-700 text-white text-[9px] font-bold uppercase tracking-[0.4em] mb-10 animate-in fade-in slide-in-from-left-4 duration-1000">
+                            <span className="inline-block px-4 py-1.5 bg-red-700 text-white text-xs font-bold uppercase tracking-[0.4em] mb-10 animate-in fade-in slide-in-from-left-4 duration-1000">
                                 Binding Contract
                             </span>
                             <h1 className="text-6xl md:text-8xl font-black font-serif italic text-slate-900 tracking-tighter leading-none mb-12 animate-in fade-in slide-in-from-left-8 duration-1000 delay-300">
                                 Terms & <br /> Conditions
                             </h1>
-                            <div className="flex flex-wrap items-center gap-8 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 border-t border-b border-gray-100 py-6 animate-in fade-in slide-in-from-left-12 duration-1000 delay-500">
+                            <div className="flex flex-wrap items-center gap-8 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-600 border-t border-b border-gray-100 py-6 animate-in fade-in slide-in-from-left-12 duration-1000 delay-500">
                                 <div className="flex items-center">
                                     <Clock size={14} className="mr-2 text-red-700" />
                                     <span>Effective Date: April 09, 2024</span>
@@ -181,7 +181,7 @@ const TermsConditions = () => {
                                             For institutional access, syndicated content, or corporate intelligence distribution, a separate Commercial License is required.
                                         </p>
                                     </div>
-                                    <a href="/contact" className="ml-auto bg-white text-red-700 px-8 py-4 text-[9px] font-bold uppercase tracking-widest whitespace-nowrap hover:bg-slate-900 hover:text-white transition-all duration-500">
+                                    <a href="/contact" className="ml-auto bg-white text-red-700 px-8 py-4 text-xs font-bold uppercase tracking-widest whitespace-nowrap hover:bg-slate-900 hover:text-white transition-all duration-500">
                                         Request Quote
                                     </a>
                                 </div>
@@ -224,7 +224,7 @@ const TermsConditions = () => {
 
                             <div className="bg-slate-900 p-8 md:p-12 relative overflow-hidden">
                                 <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-red-700/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
-                                <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 text-gray-400 text-sm italic font-serif leading-relaxed">
+                                <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 text-gray-600 text-sm italic font-serif leading-relaxed">
                                     <p>
                                         In no event shall Nexora News or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) even if Nexora News or a Nexora News authorized representative has been notified orally or in writing of the possibility of such damage.
                                     </p>
@@ -247,14 +247,14 @@ const TermsConditions = () => {
                                 <div className="flex-1 p-10 border border-gray-100 text-center flex flex-col items-center group hover:bg-gray-50 transition-colors">
                                     <Gavel size={32} className="text-red-700 mb-6 group-hover:scale-110 transition-transform duration-500" />
                                     <h5 className="text-[10px] font-bold uppercase tracking-widest text-slate-900 mb-4">Jurisdiction</h5>
-                                    <p className="text-[11px] text-gray-400 leading-relaxed uppercase tracking-widest italic">
+                                    <p className="text-[11px] text-gray-600 leading-relaxed uppercase tracking-widest italic">
                                         Any claim relating to Nexora News' website shall be governed by global digital rights laws without regard to its conflict of law provisions.
                                     </p>
                                 </div>
                                 <div className="flex-1 p-10 border border-gray-100 text-center flex flex-col items-center group hover:bg-gray-50 transition-colors">
                                     <FileSignature size={32} className="text-red-700 mb-6 group-hover:scale-110 transition-transform duration-500" />
                                     <h5 className="text-[10px] font-bold uppercase tracking-widest text-slate-900 mb-4">Updates</h5>
-                                    <p className="text-[11px] text-gray-400 leading-relaxed uppercase tracking-widest italic">
+                                    <p className="text-[11px] text-gray-600 leading-relaxed uppercase tracking-widest italic">
                                         Nexora News may revise these terms at any time without notice. By using this website you are agreeing to be bound by the then current version.
                                     </p>
                                 </div>
@@ -294,3 +294,4 @@ const TermsConditions = () => {
 };
 
 export default TermsConditions;
+

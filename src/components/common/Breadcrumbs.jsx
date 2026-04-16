@@ -7,17 +7,16 @@ const Breadcrumbs = ({ items }) => {
 
     return (
         <nav aria-label="Breadcrumb" className="mb-8">
-            <ol className="flex items-center flex-wrap gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
+            <ol className="flex items-center flex-wrap gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-600">
                 <li className="flex items-center">
                     <Link to="/" className="hover:text-red-700 transition-colors flex items-center gap-1">
-                        <Home size={12} />
                         <span>Home</span>
                     </Link>
                 </li>
-                
+
                 {items.map((item, index) => (
                     <li key={index} className="flex items-center gap-2">
-                        <ChevronRight size={10} className="text-gray-300" />
+                        <ChevronRight size={10} className='text-black' />
                         {item.link ? (
                             <Link to={item.link} className="hover:text-red-700 transition-colors">
                                 {item.label}
@@ -33,3 +32,4 @@ const Breadcrumbs = ({ items }) => {
 };
 
 export default Breadcrumbs;
+

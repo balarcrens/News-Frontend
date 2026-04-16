@@ -37,11 +37,11 @@ import { toast } from 'react-toastify';
 
 const AdminInput = ({ label, ...props }) => (
     <div className="space-y-2">
-        {label && <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] block">{label}</label>}
+        {label && <label className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] block">{label}</label>}
         <div className="bg-white border border-slate-200 px-4 py-3.5 focus-within:ring-1 focus-within:ring-red-700/20 transition-all group/input">
             <input
                 {...props}
-                className="w-full bg-transparent border-none p-0 text-[12px] font-bold text-slate-900 outline-none placeholder:text-slate-200"
+                className="w-full bg-transparent border-none p-0 text-[12px] font-bold text-slate-900 outline-none placeholder:text-slate-500"
             />
         </div>
     </div>
@@ -49,11 +49,11 @@ const AdminInput = ({ label, ...props }) => (
 
 const AdminTextarea = ({ label, ...props }) => (
     <div className="space-y-2">
-        {label && <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] block">{label}</label>}
+        {label && <label className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] block">{label}</label>}
         <div className="bg-white border border-slate-200 px-4 py-4 focus-within:ring-1 focus-within:ring-red-700/20 transition-all">
             <textarea
                 {...props}
-                className="w-full bg-transparent border-none p-0 text-[13px] font-medium text-slate-600 outline-none placeholder:text-slate-200 resize-none leading-relaxed"
+                className="w-full bg-transparent border-none p-0 text-[13px] font-medium text-slate-600 outline-none placeholder:text-slate-500 resize-none leading-relaxed"
             />
         </div>
     </div>
@@ -75,19 +75,32 @@ const AdminToggle = ({ label, checked, onChange }) => (
 
 const BlockWrapper = ({ children, onRemove, onMoveUp, onMoveDown, label }) => (
     <div className="relative group bg-white border border-slate-100 p-8 mb-8 hover:border-red-200 transition-all duration-500 shadow-sm hover:shadow-xl">
-        <div className="absolute -left-3 top-1/2 -translate-y-1/2 flex flex-col items-center bg-white border border-slate-100 p-1 opacity-0 group-hover:opacity-100 transition-all z-10">
-            <button onClick={onMoveUp} className="p-1.5 hover:text-red-700 transition-colors"><MoveUp size={14} /></button>
+        <div className="absolute -left-4 top-1/2 -translate-y-1/2 flex flex-col items-center bg-white border border-slate-100 p-1.5 opacity-0 group-hover:opacity-100 transition-all z-10 shadow-lg">
+            <button 
+                onClick={onMoveUp} 
+                className="w-10 h-10 flex items-center justify-center hover:text-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-700 rounded-sm"
+                aria-label="Move block up"
+            >
+                <MoveUp size={18} />
+            </button>
             <div className="h-4 w-px bg-slate-100 my-1"></div>
-            <button onClick={onMoveDown} className="p-1.5 hover:text-red-700 transition-colors"><MoveDown size={14} /></button>
+            <button 
+                onClick={onMoveDown} 
+                className="w-10 h-10 flex items-center justify-center hover:text-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-700 rounded-sm"
+                aria-label="Move block down"
+            >
+                <MoveDown size={18} />
+            </button>
         </div>
 
         <div className="flex items-center justify-between mb-6">
             <span className="text-[10px] font-black text-red-700 uppercase tracking-[0.4em]">{label}</span>
             <button
                 onClick={onRemove}
-                className="p-2 text-slate-300 hover:text-red-700 hover:bg-red-50 transition-all"
+                className="w-11 h-11 flex items-center justify-center text-slate-500 hover:text-red-700 hover:bg-red-50 transition-all focus:outline-none focus:ring-2 focus:ring-red-700 rounded-lg"
+                aria-label="Remove block"
             >
-                <Trash2 size={16} />
+                <Trash2 size={18} />
             </button>
         </div>
         {children}
@@ -107,6 +120,9 @@ const AdminArticleEditor = () => {
     const [slugLocked, setSlugLocked] = useState(id ? true : false);
     const [users, setUsers] = useState([]);
     const [tagInput, setTagInput] = useState('');
+    const [aiHint, setAiHint] = useState('');
+    const [isSuggesting, setIsSuggesting] = useState(false);
+    const [suggestedTitles, setSuggestedTitles] = useState([]);
 
     const [formData, setFormData] = useState({
         title: '',
@@ -163,6 +179,7 @@ const AdminArticleEditor = () => {
                         ...article,
                         category: article.category?._id || article.category,
                         author: article.author?._id || article.author || '',
+                        tags: article.tags?.map(t => typeof t === 'object' ? (t.name || t._id) : t) || [],
                         publishedAt: article.publishedAt ? format(new Date(article.publishedAt), "yyyy-MM-dd'T'HH:mm") : ''
                     });
                 } else {
@@ -318,15 +335,32 @@ const AdminArticleEditor = () => {
         };
     };
 
+    const handleSuggestTitles = async () => {
+        if (!aiHint.trim()) {
+            toast.warning('Please provide a hint or context for title suggestions.');
+            return;
+        }
+        setIsSuggesting(true);
+        try {
+            const data = await aiService.suggestTitles(aiHint);
+            setSuggestedTitles(data.suggestions || []);
+            toast.success('Generated headline suggestions.');
+        } catch (err) {
+            toast.error('Failed to suggest titles: ' + err.message);
+        } finally {
+            setIsSuggesting(false);
+        }
+    };
+
     const handleAIGenerate = async () => {
-        if (!formData.title) {
-            toast.warning('Headline required for AI intelligence generation.');
+        if (!formData.title && !aiHint) {
+            toast.warning('Headline or Hint required for AI intelligence generation.');
             return;
         }
 
         setIsGenerating(true);
         try {
-            const aiData = await aiService.generateArticle(formData.title);
+            const aiData = await aiService.generateArticle(formData.title, aiHint);
 
             // Map blocks from AI response to editor internal format
             const mappedContent = aiData.content.content.map(item => ({
@@ -422,24 +456,37 @@ const AdminArticleEditor = () => {
             {/* Header */}
             <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-100 -mx-4 md:-mx-8 px-4 md:px-8 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 mb-12">
                 <div className="flex items-center space-x-4">
-                    <button onClick={() => navigate('/admin/articles')} className="p-2 text-slate-400 hover:text-red-700 transition-colors">
+                    <button 
+                        onClick={() => navigate('/admin/articles')} 
+                        className="p-2 text-slate-600 hover:text-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-700 rounded-lg"
+                        aria-label="Return to articles list"
+                    >
                         <ArrowLeft size={24} />
                     </button>
                     <div>
                         <h1 className="text-xl font-black font-serif text-slate-900 uppercase tracking-tight">
                             {id ? 'Refine Report' : 'New Intelligence Briefing'}
                         </h1>
-                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+                        <p className="text-xs font-bold text-slate-600 uppercase tracking-widest mt-1">
                             {id ? `ID: ${id.slice(-8)}` : 'Initiating standard editorial protocol'}
                         </p>
                     </div>
                 </div>
 
                 <div className="flex items-center space-x-3">
-                    <button onClick={() => window.open(id ? `/article/${formData.slug}` : '/', '_blank')} className="px-5 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-slate-900 border border-slate-100 flex items-center">
+                    <button 
+                        onClick={() => window.open(id ? `/article/${formData.slug}` : '/', '_blank')} 
+                        className="px-5 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 hover:text-slate-900 border border-slate-100 flex items-center focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2"
+                        aria-label="Preview article"
+                    >
                         <Eye size={16} className="mr-2" /> Preview
                     </button>
-                    <button onClick={handleSave} disabled={isSaving} className="px-8 py-3 bg-red-700 text-white text-[10px] font-black uppercase tracking-[0.2em] hover:bg-slate-950 transition-all duration-500 shadow-xl shadow-red-700/10 flex items-center disabled:opacity-50">
+                    <button 
+                        onClick={handleSave} 
+                        disabled={isSaving} 
+                        className="px-8 py-3 bg-red-700 text-white text-[10px] font-black uppercase tracking-[0.2em] hover:bg-slate-950 transition-all duration-500 shadow-xl shadow-red-700/10 flex items-center disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2"
+                        aria-label={id ? 'Update report' : 'Transmit report'}
+                    >
                         {isSaving ? <Loader2 size={16} className="mr-2 animate-spin" /> : <Save size={16} className="mr-2" />}
                         {id ? 'Update' : 'Transmit'}
                     </button>
@@ -452,7 +499,9 @@ const AdminArticleEditor = () => {
                     <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`flex items-center px-8 py-4 text-[10px] font-black uppercase tracking-[0.3em] transition-all relative border-r border-slate-50 last:border-r-0 ${activeTab === tab.id ? 'text-red-700 bg-slate-50/50' : 'text-slate-400 hover:text-slate-900 hover:bg-slate-50/30'}`}
+                        className={`flex items-center px-8 py-4 text-[10px] font-black uppercase tracking-[0.3em] transition-all relative border-r border-slate-50 last:border-r-0 focus:outline-none focus:ring-2 focus:ring-red-700 focus:z-10 ${activeTab === tab.id ? 'text-red-700 bg-slate-50/50' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50/30'}`}
+                        aria-pressed={activeTab === tab.id}
+                        aria-label={`Show ${tab.name} section`}
                     >
                         <tab.icon size={14} className="mr-3" />
                         {tab.name}
@@ -466,6 +515,72 @@ const AdminArticleEditor = () => {
                 <div className="lg:col-span-8">
                     {activeTab === 'editorial' && (
                         <div className="space-y-12 animate-in fade-in duration-500">
+                            {/* AI Intelligence Assistance */}
+                            <div className="bg-slate-900 border border-slate-800 p-8 md:p-10 shadow-2xl relative overflow-hidden group">
+                                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                                    <Zap size={80} className="text-red-700" />
+                                </div>
+
+                                <div className="relative z-10">
+                                    <div className="flex items-center space-x-3 mb-6">
+                                        <Sparkles size={16} className="text-red-700" />
+                                        <h3 className="text-[10px] font-black text-white uppercase tracking-[0.4em]">AI Intelligence Command</h3>
+                                    </div>
+
+                                    <div className="space-y-6">
+                                        <textarea
+                                            rows="2"
+                                            className="w-full bg-slate-950 border border-slate-800 p-4 text-[12px] font-medium text-slate-500 focus:border-red-700 outline-none transition-all placeholder:text-slate-700"
+                                            placeholder="Provide context, specific instructions, or a hint for the AI (e.g., 'Focus on today's GST council meeting in Delhi'...)"
+                                            value={aiHint}
+                                            onChange={(e) => setAiHint(e.target.value)}
+                                        ></textarea>
+
+                                        <div className="flex flex-wrap gap-4">
+                                            <button
+                                                onClick={handleSuggestTitles}
+                                                disabled={isSuggesting || !aiHint}
+                                                className="flex items-center px-6 py-3 bg-white text-slate-950 text-xs font-black uppercase tracking-widest hover:bg-red-700 hover:text-white transition-all disabled:opacity-30"
+                                            >
+                                                {isSuggesting ? <Loader2 size={12} className="mr-2 animate-spin" /> : <Plus size={12} className="mr-2" />}
+                                                Suggest Headlines
+                                            </button>
+
+                                            <button
+                                                onClick={handleAIGenerate}
+                                                disabled={isGenerating || (!formData.title && !aiHint)}
+                                                className="flex items-center px-6 py-3 bg-red-700 text-white text-xs font-black uppercase tracking-widest hover:bg-white hover:text-slate-950 transition-all disabled:opacity-30"
+                                            >
+                                                {isGenerating ? <Loader2 size={12} className="mr-2 animate-spin" /> : <Zap size={12} className="mr-2" />}
+                                                Synthesize Full Article
+                                            </button>
+                                        </div>
+
+                                        {suggestedTitles.length > 0 && (
+                                            <div className="mt-8 pt-6 border-t border-slate-800 animate-in fade-in slide-in-from-top-2">
+                                                <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Select Draft Headline:</p>
+                                                <div className="space-y-2">
+                                                    {suggestedTitles.map((item, i) => (
+                                                        <button
+                                                            key={i}
+                                                            onClick={() => {
+                                                                setFormData(prev => ({ ...prev, title: item.title, slug: item.slug_hint }));
+                                                                setSuggestedTitles([]);
+                                                            }}
+                                                            className="w-full text-left p-3 bg-slate-950 border border-slate-800 hover:border-red-700 text-[11px] text-slate-600 hover:text-white transition-all flex items-center group/item"
+                                                        >
+                                                            <div className="w-1.5 h-1.5 bg-red-700 mr-3 opacity-0 group-hover/item:opacity-100 transition-opacity"></div>
+                                                            {item.title}
+                                                            <span className="ml-auto text-xs opacity-40 italic">{item.angle}</span>
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
                             {/* Title & Summary */}
                             <div className="bg-white border border-slate-100 p-8 md:p-12 shadow-sm">
                                 <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -480,14 +595,6 @@ const AdminArticleEditor = () => {
                                             onChange={handleInputChange}
                                         />
                                     </div>
-                                    <button
-                                        onClick={handleAIGenerate}
-                                        disabled={isGenerating || !formData.title}
-                                        className="h-fit flex items-center justify-center bg-white border border-red-700 text-red-700 px-6 py-4 text-[9px] font-black uppercase tracking-[0.2em] hover:bg-red-700 hover:text-white transition-all duration-500 disabled:opacity-30 group"
-                                    >
-                                        {isGenerating ? <Loader2 size={14} className="mr-3 animate-spin" /> : <Sparkles size={14} className="mr-3 group-hover:animate-bounce" />}
-                                        AI Synthesize Content
-                                    </button>
                                 </div>
                                 <AdminTextarea
                                     label="Executive Summary"
@@ -504,13 +611,13 @@ const AdminArticleEditor = () => {
                                 <div className="flex items-center justify-between mb-8 px-2">
                                     <h2 className="text-xl font-black font-serif text-slate-900 uppercase tracking-tight">Briefing Flow</h2>
                                     <div className="h-px bg-slate-100 flex-1 mx-6"></div>
-                                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{formData.content.length} Blocks Recorded</span>
+                                    <span className="text-xs font-bold text-slate-600 uppercase tracking-widest">{formData.content.length} Blocks Recorded</span>
                                 </div>
 
                                 {formData.content.length === 0 ? (
                                     <div className="bg-slate-50 border border-dashed border-slate-200 p-20 text-center mb-8">
-                                        <Layout size={48} strokeWidth={1} className="mx-auto mb-6 text-slate-300" />
-                                        <p className="text-lg font-serif text-slate-400 mb-2">Editorial canvas empty.</p>
+                                        <Layout size={48} strokeWidth={1} className="mx-auto mb-6 text-slate-500" />
+                                        <p className="text-lg font-serif text-slate-600 mb-2">Editorial canvas empty.</p>
                                     </div>
                                 ) : (
                                     <div className="space-y-4">
@@ -547,14 +654,14 @@ const AdminArticleEditor = () => {
                                                                 <>
                                                                     <img src={block.value} className="w-full h-full object-cover transition-transform duration-700 group-hover/img:scale-105" alt="" />
                                                                     <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
-                                                                        <label className="bg-white text-slate-900 px-6 py-3 text-[9px] font-black uppercase tracking-widest cursor-pointer hover:bg-red-700 hover:text-white transition-all">
+                                                                        <label className="bg-white text-slate-900 px-6 py-3 text-xs font-black uppercase tracking-widest cursor-pointer hover:bg-red-700 hover:text-white transition-all">
                                                                             Replace
                                                                             <input type="file" className="hidden" onChange={(e) => handleFileUpload(e, 'block', index)} />
                                                                         </label>
                                                                     </div>
                                                                 </>
                                                             ) : (
-                                                                <label className="flex flex-col items-center cursor-pointer text-slate-400 hover:text-red-700 transition-colors">
+                                                                <label className="flex flex-col items-center cursor-pointer text-slate-600 hover:text-red-700 transition-colors">
                                                                     <Upload size={32} strokeWidth={1.5} className="mb-4" />
                                                                     <span className="text-[10px] font-black uppercase tracking-widest">Select Visual Intel</span>
                                                                     <input type="file" className="hidden" onChange={(e) => handleFileUpload(e, 'block', index)} />
@@ -589,10 +696,10 @@ const AdminArticleEditor = () => {
                                     </div>
                                 )}
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 bg-white border border-slate-100 p-2">
-                                    <button onClick={() => addBlock('heading')} className="flex flex-col items-center justify-center p-6 bg-slate-50 hover:bg-white hover:shadow-xl transition-all duration-500 group"><Heading className="text-slate-300 group-hover:text-red-700 mb-3" size={20} /><span className="text-[9px] font-black uppercase tracking-widest">Subtitle</span></button>
-                                    <button onClick={() => addBlock('text')} className="flex flex-col items-center justify-center p-6 bg-slate-50 hover:bg-white hover:shadow-xl transition-all duration-500 group"><Type className="text-slate-300 group-hover:text-red-700 mb-3" size={20} /><span className="text-[9px] font-black uppercase tracking-widest">Paragraph</span></button>
-                                    <button onClick={() => addBlock('image')} className="flex flex-col items-center justify-center p-6 bg-slate-50 hover:bg-white hover:shadow-xl transition-all duration-500 group"><ImageIcon className="text-slate-300 group-hover:text-red-700 mb-3" size={20} /><span className="text-[9px] font-black uppercase tracking-widest">Media</span></button>
-                                    <button onClick={() => addBlock('quote')} className="flex flex-col items-center justify-center p-6 bg-slate-50 hover:bg-white hover:shadow-xl transition-all duration-500 group"><Quote className="text-slate-300 group-hover:text-red-700 mb-3" size={20} /><span className="text-[9px] font-black uppercase tracking-widest">Quote</span></button>
+                                    <button onClick={() => addBlock('heading')} className="flex flex-col items-center justify-center p-6 bg-slate-50 hover:bg-white hover:shadow-xl transition-all duration-500 group focus:outline-none focus:ring-2 focus:ring-red-700 focus:z-10" aria-label="Add subtitle block"><Heading className="text-slate-500 group-hover:text-red-700 mb-3" size={20} /><span className="text-xs font-black uppercase tracking-widest">Subtitle</span></button>
+                                    <button onClick={() => addBlock('text')} className="flex flex-col items-center justify-center p-6 bg-slate-50 hover:bg-white hover:shadow-xl transition-all duration-500 group focus:outline-none focus:ring-2 focus:ring-red-700 focus:z-10" aria-label="Add paragraph block"><Type className="text-slate-500 group-hover:text-red-700 mb-3" size={20} /><span className="text-xs font-black uppercase tracking-widest">Paragraph</span></button>
+                                    <button onClick={() => addBlock('image')} className="flex flex-col items-center justify-center p-6 bg-slate-50 hover:bg-white hover:shadow-xl transition-all duration-500 group focus:outline-none focus:ring-2 focus:ring-red-700 focus:z-10" aria-label="Add media block"><ImageIcon className="text-slate-500 group-hover:text-red-700 mb-3" size={20} /><span className="text-xs font-black uppercase tracking-widest">Media</span></button>
+                                    <button onClick={() => addBlock('quote')} className="flex flex-col items-center justify-center p-6 bg-slate-50 hover:bg-white hover:shadow-xl transition-all duration-500 group focus:outline-none focus:ring-2 focus:ring-red-700 focus:z-10" aria-label="Add quote block"><Quote className="text-slate-500 group-hover:text-red-700 mb-3" size={20} /><span className="text-xs font-black uppercase tracking-widest">Quote</span></button>
                                 </div>
                             </div>
                         </div>
@@ -609,13 +716,13 @@ const AdminArticleEditor = () => {
                                             {formData.customAuthor.profileImage ? (
                                                 <img src={formData.customAuthor.profileImage} className="w-full h-full object-cover" alt="" />
                                             ) : (
-                                                <div className="w-full h-full flex items-center justify-center text-slate-200">
+                                                <div className="w-full h-full flex items-center justify-center text-slate-500">
                                                     <UserCircle size={48} strokeWidth={1} />
                                                 </div>
                                             )}
                                             <label className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center cursor-pointer text-white">
                                                 <Upload size={20} className="mb-2" />
-                                                <span className="text-[8px] font-black uppercase tracking-widest">Update Photo</span>
+                                                <span className="text-xs font-black uppercase tracking-widest">Update Photo</span>
                                                 <input type="file" className="hidden" onChange={(e) => handleFileUpload(e, 'customAuthor')} />
                                             </label>
                                         </div>
@@ -667,7 +774,10 @@ const AdminArticleEditor = () => {
                                 <h3 className="text-xl font-black font-serif text-slate-900 uppercase tracking-tight mb-8">Transmission Protocols</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] block">Publication Sector</label>
+                                        <div className='flex justify-between'>
+                                            <label className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] block">Publication Sector</label>
+                                            <RefreshCcw size={12} className="text-slate-600 cursor-pointer" onClick={() => categoryService.getAll().then(setCategories)} />
+                                        </div>
                                         <div className="bg-slate-50 border-none px-4 py-3.5 focus-within:ring-1 focus-within:ring-red-700/20 transition-all">
                                             <select
                                                 name="category"
@@ -681,7 +791,7 @@ const AdminArticleEditor = () => {
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] block">Status Protocol</label>
+                                        <label className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] block">Status Protocol</label>
                                         <div className="bg-white border border-slate-200 px-4 py-3.5 focus-within:ring-1 focus-within:ring-red-700/20 transition-all">
                                             <select
                                                 name="status"
@@ -698,9 +808,9 @@ const AdminArticleEditor = () => {
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] block">Manual Date Override</label>
+                                        <label className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] block">Manual Date Override</label>
                                         <div className="bg-slate-50 border-none px-4 py-3.5 focus-within:ring-1 focus-within:ring-red-700/20 transition-all flex items-center">
-                                            <Clock size={16} className="text-slate-300 mr-3" />
+                                            <Clock size={16} className="text-slate-500 mr-3" />
                                             <input
                                                 type="datetime-local"
                                                 name="publishedAt"
@@ -721,11 +831,11 @@ const AdminArticleEditor = () => {
                             {/* Tags */}
                             <div className="bg-white border border-slate-100 p-8 md:p-12 shadow-sm">
                                 <h3 className="text-xl font-black font-serif text-slate-900 uppercase tracking-tight mb-4">Indexing Tags</h3>
-                                <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest mb-8">Type a concept and press Enter to bubble-wrap the tag.</p>
+                                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-8">Type a concept and press Enter to bubble-wrap the tag.</p>
 
                                 <div className="space-y-6">
                                     <div className="bg-slate-50 border-none px-4 py-3.5 focus-within:ring-1 focus-within:ring-red-700/20 transition-all flex items-center">
-                                        <Hash size={16} className="text-slate-300 mr-3" />
+                                        <Hash size={16} className="text-slate-500 mr-3" />
                                         <input
                                             type="text"
                                             placeholder="Add intel markers..."
@@ -737,9 +847,13 @@ const AdminArticleEditor = () => {
                                     </div>
                                     <div className="flex flex-wrap gap-2">
                                         {formData.tags.map((tag, idx) => (
-                                            <span key={idx} className="flex items-center px-3 py-1.5 bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest group">
-                                                {tag}
-                                                <button onClick={() => removeTag(tag)} className="ml-2 hover:text-red-500 transition-colors">
+                                            <span key={idx} className="flex items-center px-3 py-1.5 bg-slate-900 text-white text-xs font-black uppercase tracking-widest group">
+                                                {typeof tag === 'object' ? tag.name : tag}
+                                                <button 
+                                                    onClick={() => removeTag(tag)} 
+                                                    className="ml-2 hover:text-red-500 transition-colors focus:outline-none focus:text-red-500"
+                                                    aria-label={`Remove tag ${typeof tag === 'object' ? tag.name : tag}`}
+                                                >
                                                     <X size={12} />
                                                 </button>
                                             </span>
@@ -757,8 +871,8 @@ const AdminArticleEditor = () => {
                                 <div className="space-y-8">
                                     <div className="space-y-2">
                                         <div className="flex justify-between">
-                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] block">Meta Headline</label>
-                                            <span className={`text-[10px] font-black uppercase tracking-widest ${formData.seo.metaTitle.length > 60 ? 'text-red-700' : 'text-slate-300'}`}>
+                                            <label className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] block">Meta Headline</label>
+                                            <span className={`text-[10px] font-black uppercase tracking-widest ${formData.seo.metaTitle.length > 60 ? 'text-red-700' : 'text-slate-500'}`}>
                                                 {formData.seo.metaTitle.length} / 60
                                             </span>
                                         </div>
@@ -774,8 +888,8 @@ const AdminArticleEditor = () => {
                                     </div>
                                     <div className="space-y-2">
                                         <div className="flex justify-between">
-                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] block">Meta Briefing (Description)</label>
-                                            <span className={`text-[10px] font-black uppercase tracking-widest ${formData.seo.metaDescription.length > 160 ? 'text-red-700' : 'text-slate-300'}`}>
+                                            <label className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] block">Meta Briefing (Description)</label>
+                                            <span className={`text-[10px] font-black uppercase tracking-widest ${formData.seo.metaDescription.length > 160 ? 'text-red-700' : 'text-slate-500'}`}>
                                                 {formData.seo.metaDescription.length} / 160
                                             </span>
                                         </div>
@@ -818,10 +932,16 @@ const AdminArticleEditor = () => {
                             {formData.media.featuredImage ? (
                                 <>
                                     <img src={formData.media.featuredImage} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="" />
-                                    <button onClick={() => setFormData(p => ({ ...p, media: { ...p.media, featuredImage: '' } }))} className="absolute top-4 right-4 p-2 bg-slate-950/40 text-white hover:bg-red-700 transition-all rounded-full"><X size={14} /></button>
+                                    <button 
+                                        onClick={() => setFormData(p => ({ ...p, media: { ...p.media, featuredImage: '' } }))} 
+                                        className="absolute top-4 right-4 p-2 bg-slate-950/40 text-white hover:bg-red-700 transition-all rounded-full focus:outline-none focus:ring-2 focus:ring-red-700"
+                                        aria-label="Remove featured image"
+                                    >
+                                        <X size={14} />
+                                    </button>
                                 </>
                             ) : (
-                                <label className="flex flex-col items-center cursor-pointer text-slate-400 hover:text-red-700 transition-colors">
+                                <label className="flex flex-col items-center cursor-pointer text-slate-600 hover:text-red-700 transition-colors">
                                     <Upload size={40} strokeWidth={1} className="mb-4" />
                                     <span className="text-[10px] font-black uppercase tracking-widest text-center px-6">Transmit Visual Asset</span>
                                     <input type="file" className="hidden" onChange={(e) => handleFileUpload(e, 'featured')} />
@@ -834,7 +954,7 @@ const AdminArticleEditor = () => {
                             <div className="mt-6 p-5 bg-slate-50 border-l-2 border-red-700 animate-in slide-in-from-left-2 duration-700">
                                 <div className="flex items-center space-x-2 mb-3">
                                     <Sparkles size={12} className="text-red-700" />
-                                    <span className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-400">Suggested Visual Protocol</span>
+                                    <span className="text-xs font-black uppercase tracking-[0.2em] text-slate-600">Suggested Visual Protocol</span>
                                 </div>
                                 <p className="text-[10px] text-slate-600 leading-relaxed font-serif">
                                     "{formData.media.imagePrompt}"
@@ -848,10 +968,10 @@ const AdminArticleEditor = () => {
                         <label className="text-[10px] font-black text-red-700 uppercase tracking-[0.4em] mb-8 block">Control Protocol</label>
                         <div className="space-y-6">
                             <div>
-                                <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3 block">Network Broadcast Type</label>
+                                <label className="text-xs font-black text-slate-600 uppercase tracking-widest mb-3 block">Network Broadcast Type</label>
                                 <div className="grid grid-cols-2 bg-slate-50 p-1">
-                                    <button onClick={() => setFormData(p => ({ ...p, type: 'news' }))} className={`py-2 text-[9px] font-black uppercase tracking-widest transition-all ${formData.type === 'news' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}>News Intel</button>
-                                    <button onClick={() => setFormData(p => ({ ...p, type: 'blog' }))} className={`py-2 text-[9px] font-black uppercase tracking-widest transition-all ${formData.type === 'blog' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}>Opinion Blog</button>
+                                    <button onClick={() => setFormData(p => ({ ...p, type: 'news' }))} className={`py-2 text-xs font-black uppercase tracking-widest transition-all ${formData.type === 'news' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-600'}`}>News Intel</button>
+                                    <button onClick={() => setFormData(p => ({ ...p, type: 'blog' }))} className={`py-2 text-xs font-black uppercase tracking-widest transition-all ${formData.type === 'blog' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-600'}`}>Opinion Blog</button>
                                 </div>
                             </div>
                         </div>
@@ -864,16 +984,16 @@ const AdminArticleEditor = () => {
                             <h4 className="text-[10px] font-black uppercase tracking-[0.3em]">Integrity Check</h4>
                         </div>
                         <ul className="space-y-4">
-                            <li className={`flex items-center text-[9px] font-bold uppercase tracking-widest ${formData.title ? 'text-white' : 'text-white/30'}`}>
+                            <li className={`flex items-center text-xs font-bold uppercase tracking-widest ${formData.title ? 'text-white' : 'text-white/30'}`}>
                                 <Plus size={12} className="mr-3" /> Headline Locked
                             </li>
-                            <li className={`flex items-center text-[9px] font-bold uppercase tracking-widest ${formData.category ? 'text-white' : 'text-white/30'}`}>
+                            <li className={`flex items-center text-xs font-bold uppercase tracking-widest ${formData.category ? 'text-white' : 'text-white/30'}`}>
                                 <Plus size={12} className="mr-3" /> Sector Assigned
                             </li>
-                            <li className={`flex items-center text-[9px] font-bold uppercase tracking-widest ${formData.author ? 'text-white' : 'text-white/30'}`}>
+                            <li className={`flex items-center text-xs font-bold uppercase tracking-widest ${formData.author ? 'text-white' : 'text-white/30'}`}>
                                 <Plus size={12} className="mr-3" /> Personnel Assigned
                             </li>
-                            <li className={`flex items-center text-[9px] font-bold uppercase tracking-widest ${formData.media.featuredImage ? 'text-white' : 'text-white/30'}`}>
+                            <li className={`flex items-center text-xs font-bold uppercase tracking-widest ${formData.media.featuredImage ? 'text-white' : 'text-white/30'}`}>
                                 <Plus size={12} className="mr-3" /> Visual Asset Secure
                             </li>
                         </ul>
@@ -892,3 +1012,4 @@ const AdminArticleEditor = () => {
 };
 
 export default AdminArticleEditor;
+

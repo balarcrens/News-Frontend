@@ -9,7 +9,7 @@ const ArticleHero = ({ article }) => {
     return (
         <div className="max-w-4xl mx-auto text-center mb-16">
             <div className="flex flex-col items-center mb-10">
-                <span className="bg-red-700 text-white text-[9px] font-bold uppercase tracking-[0.3em] px-4 py-1.5 mb-8">
+                <span className="bg-red-700 text-white text-xs font-bold uppercase tracking-[0.3em] px-4 py-1.5 mb-8">
                     Featured & Global Analysis
                 </span>
 
@@ -38,20 +38,20 @@ const ArticleHero = ({ article }) => {
                     />
                     <div className="text-left">
                         <p className="text-[12px] font-bold text-red-700 uppercase tracking-widest leading-none mb-1">BY {article.author?.name || 'NexoraNews'}</p>
-                        <p className="text-[10px] font-medium text-gray-400 uppercase tracking-[0.2em] font-serif italic">Senior Editorial Correspondent</p>
+                        <p className="text-[10px] font-medium text-gray-600 uppercase tracking-[0.2em] font-serif italic">Senior Editorial Correspondent</p>
                     </div>
                 </div>
 
                 <div className="text-left">
                     <p className="text-[12px] font-bold text-slate-900 uppercase tracking-widest leading-none mb-1">PUBLISHED</p>
-                    <p className="text-[10px] font-medium text-gray-400 uppercase tracking-[0.2em] font-serif italic">
+                    <p className="text-[10px] font-medium text-gray-600 uppercase tracking-[0.2em] font-serif italic">
                         {publishedDate ? format(new Date(publishedDate), 'MMMM dd, yyyy') : 'October 24, 2026'}
                     </p>
                 </div>
 
                 <div className="text-left">
                     <p className="text-[12px] font-bold text-slate-900 uppercase tracking-widest leading-none mb-1">READ TIME</p>
-                    <p className="text-[10px] font-medium text-gray-400 uppercase tracking-[0.2em] font-serif italic">12 Minute Read</p>
+                    <p className="text-[10px] font-medium text-gray-600 uppercase tracking-[0.2em] font-serif italic">12 Minute Read</p>
                 </div>
             </div>
         </div>
@@ -59,3 +59,4 @@ const ArticleHero = ({ article }) => {
 };
 
 export default ArticleHero;
+

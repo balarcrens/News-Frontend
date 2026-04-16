@@ -18,7 +18,7 @@ const SidebarLink = ({ href, children }) => (
     <li>
         <a
             href={href}
-            className="group flex items-center text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-red-700 transition-all duration-300 py-3 border-b border-gray-50 last:border-0"
+            className="group flex items-center text-[10px] font-bold uppercase tracking-[0.2em] text-gray-600 hover:text-red-700 transition-all duration-300 py-3 border-b border-gray-50 last:border-0"
         >
             <span className="w-0 group-hover:w-4 overflow-hidden transition-all duration-300 text-red-700">
                 <ChevronRight size={12} strokeWidth={3} />
@@ -41,7 +41,7 @@ const ClassificationCard = ({ icon: Icon, title, description, badge, status, onT
                             {title}
                         </h3>
                         {mandatory && (
-                            <span className="text-[8px] font-bold bg-gray-100 text-gray-400 px-2 py-0.5 uppercase tracking-widest">Mandatory</span>
+                            <span className="text-xs font-bold bg-gray-100 text-gray-600 px-2 py-0.5 uppercase tracking-widest">Mandatory</span>
                         )}
                     </div>
                     <p className="text-sm text-gray-500 font-medium leading-relaxed max-w-xl">
@@ -54,7 +54,7 @@ const ClassificationCard = ({ icon: Icon, title, description, badge, status, onT
                 {mandatory ? (
                     <div className="flex items-center space-x-2 text-red-700">
                         <Check size={16} strokeWidth={3} />
-                        <span className="text-[9px] font-bold uppercase tracking-widest">Active</span>
+                        <span className="text-xs font-bold uppercase tracking-widest">Active</span>
                     </div>
                 ) : (
                     <div
@@ -122,7 +122,7 @@ const CookiePolicy = () => {
                                     />
                                     <div>
                                         <h5 className="text-[10px] font-bold text-slate-900 uppercase tracking-widest leading-none">Eleanor Vance</h5>
-                                        <p className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mt-1">Legal Counsel</p>
+                                        <p className="text-xs font-bold text-gray-600 uppercase tracking-widest mt-1">Legal Counsel</p>
                                     </div>
                                 </div>
                             </div>
@@ -132,7 +132,7 @@ const CookiePolicy = () => {
                     {/* Main Content */}
                     <main className="lg:col-span-9">
                         <header className="mb-10">
-                            <span className="inline-block px-4 py-1.5 bg-red-700 text-white text-[9px] font-bold uppercase tracking-[0.4em] mb-10">
+                            <span className="inline-block px-4 py-1.5 bg-red-700 text-white text-xs font-bold uppercase tracking-[0.4em] mb-10">
                                 Legal Transparency
                             </span>
                             <h1 className="text-4xl md:text-6xl font-black font-serif italic text-slate-900 tracking-tighter leading-none mb-12">
@@ -141,7 +141,7 @@ const CookiePolicy = () => {
                             <p className="text-xl md:text-2xl font-serif text-slate-700 italic leading-relaxed mb-12 max-w-4xl">
                                 The Daily Pulse uses cookies and similar technologies to help provide, protect, and improve our services. This policy explains how and why we use these technologies and the choices you have.
                             </p>
-                            <div className="flex flex-wrap items-center gap-8 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 border-t border-b border-gray-100 py-6">
+                            <div className="flex flex-wrap items-center gap-8 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-600 border-t border-b border-gray-100 py-6">
                                 <div className="flex items-center">
                                     <FileText size={14} className="mr-2 text-red-700" />
                                     <span>Effective Date: May 14, 2026</span>
@@ -195,7 +195,7 @@ const CookiePolicy = () => {
                             <div className="bg-slate-950 p-12 md:p-16 relative overflow-hidden text-center group">
                                 <div className="absolute top-0 right-0 w-96 h-96 bg-red-700/10 rounded-full translate-x-1/2 -translate-y-1/2 blur-3xl group-hover:bg-red-700/20 transition-all duration-1000"></div>
                                 <h3 className="text-3xl md:text-5xl font-black font-serif italic text-white mb-6 relative z-10">Take Control of Your Data</h3>
-                                <p className="text-gray-400 font-serif italic text-lg max-w-2xl mx-auto mb-12 relative z-10">
+                                <p className="text-gray-600 font-serif italic text-lg max-w-2xl mx-auto mb-12 relative z-10">
                                     You can change your cookie preferences at any time. Clicking "Save Preferences" will update your consent status immediately across all our platforms.
                                 </p>
                                 <div className="flex flex-col sm:flex-row items-center justify-center gap-6 relative z-10">
@@ -221,10 +221,10 @@ const CookiePolicy = () => {
                                 <table className="w-full">
                                     <thead>
                                         <tr className="bg-gray-50 border-b border-gray-100">
-                                            <th className="text-left py-6 px-8 text-[9px] font-bold uppercase tracking-[0.2em] text-gray-500">Cookie Name</th>
-                                            <th className="text-left py-6 px-8 text-[9px] font-bold uppercase tracking-[0.2em] text-gray-500">Provider</th>
-                                            <th className="text-left py-6 px-8 text-[9px] font-bold uppercase tracking-[0.2em] text-gray-500">Purpose</th>
-                                            <th className="text-left py-6 px-8 text-[9px] font-bold uppercase tracking-[0.2em] text-gray-500">Duration</th>
+                                            <th className="text-left py-6 px-8 text-xs font-bold uppercase tracking-[0.2em] text-gray-500">Cookie Name</th>
+                                            <th className="text-left py-6 px-8 text-xs font-bold uppercase tracking-[0.2em] text-gray-500">Provider</th>
+                                            <th className="text-left py-6 px-8 text-xs font-bold uppercase tracking-[0.2em] text-gray-500">Purpose</th>
+                                            <th className="text-left py-6 px-8 text-xs font-bold uppercase tracking-[0.2em] text-gray-500">Duration</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-50">
@@ -238,7 +238,7 @@ const CookiePolicy = () => {
                                                 <td className="py-6 px-8 text-[11px] font-bold text-slate-900 font-mono">{cookie.name}</td>
                                                 <td className="py-6 px-8 text-[11px] font-medium text-gray-600">{cookie.provider}</td>
                                                 <td className="py-6 px-8 text-[11px] font-medium text-gray-600 font-serif italic">{cookie.purpose}</td>
-                                                <td className="py-6 px-8 text-[11px] font-bold text-gray-400 uppercase tracking-widest">{cookie.duration}</td>
+                                                <td className="py-6 px-8 text-[11px] font-bold text-gray-600 uppercase tracking-widest">{cookie.duration}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -259,3 +259,4 @@ const CookiePolicy = () => {
 };
 
 export default CookiePolicy;
+

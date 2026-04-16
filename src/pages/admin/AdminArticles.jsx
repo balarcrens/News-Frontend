@@ -125,11 +125,11 @@ const AdminArticles = () => {
 
             <div className="bg-white border border-slate-100 p-4 mb-8 flex flex-col xl:flex-row gap-6 items-center justify-between shadow-sm">
                 <div className="relative w-full xl:max-w-100 group">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-red-700 transition-colors" size={16} />
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-red-700 transition-colors" size={16} />
                     <input
                         type="text"
                         placeholder="Search headlines..."
-                        className="w-full bg-slate-50 border-none pl-12 pr-4 py-3 text-[11px] font-bold uppercase tracking-wider placeholder:text-slate-300 focus:ring-1 focus:ring-red-100 transition-all outline-none"
+                        className="w-full bg-slate-50 border-none pl-12 pr-4 py-3 text-[11px] font-bold uppercase tracking-wider placeholder:text-slate-500 focus:ring-1 focus:ring-red-100 transition-all outline-none"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         onKeyDown={handleSearch}
@@ -138,7 +138,7 @@ const AdminArticles = () => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full xl:flex-1">
                     <div className="bg-slate-50 px-4 py-2 flex items-center focus-within:ring-1 focus-within:ring-red-100 transition-all">
-                        <Filter size={14} className="text-slate-300 mr-3" />
+                        <Filter size={14} className="text-slate-500 mr-3" />
                         <select
                             className="bg-transparent border-none w-full text-[10px] font-black uppercase tracking-widest text-slate-900 outline-none pb-0"
                             value={categoryFilter}
@@ -150,7 +150,7 @@ const AdminArticles = () => {
                     </div>
 
                     <div className="bg-slate-50 px-4 py-2 flex items-center focus-within:ring-1 focus-within:ring-red-100 transition-all">
-                        <Type size={14} className="text-slate-300 mr-3" />
+                        <Type size={14} className="text-slate-500 mr-3" />
                         <select
                             className="bg-transparent border-none w-full text-[10px] font-black uppercase tracking-widest text-slate-900 outline-none"
                             value={typeFilter}
@@ -170,11 +170,11 @@ const AdminArticles = () => {
                     <table className="w-full text-left">
                         <thead>
                             <tr className="bg-slate-50/50 border-b border-slate-100">
-                                <th className="py-6 px-8 text-[9px] font-black text-slate-400 uppercase tracking-widest">Report Title</th>
-                                <th className="py-6 px-8 text-[9px] font-black text-slate-400 uppercase tracking-widest">Section</th>
-                                <th className="py-6 px-8 text-[9px] font-black text-slate-400 uppercase tracking-widest text-center">Engagement</th>
-                                <th className="py-6 px-8 text-[9px] font-black text-slate-400 uppercase tracking-widest">Status</th>
-                                <th className="py-6 px-8 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">Operations</th>
+                                <th className="py-6 px-8 text-xs font-black text-slate-600 uppercase tracking-widest">Report Title</th>
+                                <th className="py-6 px-8 text-xs font-black text-slate-600 uppercase tracking-widest">Section</th>
+                                <th className="py-6 px-8 text-xs font-black text-slate-600 uppercase tracking-widest text-center">Engagement</th>
+                                <th className="py-6 px-8 text-xs font-black text-slate-600 uppercase tracking-widest">Status</th>
+                                <th className="py-6 px-8 text-xs font-black text-slate-600 uppercase tracking-widest text-right">Operations</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-50">
@@ -201,7 +201,7 @@ const AdminArticles = () => {
                                                     <p className="text-[11px] font-black text-slate-900 group-hover:text-red-700 transition-colors uppercase tracking-[0.05em] line-clamp-1 mb-1">
                                                         {article.title}
                                                     </p>
-                                                    <div className="flex items-center text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                                                    <div className="flex items-center text-xs font-bold text-slate-600 uppercase tracking-widest">
                                                         <span>{article.author?.name || 'Staff Author'}</span>
                                                         <span className="mx-2">•</span>
                                                         <span>{format(new Date(article.createdAt), 'MMM dd, yyyy')}</span>
@@ -215,14 +215,14 @@ const AdminArticles = () => {
                                             </span>
                                         </td>
                                         <td className="py-6 px-8">
-                                            <div className="flex items-center justify-center space-x-6 text-slate-400">
+                                            <div className="flex items-center justify-center space-x-6 text-slate-600">
                                                 <div className="text-center">
                                                     <p className="text-[10px] font-black text-slate-900 tabular-nums leading-none mb-1">{article.engagement?.views?.toLocaleString() || 0}</p>
-                                                    <p className="text-[8px] font-bold uppercase tracking-widest">Views</p>
+                                                    <p className="text-xs font-bold uppercase tracking-widest">Views</p>
                                                 </div>
                                                 <div className="text-center">
                                                     <p className="text-[10px] font-black text-slate-900 tabular-nums leading-none mb-1">{article.engagement?.likes?.toLocaleString() || 0}</p>
-                                                    <p className="text-[8px] font-bold uppercase tracking-widest">Likes</p>
+                                                    <p className="text-xs font-bold uppercase tracking-widest">Likes</p>
                                                 </div>
                                             </div>
                                         </td>
@@ -230,7 +230,7 @@ const AdminArticles = () => {
                                             <div className={`flex items-center space-x-2 ${article.status === 'published' ? 'text-green-600' : 'text-amber-500'
                                                 }`}>
                                                 <div className={`w-1.5 h-1.5 rounded-full bg-current ${article.status === 'published' ? 'animate-pulse' : ''}`}></div>
-                                                <span className="text-[9px] font-black uppercase tracking-widest">{article.status}</span>
+                                                <span className="text-xs font-black uppercase tracking-widest">{article.status}</span>
                                             </div>
                                         </td>
                                         <td className="py-6 px-8">
@@ -239,21 +239,24 @@ const AdminArticles = () => {
                                                     href={`/article/${article.slug}`}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="p-2.5 bg-slate-50 text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-all group/btn"
+                                                    className="w-10 h-10 flex items-center justify-center bg-slate-50 text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all group/btn"
+                                                    aria-label="View article"
                                                 >
-                                                    <Eye size={14} />
+                                                    <Eye size={18} />
                                                 </a>
                                                 <Link
                                                     to={`/admin/articles/edit/${article._id}`}
-                                                    className="p-2.5 bg-slate-50 text-slate-400 hover:text-red-700 hover:bg-red-50 transition-all"
+                                                    className="w-10 h-10 flex items-center justify-center bg-slate-50 text-slate-600 hover:text-red-700 hover:bg-red-50 transition-all"
+                                                    aria-label="Edit article"
                                                 >
-                                                    <Edit2 size={14} />
+                                                    <Edit2 size={18} />
                                                 </Link>
                                                 <button
                                                     onClick={() => handleDelete(article._id)}
-                                                    className="p-2.5 bg-slate-50 text-slate-400 hover:text-white hover:bg-slate-950 transition-all"
+                                                    className="w-10 h-10 flex items-center justify-center bg-slate-50 text-slate-600 hover:text-white hover:bg-slate-950 transition-all"
+                                                    aria-label="Delete article"
                                                 >
-                                                    <Trash2 size={14} />
+                                                    <Trash2 size={18} />
                                                 </button>
                                             </div>
                                         </td>
@@ -262,7 +265,7 @@ const AdminArticles = () => {
                             ) : (
                                 <tr>
                                     <td colSpan="5" className="py-20 text-center">
-                                        <div className="flex flex-col items-center justify-center text-slate-300">
+                                        <div className="flex flex-col items-center justify-center text-slate-500">
                                             <AlertCircle size={48} strokeWidth={1} className="mb-4" />
                                             <p className="text-lg font-serif">No intelligence reports found matching your criteria.</p>
                                         </div>
@@ -276,23 +279,25 @@ const AdminArticles = () => {
                 {/* Pagination */}
                 {pagination.totalPages > 1 && (
                     <div className="px-8 py-6 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between">
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                        <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">
                             Page {pagination.currentPage} of {pagination.totalPages}
                         </p>
                         <div className="flex items-center space-x-2">
                             <button
-                                disabled={pagination.currentPage === 1}
                                 onClick={() => setPage(p => p - 1)}
-                                className="p-2 bg-white border border-slate-100 text-slate-400 hover:text-red-700 disabled:opacity-30 transition-all"
+                                disabled={pagination.currentPage === 1}
+                                className="w-12 h-12 flex items-center justify-center bg-white border border-slate-100 text-slate-600 hover:text-red-700 disabled:opacity-30 transition-all focus:outline-none focus:ring-2 focus:ring-red-700"
+                                aria-label="Previous page"
                             >
-                                <ChevronLeft size={16} />
+                                <ChevronLeft size={20} />
                             </button>
                             <button
-                                disabled={pagination.currentPage === pagination.totalPages}
                                 onClick={() => setPage(p => p + 1)}
-                                className="p-2 bg-white border border-slate-100 text-slate-400 hover:text-red-700 disabled:opacity-30 transition-all"
+                                disabled={pagination.currentPage === pagination.totalPages}
+                                className="w-12 h-12 flex items-center justify-center bg-white border border-slate-100 text-slate-600 hover:text-red-700 disabled:opacity-30 transition-all focus:outline-none focus:ring-2 focus:ring-red-700"
+                                aria-label="Next page"
                             >
-                                <ChevronRight size={16} />
+                                <ChevronRight size={20} />
                             </button>
                         </div>
                     </div>
@@ -303,3 +308,4 @@ const AdminArticles = () => {
 };
 
 export default AdminArticles;
+

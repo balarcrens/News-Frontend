@@ -29,7 +29,7 @@ const TopTicker = ({ headlines = [], isScrolled = false }) => {
                         )}
                     </span>
                 </div>
-                <div className="ml-auto flex items-center text-gray-400 font-medium whitespace-nowrap pl-4">
+                <div className="ml-auto flex items-center text-gray-600 font-medium whitespace-nowrap pl-4">
                     <span>LIVE UPDATES</span>
                 </div>
             </div>
@@ -59,7 +59,8 @@ const Navbar = ({ isScrolled = false, onMenuOpen, user, logout, categories = [] 
                 <div className="flex-1 flex items-center">
                     <button
                         onClick={onMenuOpen}
-                        className="md:hidden mr-4 p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
+                        className="md:hidden mr-4 p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2"
+                        aria-label="Open main menu"
                     >
                         <Menu size={22} />
                     </button>
@@ -98,7 +99,7 @@ const Navbar = ({ isScrolled = false, onMenuOpen, user, logout, categories = [] 
                                     </Link>
                                 ))}
                                 <div className="col-span-3 pt-4 border-t border-gray-50 mt-2">
-                                    <Link to="/" className="text-[9px] text-gray-400 hover:text-slate-900 transition-colors flex items-center uppercase py-2">
+                                    <Link to="/" className="text-xs text-gray-600 hover:text-slate-900 transition-colors flex items-center uppercase py-2">
                                         Browse all intelligence reports <ArrowRight size={10} className="ml-2" />
                                     </Link>
                                 </div>
@@ -121,16 +122,21 @@ const Navbar = ({ isScrolled = false, onMenuOpen, user, logout, categories = [] 
                             placeholder="Find reports..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className={`pl-4 pr-10 bg-white border border-gray-100 rounded-none text-[10px] font-bold uppercase tracking-widest focus:ring-1 focus:ring-red-700/20 focus:border-red-700 outline-none transition-all duration-500 ${isScrolled ? 'py-1.5 w-40 focus:w-56' : 'py-2.5 w-48 focus:w-72'}`}
+                            className={`pl-4 pr-12 bg-white border border-gray-100 rounded-none text-[10px] font-bold uppercase tracking-widest focus:ring-1 focus:ring-red-700/20 focus:border-red-700 outline-none transition-all duration-500 ${isScrolled ? 'py-2.5 w-40 focus:w-56' : 'py-3.5 w-48 focus:w-72'}`}
                         />
-                        <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-700 transition-colors">
-                            <Search size={14} />
+                        <button 
+                            type="submit" 
+                            className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center text-gray-600 hover:text-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-700 rounded-sm"
+                            aria-label="Search"
+                        >
+                            <Search size={16} />
                         </button>
                     </form>
 
                     <button
                         onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
-                        className="lg:hidden p-2 text-gray-600 hover:bg-gray-50 cursor-pointer rounded-lg transition-colors"
+                        className="lg:hidden p-2 text-gray-600 hover:bg-gray-50 cursor-pointer rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2"
+                        aria-label={isMobileSearchOpen ? "Close search bar" : "Open search bar"}
                     >
                         {isMobileSearchOpen ? <X size={20} /> : <Search size={20} />}
                     </button>
@@ -140,7 +146,8 @@ const Navbar = ({ isScrolled = false, onMenuOpen, user, logout, categories = [] 
                             <div className="relative">
                                 <button
                                     onClick={() => setIsProfileOpen(!isProfileOpen)}
-                                    className="py-2 px-3 border cursor-pointer border-gray-100 flex items-center space-x-2 hover:bg-gray-50 transition-colors"
+                                    className="py-2 px-3 border cursor-pointer border-gray-100 flex items-center space-x-2 hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2"
+                                    aria-label="User profile"
                                 >
                                     <span className="text-[10px] font-bold uppercase tracking-widest text-gray-600 hidden sm:block">
                                         {user.name.split(' ')[0]}
@@ -151,7 +158,7 @@ const Navbar = ({ isScrolled = false, onMenuOpen, user, logout, categories = [] 
                                 {isProfileOpen && (
                                     <div className="absolute right-0 mt-3 w-48 bg-white border border-gray-100 shadow-xl rounded-xl py-4 z-[100] animate-in fade-in slide-in-from-top-2">
                                         <div className="px-6 pb-3 border-b border-gray-50 mb-3">
-                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Account</p>
+                                            <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">Account</p>
                                             <p className="text-xs font-bold text-slate-900 truncate">{user.email}</p>
                                         </div>
                                         {user?.role === 'admin' && (
@@ -200,7 +207,11 @@ const Navbar = ({ isScrolled = false, onMenuOpen, user, logout, categories = [] 
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="w-full pl-4 pr-12 py-3 bg-gray-50 border-transparent focus:bg-white focus:border-red-700 rounded-none text-sm outline-none transition-all"
                         />
-                        <button type="submit" className="absolute right-4 top-1/2 -translate-y-1/2 text-red-700">
+                        <button 
+                            type="submit" 
+                            className="absolute right-4 top-1/2 -translate-y-1/2 text-red-700 focus:outline-none focus:ring-2 focus:ring-red-700 rounded-sm"
+                            aria-label="Search"
+                        >
                             <Search size={18} />
                         </button>
                     </form>
@@ -223,7 +234,11 @@ const MobileDrawer = ({ isOpen, onClose, user, logout, categories = [] }) => {
             <div className={`fixed top-0 left-0 h-full w-[80%] max-w-sm bg-white z-[100] overflow-y-auto shadow-2xl transition-transform duration-500 ease-out border-r border-gray-100 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                 <div className="flex items-center justify-between p-6 border-b border-gray-100">
                     <h2 className="text-xl font-black font-serif italic tracking-tighter text-slate-900">Nexora News</h2>
-                    <button onClick={onClose} className="p-2 text-gray-400 hover:text-red-700 transition-colors">
+                    <button 
+                        onClick={onClose} 
+                        className="p-2 text-gray-600 hover:text-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2"
+                        aria-label="Close menu"
+                    >
                         <X size={24} />
                     </button>
                 </div>
@@ -242,10 +257,14 @@ const MobileDrawer = ({ isOpen, onClose, user, logout, categories = [] }) => {
                                 name="search"
                                 type="text"
                                 placeholder="Search..."
-                                className="w-full pl-4 pr-10 py-3 bg-gray-50 border-none text-sm focus:ring-1 focus:ring-red-700 outline-none transition-all"
+                                className="w-full pl-4 pr-12 py-4 bg-gray-50 border-none text-sm focus:ring-1 focus:ring-red-700 outline-none transition-all"
                             />
-                            <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-700">
-                                <Search size={16} />
+                            <button 
+                                type="submit" 
+                                className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center text-gray-600 group-focus-within:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-700 rounded-sm"
+                                aria-label="Search"
+                            >
+                                <Search size={18} />
                             </button>
                         </form>
                     </div>
@@ -258,7 +277,7 @@ const MobileDrawer = ({ isOpen, onClose, user, logout, categories = [] }) => {
                                         {user.name[0]}
                                     </div>
                                     <div>
-                                        <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Identity Verified</p>
+                                        <p className="text-xs font-bold uppercase tracking-widest text-gray-600">Identity Verified</p>
                                         <p className="text-sm font-serif font-bold text-slate-900">{user.name}</p>
                                     </div>
                                 </div>
@@ -295,15 +314,17 @@ const MobileDrawer = ({ isOpen, onClose, user, logout, categories = [] }) => {
                         )}
                     </div>
 
-                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-8">Navigation</h3>
+                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-600 mb-8">Navigation</h3>
                     <nav className="space-y-6">
                         <div>
                             <button
                                 onClick={() => setIsCategoriesExpanded(!isCategoriesExpanded)}
-                                className="w-full flex items-center justify-between text-lg font-bold font-serif text-slate-800 hover:text-red-700 transition-colors group"
+                                className="w-full flex items-center justify-between text-lg font-bold font-serif text-slate-800 hover:text-red-700 transition-colors group focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2 p-1"
+                                aria-expanded={isCategoriesExpanded}
+                                aria-label={isCategoriesExpanded ? "Collapse categories" : "Expand categories"}
                             >
                                 <span>Categories</span>
-                                <ChevronDown size={18} className={`transition-transform duration-300 ${isCategoriesExpanded ? 'rotate-180 text-red-700' : 'text-gray-400'}`} />
+                                <ChevronDown size={18} className={`transition-transform duration-300 ${isCategoriesExpanded ? 'rotate-180 text-red-700' : 'text-gray-600'}`} />
                             </button>
 
                             <div className={`overflow-hidden relative custom-scrollbar transition-all duration-500 ease-in-out ${isCategoriesExpanded ? 'max-h-[200px] mt-6 opacity-100 overflow-y-auto' : 'max-h-0 opacity-0'}`}>
@@ -405,3 +426,4 @@ const Header = () => {
 };
 
 export default Header;
+

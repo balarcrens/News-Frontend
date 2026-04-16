@@ -88,7 +88,7 @@ const GitHubCallback = () => {
                             Secure Handshake In Progress
                         </p>
                         <div className="flex items-center space-x-2 text-sm font-medium text-gray-500 italic">
-                            <Loader2 size={14} className="animate-spin text-gray-300" />
+                            <Loader2 size={14} className="animate-spin text-gray-500" />
                             <span key={statusIndex} className="animate-in fade-in slide-in-from-bottom-1 duration-500">
                                 {statuses[statusIndex]}
                             </span>

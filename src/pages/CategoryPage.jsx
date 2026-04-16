@@ -20,16 +20,19 @@ const Pagination = ({ pagination, onPageChange }) => {
             <button
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="p-2 text-gray-400 hover:text-red-700 disabled:opacity-30 disabled:hover:text-gray-400 transition-colors"
+                className="w-12 h-12 flex items-center justify-center text-gray-600 hover:text-red-700 disabled:opacity-30 disabled:hover:text-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-700 rounded-lg"
+                aria-label="Previous page"
             >
-                <ChevronLeft size={20} />
+                <ChevronLeft size={24} />
             </button>
 
             {pages.map(page => (
                 <button
                     key={page}
                     onClick={() => onPageChange(page)}
-                    className={`w-10 h-10 text-[11px] font-bold uppercase transition-all ${currentPage === page ? 'bg-red-700 text-white' : 'text-slate-600 hover:bg-gray-50'}`}
+                    className={`w-12 h-12 text-xs font-bold uppercase transition-all focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2 ${currentPage === page ? 'bg-red-700 text-white' : 'text-slate-600 hover:bg-gray-50'}`}
+                    aria-label={`Page ${page}`}
+                    aria-current={currentPage === page ? "page" : undefined}
                 >
                     {page}
                 </button>
@@ -38,9 +41,10 @@ const Pagination = ({ pagination, onPageChange }) => {
             <button
                 onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="p-2 text-gray-400 hover:text-red-700 disabled:opacity-30 disabled:hover:text-gray-400 transition-colors"
+                className="w-12 h-12 flex items-center justify-center text-gray-600 hover:text-red-700 disabled:opacity-30 disabled:hover:text-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-700 rounded-lg"
+                aria-label="Next page"
             >
-                <ChevronRight size={20} />
+                <ChevronRight size={24} />
             </button>
         </div>
     );
@@ -60,10 +64,10 @@ const ArticleCard = ({ article, isFeatured = false }) => {
                         className="w-full h-full"
                     />
                     <div className="absolute top-6 left-6 space-x-3 flex">
-                        <span className="bg-red-700 text-white text-[8px] font-bold uppercase tracking-[0.2em] px-3 py-1.5 shadow-lg">
+                        <span className="bg-red-700 text-white text-xs font-bold uppercase tracking-[0.2em] px-3 py-1.5 shadow-lg">
                             Breaking
                         </span>
-                        <span className="bg-white/90 backdrop-blur-md text-slate-900 text-[8px] font-bold uppercase tracking-[0.2em] px-3 py-1.5 shadow-sm border border-white/20">
+                        <span className="bg-white/90 backdrop-blur-md text-slate-900 text-xs font-bold uppercase tracking-[0.2em] px-3 py-1.5 shadow-sm border border-white/20">
                             {article.category?.name} — {article.readingTime || '10'} Min Read
                         </span>
                     </div>
@@ -89,10 +93,13 @@ const ArticleCard = ({ article, isFeatured = false }) => {
                             </div>
                             <div>
                                 <p className="text-[11px] font-bold text-slate-900 uppercase tracking-widest">{article.author?.name}</p>
-                                <p className="text-[9px] font-medium text-gray-400 uppercase tracking-[0.2em] font-serif italic">Senior Correspondent</p>
+                                <p className="text-xs font-medium text-gray-600 uppercase tracking-[0.2em] font-serif italic">Senior Correspondent</p>
                             </div>
                         </div>
-                        <button className="p-2 text-gray-300 hover:text-red-700 transition-colors">
+                        <button 
+                            className="p-2 text-gray-500 hover:text-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-700 rounded-full"
+                            aria-label="Bookmark article"
+                        >
                             <Bookmark size={20} />
                         </button>
                     </div>
@@ -111,7 +118,7 @@ const ArticleCard = ({ article, isFeatured = false }) => {
                     className="w-full h-full"
                 />
                 <div className="absolute top-4 left-4">
-                    <span className="bg-white/95 backdrop-blur-md text-slate-900 text-[7px] font-bold uppercase tracking-[0.2em] px-2 py-1 shadow-sm border border-white/20">
+                    <span className="bg-white/95 backdrop-blur-md text-slate-900 text-xs font-bold uppercase tracking-[0.2em] px-2 py-1 shadow-sm border border-white/20">
                         {article.category?.name} — {article.readingTime || '6'} Min Read
                     </span>
                 </div>
@@ -122,7 +129,7 @@ const ArticleCard = ({ article, isFeatured = false }) => {
             <p className="text-sm font-serif text-gray-500 mb-6 line-clamp-2 italic leading-relaxed">
                 {article.summary}
             </p>
-            <p className="text-[9px] font-bold text-gray-300 uppercase tracking-widest">
+            <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">
                 {article.createdAt ? format(new Date(article.createdAt), 'MMMM dd, yyyy') : 'May 14, 2026'}
             </p>
         </div>
@@ -204,7 +211,7 @@ const CategoryPage = () => {
                     <div className="absolute inset-0 border-2 border-red-700/10 rounded-full"></div>
                     <div className="absolute inset-0 border-2 border-t-red-700 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
                 </div>
-                <p className="font-serif italic text-gray-400 animate-pulse">Consulting the archives...</p>
+                <p className="font-serif italic text-gray-600 animate-pulse">Consulting the archives...</p>
             </div>
         );
     }
@@ -213,7 +220,7 @@ const CategoryPage = () => {
     const gridArticles = articles.slice(1);
 
     return (
-        <div className="max-w-7xl mx-auto px-4 md:px-6 py-12">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-12">
             <SEO
                 title={`${category?.name} News`}
                 description={category?.description || `Explore the latest ${category?.name} news, analysis and reports on Nexora News.`}
@@ -228,7 +235,8 @@ const CategoryPage = () => {
             <div className="lg:hidden flex justify-end mb-8">
                 <button
                     onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                    className="flex items-center space-x-2 bg-white border border-gray-100 px-6 py-3 shadow-sm hover:shadow-md transition-all active:scale-95"
+                    className="flex items-center space-x-2 bg-white border border-gray-100 px-6 py-3 shadow-sm hover:shadow-md transition-all active:scale-95 focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2"
+                    aria-label={isSidebarOpen ? "Close filters" : "Open filters"}
                 >
                     {isSidebarOpen ? (
                         <>
@@ -279,7 +287,7 @@ const CategoryPage = () => {
                         </>
                     ) : (
                         <div className="py-20 text-center">
-                            <h3 className="text-2xl font-serif italic text-gray-300">No stories found in this section.</h3>
+                            <h3 className="text-2xl font-serif italic text-gray-500">No stories found in this section.</h3>
                         </div>
                     )}
                 </div>
@@ -289,3 +297,4 @@ const CategoryPage = () => {
 };
 
 export default CategoryPage;
+

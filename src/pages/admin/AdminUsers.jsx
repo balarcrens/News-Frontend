@@ -20,7 +20,7 @@ const RoleBadge = ({ role }) => {
         user: 'bg-slate-50 text-slate-500 ring-slate-500/10'
     };
     return (
-        <span className={`px-2 py-0.5 text-[8px] font-black uppercase tracking-widest ring-1 ring-inset ${styles[role] || styles.user}`}>
+        <span className={`px-2 py-0.5 text-xs font-black uppercase tracking-widest ring-1 ring-inset ${styles[role] || styles.user}`}>
             {role}
         </span>
     );
@@ -108,11 +108,11 @@ const AdminUsers = () => {
             {/* Matrix Search & Filter */}
             <div className="bg-white border border-slate-100 p-4 mb-8 flex flex-col md:flex-row gap-4 items-center justify-between shadow-sm">
                 <div className="relative group w-full md:w-96">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-red-700 transition-colors" size={16} />
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-red-700 transition-colors" size={16} />
                     <input 
                         type="text" 
                         placeholder="Search by identity or email..." 
-                        className="w-full bg-slate-50 border-none pl-12 pr-4 py-3 text-[11px] font-bold uppercase tracking-wider placeholder:text-slate-300 focus:ring-1 focus:ring-red-100 transition-all outline-none"
+                        className="w-full bg-slate-50 border-none pl-12 pr-4 py-3 text-[11px] font-bold uppercase tracking-wider placeholder:text-slate-500 focus:ring-1 focus:ring-red-100 transition-all outline-none"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -123,10 +123,10 @@ const AdminUsers = () => {
                         <button
                             key={role}
                             onClick={() => setRoleFilter(role)}
-                            className={`flex-1 px-4 py-2 text-[9px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap ${
+                            className={`flex-1 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap ${
                                 roleFilter === role 
                                 ? 'bg-white text-slate-900 shadow-sm' 
-                                : 'text-slate-400 hover:text-slate-600'
+                                : 'text-slate-600 hover:text-slate-600'
                             }`}
                         >
                             {role || 'All Personnel'}
@@ -141,11 +141,11 @@ const AdminUsers = () => {
                     <table className="w-full text-left">
                         <thead>
                             <tr className="bg-slate-50 border-b border-slate-100">
-                                <th className="py-6 px-8 text-[9px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Identity</th>
-                                <th className="py-6 px-8 text-[9px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Clearance (Role)</th>
-                                <th className="py-6 px-8 text-[9px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Status</th>
-                                <th className="py-6 px-8 text-[9px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Enrolled Date</th>
-                                <th className="py-6 px-8 text-[9px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap text-right">Operations</th>
+                                <th className="py-6 px-8 text-xs font-black text-slate-600 uppercase tracking-widest whitespace-nowrap">Identity</th>
+                                <th className="py-6 px-8 text-xs font-black text-slate-600 uppercase tracking-widest whitespace-nowrap">Clearance (Role)</th>
+                                <th className="py-6 px-8 text-xs font-black text-slate-600 uppercase tracking-widest whitespace-nowrap">Status</th>
+                                <th className="py-6 px-8 text-xs font-black text-slate-600 uppercase tracking-widest whitespace-nowrap">Enrolled Date</th>
+                                <th className="py-6 px-8 text-xs font-black text-slate-600 uppercase tracking-widest whitespace-nowrap text-right">Operations</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-50">
@@ -169,9 +169,9 @@ const AdminUsers = () => {
                                                 </div>
                                                 <div>
                                                     <p className="text-[11px] font-black text-slate-900 uppercase tracking-[0.05em] mb-0.5">
-                                                        {u.name} {u._id === currentUser?._id && <span className="text-[8px] text-red-700 ml-1">(YOU)</span>}
+                                                        {u.name} {u._id === currentUser?._id && <span className="text-xs text-red-700 ml-1">(YOU)</span>}
                                                     </p>
-                                                    <div className="flex items-center text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                                                    <div className="flex items-center text-xs font-bold text-slate-600 uppercase tracking-widest">
                                                         <Mail size={10} className="mr-1.5" /> {u.email}
                                                     </div>
                                                 </div>
@@ -181,7 +181,7 @@ const AdminUsers = () => {
                                             <div className="flex items-center space-x-3">
                                                 <RoleBadge role={u.role} />
                                                 <select
-                                                    className="bg-slate-50 border-none px-2 py-1 text-[9px] font-black uppercase tracking-widest focus:ring-1 focus:ring-red-100 outline-none cursor-pointer"
+                                                    className="bg-slate-50 border-none px-2 py-1 text-xs font-black uppercase tracking-widest focus:ring-1 focus:ring-red-100 outline-none cursor-pointer"
                                                     value={u.role}
                                                     onChange={(e) => handleRoleChange(u._id, e.target.value)}
                                                     disabled={u._id === currentUser?._id}
@@ -194,13 +194,13 @@ const AdminUsers = () => {
                                         <td className="py-6 px-8">
                                             <div className="flex items-center">
                                                 <div className={`w-1.5 h-1.5 rounded-full mr-2 ${u.isActive !== false ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                                                <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">
+                                                <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">
                                                     {u.isActive !== false ? 'Verified' : 'Suspended'}
                                                 </span>
                                             </div>
                                         </td>
                                         <td className="py-6 px-8">
-                                            <div className="flex items-center text-[9px] font-bold text-slate-400 uppercase tracking-widest tabular-nums">
+                                            <div className="flex items-center text-xs font-bold text-slate-600 uppercase tracking-widest tabular-nums">
                                                 <Calendar size={12} className="mr-2" />
                                                 {format(new Date(u.createdAt), 'MMM dd, yyyy')}
                                             </div>
@@ -209,7 +209,7 @@ const AdminUsers = () => {
                                             <button 
                                                 onClick={() => handleDelete(u._id)}
                                                 disabled={u._id === currentUser?._id}
-                                                className="p-2.5 text-slate-300 cursor-pointer hover:text-red-700 hover:bg-red-50 transition-all disabled:opacity-0"
+                                                className="p-2.5 text-slate-500 cursor-pointer hover:text-red-700 hover:bg-red-50 transition-all disabled:opacity-0"
                                             >
                                                 <Trash2 size={16} />
                                             </button>
@@ -219,7 +219,7 @@ const AdminUsers = () => {
                             ) : (
                                 <tr>
                                     <td colSpan="5" className="py-20 text-center">
-                                        <div className="flex flex-col items-center justify-center text-slate-300">
+                                        <div className="flex flex-col items-center justify-center text-slate-500">
                                             <AlertCircle size={48} strokeWidth={1} className="mb-4" />
                                             <p className="text-lg font-serif">Identity not found in network databases.</p>
                                         </div>
@@ -235,3 +235,4 @@ const AdminUsers = () => {
 };
 
 export default AdminUsers;
+

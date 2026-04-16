@@ -16,7 +16,7 @@ const ArticleSidebar = ({ article }) => {
                     </p>
 
                     <div className="pt-6 border-t border-gray-100">
-                        <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">
+                        <p className="text-xs font-bold text-gray-600 uppercase tracking-widest">
                             READ TIME: {Math.ceil(JSON.stringify(article.content).length / 1000) || 5} MIN
                         </p>
                     </div>
@@ -33,7 +33,7 @@ const ArticleSidebar = ({ article }) => {
                     <input
                         type="email"
                         placeholder="EMAIL ADDRESS"
-                        className="w-full bg-gray-50 border-none p-4 text-[10px] font-bold text-center uppercase tracking-widest placeholder:text-gray-300 focus:ring-1 focus:ring-red-700/20 outline-none"
+                        className="w-full bg-gray-50 border-none p-4 text-[10px] font-bold text-center uppercase tracking-widest placeholder:text-gray-500 focus:ring-1 focus:ring-red-700/20 outline-none"
                     />
                     <button className="w-full bg-red-700 text-white py-4 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-red-800 transition-all">
                         Subscribe
@@ -45,3 +45,4 @@ const ArticleSidebar = ({ article }) => {
 };
 
 export default ArticleSidebar;
+

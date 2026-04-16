@@ -19,11 +19,11 @@ import { adminService } from '../../api/adminService';
 
 const InfoCard = ({ title, value, icon: Icon }) => (
     <div className="bg-white p-6 border border-slate-100 flex items-center group hover:border-red-700 transition-all duration-500">
-        <div className="w-12 h-12 bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-red-700 group-hover:text-white transition-all duration-500 mr-6">
+        <div className="w-12 h-12 bg-slate-50 flex items-center justify-center text-slate-600 group-hover:bg-red-700 group-hover:text-white transition-all duration-500 mr-6">
             <Icon size={20} />
         </div>
         <div>
-            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">{title}</p>
+            <p className="text-xs font-black text-slate-600 uppercase tracking-widest mb-1">{title}</p>
             <p className="text-sm font-bold text-slate-900 uppercase tracking-tight">{value}</p>
         </div>
     </div>
@@ -90,16 +90,16 @@ const AdminSettings = () => {
                         <div className="space-y-8">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div>
-                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3 block">Publication Name</label>
+                                    <label className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] mb-3 block">Publication Name</label>
                                     <div className="bg-slate-50 p-4 font-serif font-black text-2xl text-slate-900">Nexora News</div>
                                 </div>
                                 <div>
-                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3 block">Network Domain</label>
+                                    <label className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] mb-3 block">Network Domain</label>
                                     <div className="bg-slate-50 p-4 font-bold text-sm text-slate-900">nexoranews.dpdns.org</div>
                                 </div>
                             </div>
                             <div>
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3 block">Global Editorial Slogan</label>
+                                <label className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] mb-3 block">Global Editorial Slogan</label>
                                 <div className="bg-slate-50 p-4 font-medium text-slate-600 border-l-4 border-red-700">
                                     "Prestige journalism for the modern digital evolution."
                                 </div>
@@ -117,7 +117,7 @@ const AdminSettings = () => {
                             </div>
                             <div>
                                 <h4 className="text-[10px] font-black uppercase tracking-widest">Nexora Admin</h4>
-                                <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Identity Verified</p>
+                                <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Identity Verified</p>
                             </div>
                         </div>
                         <div className="space-y-6">
@@ -126,7 +126,7 @@ const AdminSettings = () => {
                                     <CheckCircle2 size={18} className="text-red-500" />
                                 </div>
                                 <div>
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Database Status</p>
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-600">Database Status</p>
                                     <p className="text-[11px] font-bold uppercase tracking-tight">Synchronized</p>
                                 </div>
                             </div>
@@ -136,21 +136,21 @@ const AdminSettings = () => {
                     {/* Stats Summary */}
                     <div className="bg-white border border-slate-100 p-8 shadow-sm">
                         <div className="flex items-center mb-6">
-                            <Info className="text-slate-300 mr-3" size={16} />
+                            <Info className="text-slate-500 mr-3" size={16} />
                             <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-widest">Network Impact</h4>
                         </div>
                         {!loading && stats && (
                             <div className="space-y-4">
                                 <div className="flex justify-between items-end border-b border-slate-50 pb-4">
-                                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Intel Volumes</span>
+                                    <span className="text-xs font-bold text-slate-600 uppercase tracking-widest">Intel Volumes</span>
                                     <span className="text-xl font-serif font-black text-slate-900">{stats.totalArticles}</span>
                                 </div>
                                 <div className="flex justify-between items-end border-b border-slate-50 pb-4">
-                                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Global Reach</span>
+                                    <span className="text-xs font-bold text-slate-600 uppercase tracking-widest">Global Reach</span>
                                     <span className="text-xl font-serif font-black text-slate-900">{stats.totalViews}</span>
                                 </div>
                                 <div className="flex justify-between items-end border-b border-slate-50 pb-4">
-                                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Personnel Count</span>
+                                    <span className="text-xs font-bold text-slate-600 uppercase tracking-widest">Personnel Count</span>
                                     <span className="text-xl font-serif font-black text-slate-900">12</span>
                                 </div>
                             </div>
@@ -163,3 +163,4 @@ const AdminSettings = () => {
 };
 
 export default AdminSettings;
+

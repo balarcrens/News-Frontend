@@ -13,9 +13,9 @@ const ArticleCard = ({ category, title, summary, image, slug, type }) => (
             />
         </div>
         <div className="flex items-center space-x-2 mb-2 md:mb-3">
-            <span className="text-[9px] font-bold text-red-700 uppercase tracking-widest">{category}</span>
+            <span className="text-xs font-bold text-red-700 uppercase tracking-widest">{category}</span>
             {type === 'blog' && (
-                <span className="text-[8px] font-bold text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded uppercase tracking-widest">Blog</span>
+                <span className="text-xs font-bold text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded uppercase tracking-widest">Blog</span>
             )}
         </div>
         <h3 className="text-lg md:text-xl font-bold font-serif mb-2 md:mb-3 leading-tight group-hover:text-red-700 transition-colors line-clamp-2">
@@ -53,7 +53,7 @@ const CategoryRow = ({ title, articles = [], loading = false }) => (
                         />
                     ))
                 ) : (
-                    <div className="col-span-2 py-10 md:py-20 text-center border-2 border-dashed border-gray-100 rounded-xl text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                    <div className="col-span-2 py-10 md:py-20 text-center border-2 border-dashed border-gray-100 rounded-xl text-[10px] font-bold uppercase tracking-widest text-gray-600">
                         Initial content coming soon to {title}
                     </div>
                 )
@@ -76,3 +76,4 @@ const NewsSection = ({ categoriesData = [], loading = false }) => (
 );
 
 export default NewsSection;
+

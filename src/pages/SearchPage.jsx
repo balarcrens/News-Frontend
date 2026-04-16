@@ -119,9 +119,9 @@ const SearchPage = () => {
                             type="text"
                             defaultValue={query}
                             placeholder="Find news, blogs, or insights..."
-                            className="w-full text-2xl md:text-3xl font-serif italic py-4 pl-12 pr-32 border-b-2 border-gray-100 focus:border-red-700 outline-none transition-all placeholder:text-gray-300"
+                            className="w-full text-2xl md:text-3xl font-serif italic py-4 pl-12 pr-32 border-b-2 border-gray-100 focus:border-red-700 outline-none transition-all placeholder:text-gray-500"
                         />
-                        <Search className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-400" size={28} />
+                        <Search className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-600" size={28} />
                         <button
                             type="submit"
                             className="absolute right-0 top-1/2 -translate-y-1/2 bg-red-700 text-white px-8 py-3 font-bold uppercase tracking-widest text-[10px] hover:bg-red-800 transition-colors shadow-lg shadow-red-700/10"
@@ -137,7 +137,10 @@ const SearchPage = () => {
 
                         <button
                             onClick={() => setIsFilterOpen(!isFilterOpen)}
-                            className="lg:hidden flex items-center space-x-2 text-slate-900 font-bold text-[10px] uppercase tracking-widest border border-gray-100 px-4 py-2 hover:bg-gray-50 transition-all shadow-sm"
+                            className="lg:hidden flex items-center space-x-2 text-slate-900 font-bold text-[10px] uppercase tracking-widest border border-gray-100 px-4 py-2 hover:bg-gray-50 transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2"
+                            aria-expanded={isFilterOpen}
+                            aria-controls="search-filters"
+                            aria-label={isFilterOpen ? "Close filters" : "Open filters"}
                         >
                             <Filter size={14} />
                             <span>Filters</span>
@@ -157,7 +160,7 @@ const SearchPage = () => {
                             <div className="space-y-4">
                                 <button
                                     onClick={() => handleFilterChange('category', 'all')}
-                                    className={`flex items-center justify-between w-full group ${selectedCategory === 'all' ? 'text-red-700' : 'text-gray-500 hover:text-slate-900'}`}
+                                    className={`flex items-center justify-between w-full group focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2 p-1 ${selectedCategory === 'all' ? 'text-red-700' : 'text-gray-600 hover:text-slate-900'}`}
                                 >
                                     <div className="flex items-center">
                                         <div className={`w-4 h-4 border ${selectedCategory === 'all' ? 'bg-red-700 border-red-700' : 'border-gray-200'} mr-3 flex items-center justify-center transition-all`}>
@@ -170,7 +173,7 @@ const SearchPage = () => {
                                     <button
                                         key={cat._id}
                                         onClick={() => handleFilterChange('category', cat._id)}
-                                        className={`flex items-center justify-between w-full group ${selectedCategory === cat._id ? 'text-red-700' : 'text-gray-500 hover:text-slate-900'}`}
+                                        className={`flex items-center justify-between w-full group focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2 p-1 ${selectedCategory === cat._id ? 'text-red-700' : 'text-gray-600 hover:text-slate-900'}`}
                                     >
                                         <div className="flex items-center">
                                             <div className={`w-4 h-4 border ${selectedCategory === cat._id ? 'bg-red-700 border-red-700' : 'border-gray-200'} mr-3 flex items-center justify-center transition-all`}>
@@ -199,7 +202,7 @@ const SearchPage = () => {
                                     <button
                                         key={opt.value}
                                         onClick={() => handleFilterChange('timeframe', opt.value)}
-                                        className={`block w-full text-left px-4 py-3 text-[11px] font-bold uppercase tracking-[0.1em] border transition-all ${timeframe === opt.value ? 'bg-red-700 text-white border-red-700 shadow-md shadow-red-700/5' : 'bg-gray-50 text-gray-500 border-transparent hover:border-gray-200'}`}
+                                        className={`block w-full text-left px-4 py-3 text-[11px] font-bold uppercase tracking-[0.1em] border transition-all focus:outline-none focus:ring-2 focus:ring-red-700 ${timeframe === opt.value ? 'bg-red-700 text-white border-red-700 shadow-md shadow-red-700/5' : 'bg-gray-50 text-gray-600 border-transparent hover:border-gray-200'}`}
                                     >
                                         {opt.label}
                                     </button>
@@ -223,7 +226,7 @@ const SearchPage = () => {
                                     <option value="oldest">Oldest First</option>
                                     <option value="views">Most Popular</option>
                                 </select>
-                                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 group-focus-within:text-red-700 transition-colors">
+                                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-600 group-focus-within:text-red-700 transition-colors">
                                     <SortAsc size={16} />
                                 </div>
                             </div>
@@ -268,7 +271,7 @@ const SearchPage = () => {
                                             <div className="flex items-center space-x-3 text-[10px] font-bold uppercase tracking-[0.2em] text-red-700">
                                                 <span>{article.category?.name || 'Uncategorized'}</span>
                                                 <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
-                                                <span className="text-gray-400">{format(new Date(article.publishedAt || article.createdAt), 'MMMM dd, yyyy')}</span>
+                                                <span className="text-gray-600">{format(new Date(article.publishedAt || article.createdAt), 'MMMM dd, yyyy')}</span>
                                             </div>
 
                                             <Link to={`/article/${article.slug}`}>
@@ -313,9 +316,10 @@ const SearchPage = () => {
                                         <button
                                             disabled={currentPage === 1}
                                             onClick={() => handleFilterChange('page', currentPage - 1)}
-                                            className="w-10 h-10 border border-gray-100 flex items-center justify-center hover:bg-gray-50 disabled:opacity-30 transition-all font-bold"
+                                            className="w-12 h-12 border border-gray-100 flex items-center justify-center hover:bg-gray-50 disabled:opacity-30 transition-all font-bold focus:outline-none focus:ring-2 focus:ring-red-700"
+                                            aria-label="Previous page"
                                         >
-                                            <ChevronRight className="rotate-180" size={16} />
+                                            <ChevronRight className="rotate-180" size={20} />
                                         </button>
 
                                         {[...Array(pagination.totalPages)].map((_, i) => {
@@ -329,14 +333,16 @@ const SearchPage = () => {
                                                     <button
                                                         key={pageNum}
                                                         onClick={() => handleFilterChange('page', pageNum)}
-                                                        className={`w-10 h-10 text-[11px] font-bold transition-all ${currentPage === pageNum ? 'bg-red-700 text-white border-red-700 shadow-md shadow-red-700/10' : 'border border-gray-100 hover:bg-gray-50'}`}
+                                                        className={`w-12 h-12 text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-1 ${currentPage === pageNum ? 'bg-red-700 text-white border-red-700 shadow-md shadow-red-700/10' : 'border border-gray-100 hover:bg-gray-50'}`}
+                                                        aria-label={`Page ${pageNum}`}
+                                                        aria-current={currentPage === pageNum ? "page" : undefined}
                                                     >
                                                         {pageNum}
                                                     </button>
                                                 );
                                             }
                                             if (pageNum === 2 || pageNum === pagination.totalPages - 1) {
-                                                return <span key={pageNum} className="px-2 text-gray-300">...</span>;
+                                                return <span key={pageNum} className="px-2 text-gray-500">...</span>;
                                             }
                                             return null;
                                         })}
@@ -344,21 +350,22 @@ const SearchPage = () => {
                                         <button
                                             disabled={currentPage === pagination.totalPages}
                                             onClick={() => handleFilterChange('page', currentPage + 1)}
-                                            className="w-10 h-10 border border-gray-100 flex items-center justify-center hover:bg-gray-50 disabled:opacity-30 transition-all font-bold"
+                                            className="w-12 h-12 border border-gray-100 flex items-center justify-center hover:bg-gray-50 disabled:opacity-30 transition-all font-bold focus:outline-none focus:ring-2 focus:ring-red-700"
+                                            aria-label="Next page"
                                         >
-                                            <ChevronRight size={16} />
+                                            <ChevronRight size={20} />
                                         </button>
                                     </div>
                                 )}
                             </div>
                         ) : (
                             <div className="py-20 text-center space-y-6 bg-gray-50/50 rounded-2xl border border-dashed border-gray-100">
-                                <div className="w-16 h-16 bg-white shadow-sm rounded-full flex items-center justify-center mx-auto text-gray-300">
+                                <div className="w-16 h-16 bg-white shadow-sm rounded-full flex items-center justify-center mx-auto text-gray-500">
                                     <Search size={32} />
                                 </div>
                                 <div className="space-y-2 px-6">
                                     <h3 className="text-xl font-serif font-bold text-slate-900 italic">No matching reports found</h3>
-                                    <p className="text-sm text-gray-400 max-w-md mx-auto">
+                                    <p className="text-sm text-gray-600 max-w-md mx-auto">
                                         We couldn't find any articles matching your search for "{query}". Try adjusting your keywords or filters.
                                     </p>
                                 </div>
@@ -378,3 +385,4 @@ const SearchPage = () => {
 };
 
 export default SearchPage;
+

@@ -21,7 +21,7 @@ const NavItem = ({ to, icon: Icon, label, active, collapsed }) => (
         to={to}
         className={`flex items-center px-4 py-3.5 mb-2 transition-all duration-300 group ${active
             ? 'bg-red-700 text-white shadow-lg shadow-red-700/20'
-            : 'text-slate-400 hover:bg-slate-50 hover:text-slate-900'
+            : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
             }`}
     >
         <Icon size={20} strokeWidth={active ? 2.5 : 2} className="shrink-0" />
@@ -74,7 +74,7 @@ const AdminLayout = ({ children }) => {
                         {!collapsed && (
                             <div className="ml-4 overflow-hidden">
                                 <h1 className="font-serif italic font-black text-slate-900 tracking-tighter leading-none whitespace-nowrap">Nexora</h1>
-                                <p className="text-[8px] font-black text-red-700 uppercase tracking-widest mt-1">Intelligence Panel</p>
+                                <p className="text-xs font-black text-red-700 uppercase tracking-widest mt-1">Intelligence Panel</p>
                             </div>
                         )}
                     </div>
@@ -98,7 +98,7 @@ const AdminLayout = ({ children }) => {
                 <div className="p-4 mt-auto border-t border-slate-50">
                     <button
                         onClick={handleLogout}
-                        className="w-full flex items-center px-4 py-3.5 text-slate-400 hover:text-red-700 transition-colors group"
+                        className="w-full flex items-center px-4 py-3.5 text-slate-600 hover:text-red-700 transition-colors group"
                     >
                         <LogOut size={20} />
                         {!collapsed && (
@@ -130,7 +130,7 @@ const AdminLayout = ({ children }) => {
                             <h1 className="font-serif italic font-black text-slate-900 tracking-tighter leading-none">Nexora</h1>
                         </div>
                     </div>
-                    <button onClick={() => setMobileMenuOpen(false)} className="text-slate-400">
+                    <button onClick={() => setMobileMenuOpen(false)} className="text-slate-600">
                         <X size={24} />
                     </button>
                 </div>
@@ -155,13 +155,13 @@ const AdminLayout = ({ children }) => {
                     <div className="flex items-center">
                         <button
                             onClick={() => setCollapsed(!collapsed)}
-                            className="hidden lg:flex cursor-pointer text-slate-400 hover:text-red-700 transition-colors mr-6"
+                            className="hidden lg:flex cursor-pointer text-slate-600 hover:text-red-700 transition-colors mr-6"
                         >
                             <Menu size={20} />
                         </button>
                         <button
                             onClick={() => setMobileMenuOpen(true)}
-                            className="lg:hidden cursor-pointer text-slate-400 hover:text-red-700 transition-colors mr-4"
+                            className="lg:hidden cursor-pointer text-slate-600 hover:text-red-700 transition-colors mr-4"
                         >
                             <Menu size={24} />
                         </button>
@@ -171,7 +171,7 @@ const AdminLayout = ({ children }) => {
                         <div className="flex items-center pl-6 border-l border-slate-100">
                             <div className="mr-4 text-right hidden sm:block">
                                 <p className="text-[10px] font-bold text-slate-900 uppercase tracking-widest leading-none mb-1">{user?.name}</p>
-                                <p className="text-[9px] font-bold text-red-700 uppercase tracking-widest">Editorial Admin</p>
+                                <p className="text-xs font-bold text-red-700 uppercase tracking-widest">Editorial Admin</p>
                             </div>
                             <div className="w-10 h-10 bg-slate-900 rounded-full overflow-hidden flex items-center justify-center text-white ring-4 ring-slate-50">
                                 {user?.avatar ? (
@@ -204,3 +204,4 @@ const AdminLayout = ({ children }) => {
 };
 
 export default AdminLayout;
+

@@ -79,14 +79,14 @@ const FloatingActions = ({
                         <AlertCircle size={16} className="text-red-500 shrink-0 mt-0.5" />
                         <div>
                             <p className="text-[10px] font-bold uppercase tracking-widest mb-1">Authenticity Required</p>
-                            <p className="text-[9px] text-gray-400 leading-relaxed uppercase tracking-tighter italic">Join The Pulse to express your appreciation.</p>
+                            <p className="text-xs text-gray-600 leading-relaxed uppercase tracking-tighter italic">Join The Pulse to express your appreciation.</p>
                         </div>
                     </div>
                 </div>
             )}
 
             <div className='hidden lg:flex mb-3'>
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-300 md:horizontal-text vertical-text ">
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 md:horizontal-text vertical-text ">
                     Share Stories
                 </p>
             </div>
@@ -94,28 +94,31 @@ const FloatingActions = ({
             <div className="flex mb-0 lg:flex-col items-center lg:space-y-3 space-x-3 lg:space-x-0">
                 <button
                     onClick={shareActions.twitter}
-                    className="p-3 text-gray-400 cursor-pointer hover:text-red-700 hover:bg-red-50 transition-all rounded-full group relative"
+                    className="p-4 text-gray-700 cursor-pointer hover:text-red-700 hover:bg-red-50 transition-all rounded-full group relative focus:outline-none focus:ring-2 focus:ring-red-700"
+                    aria-label="Share on Twitter"
                 >
                     <Twitter size={18} />
-                    <span className="absolute left-full md:ml-4 px-2 py-1 bg-slate-900 text-white text-[8px] font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">
+                    <span className="absolute left-full md:ml-4 px-2 py-1 bg-slate-900 text-white text-xs font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">
                         Twitter / X
                     </span>
                 </button>
                 <button
                     onClick={shareActions.facebook}
-                    className="p-3 text-gray-400 cursor-pointer hover:text-red-700 hover:bg-red-50 transition-all rounded-full group relative"
+                    className="p-4 text-gray-700 cursor-pointer hover:text-red-700 hover:bg-red-50 transition-all rounded-full group relative focus:outline-none focus:ring-2 focus:ring-red-700"
+                    aria-label="Share on Facebook"
                 >
                     <Facebook size={18} />
-                    <span className="absolute left-full md:ml-4 px-2 py-1 bg-slate-900 text-white text-[8px] font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">
+                    <span className="absolute left-full md:ml-4 px-2 py-1 bg-slate-900 text-white text-xs font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">
                         Facebook
                     </span>
                 </button>
                 <button
                     onClick={shareActions.linkedin}
-                    className="p-3 text-gray-400 cursor-pointer hover:text-red-700 hover:bg-red-50 transition-all rounded-full group relative"
+                    className="p-4 text-gray-700 cursor-pointer hover:text-red-700 hover:bg-red-50 transition-all rounded-full group relative focus:outline-none focus:ring-2 focus:ring-red-700"
+                    aria-label="Share on LinkedIn"
                 >
                     <Linkedin size={18} />
-                    <span className="absolute left-full md:ml-4 px-2 py-1 bg-slate-900 text-white text-[8px] font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">
+                    <span className="absolute left-full md:ml-4 px-2 py-1 bg-slate-900 text-white text-xs font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">
                         LinkedIn
                     </span>
                 </button>
@@ -124,30 +127,36 @@ const FloatingActions = ({
             <div className="md:w-8 md:h-px bg-gray-100"></div>
 
             <div className="flex mb-0 lg:flex-col items-center lg:space-y-3 space-x-3 lg:space-x-0">
-                <button className="flex flex-col items-center space-y-group group">
-                    <div className="p-3 text-gray-400 hover:text-red-700 hover:bg-red-50 transition-all rounded-full">
+                <button 
+                    className="flex flex-col items-center space-y-group group focus:outline-none focus:ring-2 focus:ring-red-700 rounded-lg p-1.5"
+                    aria-label={`View ${commentCount} comments`}
+                    onClick={() => document.getElementById('discussion-section')?.scrollIntoView({ behavior: 'smooth' })}
+                >
+                    <div className="p-4 text-gray-700 hover:text-red-700 hover:bg-red-50 transition-all rounded-full">
                         <MessageSquare size={18} />
                     </div>
-                    <span className="text-[9px] font-bold text-gray-400 group-hover:text-red-700 transition-colors uppercase tracking-widest">
+                    <span className="text-xs font-bold text-gray-700 group-hover:text-red-700 transition-colors uppercase tracking-widest">
                         {commentCount}
                     </span>
                 </button>
 
                 <button
                     onClick={handleLike}
-                    className={`flex flex-col items-center cursor-pointer lg:space-y-2 group transition-all duration-500`}
+                    className={`flex flex-col items-center cursor-pointer lg:space-y-2 group transition-all duration-500 focus:outline-none focus:ring-2 focus:ring-red-700 rounded-lg p-1.5`}
+                    aria-label={isLiked ? "Unlike article" : "Like article"}
                 >
-                    <div className={`p-3 rounded-full transition-all duration-500 ${(isLiked && user) ? 'text-red-700 bg-red-50 shadow-inner' : 'text-gray-400 hover:text-red-700 hover:bg-red-50'}`}>
+                    <div className={`p-4 rounded-full transition-all duration-500 ${(isLiked && user) ? 'text-red-700 bg-red-50 shadow-inner' : 'text-gray-700 hover:text-red-700 hover:bg-red-50'}`}>
                         <Heart size={18} className={isLiked ? 'fill-current' : ''} />
                     </div>
-                    <span className={`text-[9px] font-bold uppercase tracking-widest transition-colors ${(isLiked && user) ? 'text-red-700' : 'text-gray-400 group-hover:text-red-700'}`}>
+                    <span className={`text-xs font-bold uppercase tracking-widest transition-colors ${(isLiked && user) ? 'text-red-700' : 'text-gray-700 group-hover:text-red-700'}`}>
                         {likes}
                     </span>
                 </button>
 
                 <button
                     onClick={shareActions.copyLink}
-                    className="p-3 text-gray-400 hover:text-red-700 cursor-pointer hover:bg-red-50 transition-all rounded-full group relative"
+                    className="p-4 text-gray-700 hover:text-red-700 cursor-pointer hover:bg-red-50 transition-all rounded-full group relative focus:outline-none focus:ring-2 focus:ring-red-700"
+                    aria-label="Copy article link"
                 >
                     <Share2 size={18} />
                 </button>
@@ -164,3 +173,4 @@ const FloatingActions = ({
 };
 
 export default FloatingActions;
+

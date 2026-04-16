@@ -15,7 +15,7 @@ const CategorySidebar = ({
         <aside className="w-full lg:w-64 shrink-0 space-y-12">
             {/* Categories List */}
             <div>
-                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-6 border-b border-gray-100 pb-4">
+                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-600 mb-6 border-b border-gray-100 pb-4">
                     Categories
                 </h3>
                 <nav className="space-y-3">
@@ -32,7 +32,7 @@ const CategorySidebar = ({
                                 {activeSlug === cat.slug ? (
                                     <ChevronRight size={14} className="text-red-700" />
                                 ) : (
-                                    <span className="text-[10px] text-gray-300 font-medium">
+                                    <span className="text-[10px] text-gray-500 font-medium">
                                         {cat.articleCount || 0}
                                     </span>
                                 )}
@@ -44,7 +44,7 @@ const CategorySidebar = ({
 
             {/* Sort By */}
             <div>
-                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-6 border-b border-gray-100 pb-4">
+                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-600 mb-6 border-b border-gray-100 pb-4">
                     Sort By
                 </h3>
                 <div className="space-y-4">
@@ -76,7 +76,7 @@ const CategorySidebar = ({
 
             {/* Time Period */}
             <div>
-                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-6 border-b border-gray-100 pb-4">
+                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-600 mb-6 border-b border-gray-100 pb-4">
                     Time Period
                 </h3>
                 <select
@@ -105,3 +105,4 @@ const CategorySidebar = ({
 };
 
 export default CategorySidebar;
+

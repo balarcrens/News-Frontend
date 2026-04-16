@@ -9,7 +9,7 @@ const Newsletter = () => (
 
         <div className="relative z-10">
             <h3 className="text-2xl font-black font-serif italic tracking-tighter mb-4">The Morning Briefing</h3>
-            <p className="text-gray-400 text-xs mb-8 leading-relaxed">
+            <p className="text-gray-600 text-xs mb-8 leading-relaxed">
                 Join 250,000+ professionals who start their day with our curated global intelligence digest.
             </p>
             <form className="space-y-4">
@@ -22,7 +22,7 @@ const Newsletter = () => (
                     Subscribe Now
                 </button>
             </form>
-            <p className="text-[9px] text-gray-500 mt-6 text-center italic">
+            <p className="text-xs text-gray-500 mt-6 text-center italic">
                 Unsubscribe anytime. Privacy policy applies.
             </p>
         </div>
@@ -48,7 +48,7 @@ const LatestNews = ({ articles = [], loading = false }) => {
                     articles.length > 0 ? (
                         articles.map((item, i) => (
                             <Link to={`/article/${item.slug}`} key={item._id || i} className="group cursor-pointer block border-b border-gray-100 pb-6 last:border-0 last:pb-0">
-                                <span className="text-[9px] font-bold text-red-700/60 uppercase tracking-widest block mb-2 transition-colors group-hover:text-red-700">
+                                <span className="text-xs font-bold text-red-700 uppercase tracking-widest block mb-2 transition-colors group-hover:text-red-700">
                                     {new Date(item.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                 </span>
                                 <p className="text-sm font-bold text-slate-800 leading-snug group-hover:text-red-700 transition-colors line-clamp-2">
@@ -57,7 +57,7 @@ const LatestNews = ({ articles = [], loading = false }) => {
                             </Link>
                         ))
                     ) : (
-                        <div className="text-xs text-gray-400 italic">No recent updates</div>
+                        <div className="text-xs text-gray-600 italic">No recent updates</div>
                     )
                 )}
             </div>
@@ -83,7 +83,7 @@ const PopularNews = ({ articles = [], loading = false }) => {
                     articles.length > 0 ? (
                         articles.map((item, i) => (
                             <Link to={`/article/${item.slug}`} key={item._id || i} className="flex gap-4 group cursor-pointer">
-                                <span className="text-3xl font-black font-serif italic text-gray-200 group-hover:text-red-700 transition-colors leading-none">
+                                <span className="text-3xl font-black font-serif italic text-gray-500 group-hover:text-red-700 transition-colors leading-none">
                                     {String(i + 1).padStart(2, '0')}
                                 </span>
                                 <p className="text-xs font-bold text-slate-800 leading-normal pt-1 group-hover:text-red-700 transition-colors line-clamp-2">
@@ -92,7 +92,7 @@ const PopularNews = ({ articles = [], loading = false }) => {
                             </Link>
                         ))
                     ) : (
-                        <div className="text-xs text-gray-400 italic">No trending items</div>
+                        <div className="text-xs text-gray-600 italic">No trending items</div>
                     )
                 )}
             </div>
@@ -109,3 +109,4 @@ const Sidebar = ({ latestArticles = [], popularArticles = [], loading = false })
 );
 
 export default Sidebar;
+
