@@ -18,8 +18,8 @@ const NotFound = () => {
                 </div>
 
                 {/* Main Heading */}
-                <h1 className="text-4xl md:text-6xl font-serif italic font-black text-slate-900 mb-6 tracking-tighter">
-                    Story <span className="text-red-700">Missing</span>
+                <h1 className="text-4xl md:text-6xl font-serif font-black text-slate-900 mb-6 tracking-tighter">
+                    404 <span className="text-red-700">Not Found</span>
                 </h1>
 
                 {/* GIF Container (Professional technical difficulties screen) */}

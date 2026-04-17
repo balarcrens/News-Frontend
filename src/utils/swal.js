@@ -10,13 +10,11 @@ const NexoraSwal = Swal.mixin({
         icon: 'nexora-swal-icon'
     },
     buttonsStyling: false,
-    color: '#0f172a', // slate-900
+    color: '#0f172a',
     background: '#ffffff',
+    scrollbarPadding: false,
 });
 
-/**
- * Custom Confirmation Dialog for Nexora
- */
 export const confirmDestructive = async (title, text, confirmText = 'Confirm Action') => {
     return NexoraSwal.fire({
         title: title.toUpperCase(),
@@ -26,7 +24,7 @@ export const confirmDestructive = async (title, text, confirmText = 'Confirm Act
         confirmButtonText: confirmText,
         cancelButtonText: 'CANCEL',
         reverseButtons: true,
-        iconColor: '#b91c1c', // red-700
+        iconColor: '#b91c1c',
     });
 };
 

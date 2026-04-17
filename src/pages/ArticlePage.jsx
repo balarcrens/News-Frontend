@@ -10,10 +10,13 @@ import SEO from '../components/common/SEO';
 import Breadcrumbs from '../components/common/Breadcrumbs';
 import OptimizedImage from '../components/common/OptimizedImage';
 
+import ArticleSkeleton from '../components/article/ArticleSkeleton';
+import ArticleNotFound from '../components/article/ArticleNotFound';
+
 const RelatedArticleCard = ({ article }) => {
     return (
         <Link
-            to={`/article/${article.slug}`} 
+            to={`/article/${article.slug}`}
             className="group cursor-pointer block focus:outline-none focus:ring-2 focus:ring-red-700 rounded-lg p-2 -m-2"
             aria-label={`Read related article: ${article.title}`}
         >
@@ -51,7 +54,7 @@ const ArticlePage = () => {
             console.error("Error refreshing comments:", error);
         }
     };
-    
+
     useEffect(() => {
         const fetchArticleData = async () => {
             setLoading(true);
@@ -93,18 +96,10 @@ const ArticlePage = () => {
     }, [slug]);
 
     if (loading && !article) {
-        return (
-            <div className="max-w-7xl mx-auto px-4 py-40 text-center flex flex-col items-center justify-center space-y-6">
-                <div className="relative w-16 h-16">
-                    <div className="absolute inset-0 border-2 border-red-700/10 rounded-full"></div>
-                    <div className="absolute inset-0 border-2 border-t-red-700 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
-                </div>
-                <p className="font-serif italic text-gray-600 tracking-tight animate-pulse">Consulting the archives...</p>
-            </div>
-        );
+        return <ArticleSkeleton />;
     }
 
-    if (!article) return <div className="py-40 text-center font-serif text-2xl">Article not found.</div>;
+    if (!article) return <ArticleNotFound />;
 
     return (
         <article className="bg-white">
@@ -275,10 +270,10 @@ const ArticlePage = () => {
 
             {/* Discussion Section */}
             <div className="max-w-7xl mx-auto px-4 md:px-6 pb-24">
-                <DiscussionSection 
-                    articleId={article._id} 
-                    comments={comments} 
-                    onCommentAdded={refreshComments} 
+                <DiscussionSection
+                    articleId={article._id}
+                    comments={comments}
+                    onCommentAdded={refreshComments}
                 />
             </div>
 

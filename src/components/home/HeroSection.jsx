@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import OptimizedImage from '../common/OptimizedImage';
+import Skeleton from '../common/Skeleton';
 
 const CardLarge = ({ category, title, summary, image, slug }) => (
     <Link to={`/article/${slug}`} className="relative group cursor-pointer block overflow-hidden rounded-xl h-[450px] md:h-[600px] bg-gray-100">
@@ -19,7 +20,7 @@ const CardLarge = ({ category, title, summary, image, slug }) => (
             <h2 className="text-2xl md:text-4xl font-black font-serif text-white mb-6 line-clamp-2 leading-[1.1]">
                 {title}
             </h2>
-            <p className="hidden md:line-clamp-2 text-gray-500 text-sm md:text-base mb-8 tracking-tighter">
+            <p className="hidden md:line-clamp-2 text-gray-300 text-sm md:text-base mb-8 tracking-tighter">
                 {summary}
             </p>
             <div className="flex items-center space-x-6">
@@ -41,7 +42,7 @@ const CardSmall = ({ category, title, image, slug }) => (
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent"></div>
         <div className="absolute bottom-0 left-0 p-6 w-full">
-            <span className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block">
+            <span className="text-xs font-bold text-gray-300 uppercase tracking-widest mb-2 block">
                 {category}
             </span>
             <h3 className="text-lg md:text-xl font-bold font-serif text-white leading-tight line-clamp-2">
@@ -55,16 +56,12 @@ const HeroSection = ({ articles = [], loading = false }) => {
     if (loading) return (
         <div className="mb-12">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2 h-[450px] md:h-[600px] bg-gray-100 rounded-xl overflow-hidden animate-pulse">
-                     <div className="w-full h-full bg-linear-to-r from-gray-100 via-gray-200 to-gray-100 animate-shimmer"></div>
+                <div className="lg:col-span-2">
+                    <Skeleton width="100%" className="h-[450px] md:h-[600px] rounded-xl" />
                 </div>
                 <div className="flex flex-col gap-6">
-                    <div className="h-[215px] md:h-[290px] bg-gray-100 rounded-xl overflow-hidden animate-pulse">
-                         <div className="w-full h-full bg-linear-to-r from-gray-100 via-gray-200 to-gray-100 animate-shimmer"></div>
-                    </div>
-                    <div className="h-[215px] md:h-[290px] bg-gray-100 rounded-xl overflow-hidden animate-pulse">
-                         <div className="w-full h-full bg-linear-to-r from-gray-100 via-gray-200 to-gray-100 animate-shimmer"></div>
-                    </div>
+                    <Skeleton width="100%" className="h-[215px] md:h-[290px] rounded-xl" />
+                    <Skeleton width="100%" className="h-[215px] md:h-[290px] rounded-xl" />
                 </div>
             </div>
         </div>

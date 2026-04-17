@@ -76,16 +76,16 @@ const AdminToggle = ({ label, checked, onChange }) => (
 const BlockWrapper = ({ children, onRemove, onMoveUp, onMoveDown, label }) => (
     <div className="relative group bg-white border border-slate-100 p-8 mb-8 hover:border-red-200 transition-all duration-500 shadow-sm hover:shadow-xl">
         <div className="absolute -left-4 top-1/2 -translate-y-1/2 flex flex-col items-center bg-white border border-slate-100 p-1.5 opacity-0 group-hover:opacity-100 transition-all z-10 shadow-lg">
-            <button 
-                onClick={onMoveUp} 
+            <button
+                onClick={onMoveUp}
                 className="w-10 h-10 flex items-center justify-center hover:text-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-700 rounded-sm"
                 aria-label="Move block up"
             >
                 <MoveUp size={18} />
             </button>
             <div className="h-4 w-px bg-slate-100 my-1"></div>
-            <button 
-                onClick={onMoveDown} 
+            <button
+                onClick={onMoveDown}
                 className="w-10 h-10 flex items-center justify-center hover:text-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-700 rounded-sm"
                 aria-label="Move block down"
             >
@@ -117,7 +117,6 @@ const AdminArticleEditor = () => {
     const [isSaving, setIsSaving] = useState(false);
     const [isGenerating, setIsGenerating] = useState(false);
     const [activeTab, setActiveTab] = useState('editorial');
-    const [slugLocked, setSlugLocked] = useState(id ? true : false);
     const [users, setUsers] = useState([]);
     const [tagInput, setTagInput] = useState('');
     const [aiHint, setAiHint] = useState('');
@@ -157,7 +156,7 @@ const AdminArticleEditor = () => {
             canonicalUrl: '',
             ogTitle: '',
             ogDescription: '',
-            ogImage: ''
+            ogImage: null
         },
         tags: [],
         content: []
@@ -229,7 +228,7 @@ const AdminArticleEditor = () => {
         }));
 
         // Auto-slug logic
-        if (name === 'title' && !slugLocked) {
+        if (name === 'title') {
             const slug = value
                 .toLowerCase()
                 .replace(/[^\w\s-]/g, '')
@@ -246,7 +245,6 @@ const AdminArticleEditor = () => {
         }));
     };
 
-    // --- Tag Cloud Logic ---
     const handleTagKeyDown = (e) => {
         if (e.key === 'Enter' && tagInput.trim()) {
             e.preventDefault();
@@ -397,13 +395,12 @@ const AdminArticleEditor = () => {
                     canonicalUrl: aiData.seo?.canonicalUrl || prev.seo.canonicalUrl,
                     ogTitle: aiData.seo?.ogTitle || aiData.seo?.metaTitle || aiData.title,
                     ogDescription: (aiData.seo?.ogDescription || aiData.seo?.metaDescription || aiData.summary)?.substring(0, 160),
-                    ogImage: aiData.seo?.ogImage || prev.seo.ogImage,
+                    ogImage: aiData.seo?.ogImage || formData?.media?.featuredImage,
                 },
                 source: {
                     name: aiData.source?.name || '',
                     url: aiData.source?.url || ''
                 }
-
             }));
 
             toast.success('AI intelligence successfully synthesized.');
@@ -456,8 +453,8 @@ const AdminArticleEditor = () => {
             {/* Header */}
             <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-100 -mx-4 md:-mx-8 px-4 md:px-8 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 mb-12">
                 <div className="flex items-center space-x-4">
-                    <button 
-                        onClick={() => navigate('/admin/articles')} 
+                    <button
+                        onClick={() => navigate('/admin/articles')}
                         className="p-2 text-slate-600 hover:text-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-700 rounded-lg"
                         aria-label="Return to articles list"
                     >
@@ -474,16 +471,16 @@ const AdminArticleEditor = () => {
                 </div>
 
                 <div className="flex items-center space-x-3">
-                    <button 
-                        onClick={() => window.open(id ? `/article/${formData.slug}` : '/', '_blank')} 
+                    <button
+                        onClick={() => window.open(id ? `/article/${formData.slug}` : '/', '_blank')}
                         className="px-5 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 hover:text-slate-900 border border-slate-100 flex items-center focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2"
                         aria-label="Preview article"
                     >
                         <Eye size={16} className="mr-2" /> Preview
                     </button>
-                    <button 
-                        onClick={handleSave} 
-                        disabled={isSaving} 
+                    <button
+                        onClick={handleSave}
+                        disabled={isSaving}
                         className="px-8 py-3 bg-red-700 text-white text-[10px] font-black uppercase tracking-[0.2em] hover:bg-slate-950 transition-all duration-500 shadow-xl shadow-red-700/10 flex items-center disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2"
                         aria-label={id ? 'Update report' : 'Transmit report'}
                     >
@@ -511,14 +508,13 @@ const AdminArticleEditor = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                {/* Main Pane */}
                 <div className="lg:col-span-8">
                     {activeTab === 'editorial' && (
                         <div className="space-y-12 animate-in fade-in duration-500">
                             {/* AI Intelligence Assistance */}
                             <div className="bg-slate-900 border border-slate-800 p-8 md:p-10 shadow-2xl relative overflow-hidden group">
                                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                    <Zap size={80} className="text-red-700" />
+                                    <Zap size={80} className="text-red-400" />
                                 </div>
 
                                 <div className="relative z-10">
@@ -530,7 +526,7 @@ const AdminArticleEditor = () => {
                                     <div className="space-y-6">
                                         <textarea
                                             rows="2"
-                                            className="w-full bg-slate-950 border border-slate-800 p-4 text-[12px] font-medium text-slate-500 focus:border-red-700 outline-none transition-all placeholder:text-slate-700"
+                                            className="w-full bg-slate-950 border border-slate-800 p-4 text-[12px] font-medium text-slate-300 focus:border-red-700 outline-none transition-all placeholder:text-slate-400"
                                             placeholder="Provide context, specific instructions, or a hint for the AI (e.g., 'Focus on today's GST council meeting in Delhi'...)"
                                             value={aiHint}
                                             onChange={(e) => setAiHint(e.target.value)}
@@ -567,7 +563,7 @@ const AdminArticleEditor = () => {
                                                                 setFormData(prev => ({ ...prev, title: item.title, slug: item.slug_hint }));
                                                                 setSuggestedTitles([]);
                                                             }}
-                                                            className="w-full text-left p-3 bg-slate-950 border border-slate-800 hover:border-red-700 text-[11px] text-slate-600 hover:text-white transition-all flex items-center group/item"
+                                                            className="w-full text-left p-3 bg-slate-950 border border-slate-800 hover:border-red-700 text-[11px] text-slate-300 hover:text-white transition-all flex items-center group/item"
                                                         >
                                                             <div className="w-1.5 h-1.5 bg-red-700 mr-3 opacity-0 group-hover/item:opacity-100 transition-opacity"></div>
                                                             {item.title}
@@ -581,7 +577,6 @@ const AdminArticleEditor = () => {
                                 </div>
                             </div>
 
-                            {/* Title & Summary */}
                             <div className="bg-white border border-slate-100 p-8 md:p-12 shadow-sm">
                                 <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
                                     <div className="flex-1">
@@ -590,7 +585,7 @@ const AdminArticleEditor = () => {
                                             type="text"
                                             name="title"
                                             placeholder="Enter report headline..."
-                                            className="w-full text-4xl font-serif font-black text-slate-900 border-none p-0 focus:ring-0 placeholder:text-slate-100 outline-none"
+                                            className="w-full text-2xl font-serif font-black text-slate-900 border-none p-0 focus:ring-0 placeholder:text-slate-300 outline-none"
                                             value={formData.title}
                                             onChange={handleInputChange}
                                         />
@@ -606,7 +601,6 @@ const AdminArticleEditor = () => {
                                 />
                             </div>
 
-                            {/* Blocks Editor */}
                             <div className="editorial-canvas">
                                 <div className="flex items-center justify-between mb-8 px-2">
                                     <h2 className="text-xl font-black font-serif text-slate-900 uppercase tracking-tight">Briefing Flow</h2>
@@ -707,7 +701,6 @@ const AdminArticleEditor = () => {
 
                     {activeTab === 'authorship' && (
                         <div className="space-y-12 animate-in slide-in-from-right-4 duration-500">
-                            {/* Custom Author */}
                             <div className="bg-white border border-slate-100 p-8 md:p-12 shadow-sm">
                                 <h3 className="text-xl font-black font-serif text-slate-900 uppercase tracking-tight mb-8">Guest Reporting Profile</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
@@ -747,7 +740,6 @@ const AdminArticleEditor = () => {
                                 </div>
                             </div>
 
-                            {/* Source */}
                             <div className="bg-white border border-slate-100 p-8 md:p-12 shadow-sm">
                                 <h3 className="text-xl font-black font-serif text-slate-900 uppercase tracking-tight mb-8">External Intel Source</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -849,8 +841,8 @@ const AdminArticleEditor = () => {
                                         {formData.tags.map((tag, idx) => (
                                             <span key={idx} className="flex items-center px-3 py-1.5 bg-slate-900 text-white text-xs font-black uppercase tracking-widest group">
                                                 {typeof tag === 'object' ? tag.name : tag}
-                                                <button 
-                                                    onClick={() => removeTag(tag)} 
+                                                <button
+                                                    onClick={() => removeTag(tag)}
                                                     className="ml-2 hover:text-red-500 transition-colors focus:outline-none focus:text-red-500"
                                                     aria-label={`Remove tag ${typeof tag === 'object' ? tag.name : tag}`}
                                                 >
@@ -932,8 +924,8 @@ const AdminArticleEditor = () => {
                             {formData.media.featuredImage ? (
                                 <>
                                     <img src={formData.media.featuredImage} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="" />
-                                    <button 
-                                        onClick={() => setFormData(p => ({ ...p, media: { ...p.media, featuredImage: '' } }))} 
+                                    <button
+                                        onClick={() => setFormData(p => ({ ...p, media: { ...p.media, featuredImage: '' } }))}
                                         className="absolute top-4 right-4 p-2 bg-slate-950/40 text-white hover:bg-red-700 transition-all rounded-full focus:outline-none focus:ring-2 focus:ring-red-700"
                                         aria-label="Remove featured image"
                                     >
@@ -963,7 +955,6 @@ const AdminArticleEditor = () => {
                         )}
                     </div>
 
-                    {/* Meta Controls */}
                     <div className="bg-white border border-slate-100 p-8 shadow-sm">
                         <label className="text-[10px] font-black text-red-700 uppercase tracking-[0.4em] mb-8 block">Control Protocol</label>
                         <div className="space-y-6">
@@ -975,28 +966,6 @@ const AdminArticleEditor = () => {
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    {/* Pre-broadcast Checklist */}
-                    <div className="p-8 bg-slate-950 text-white">
-                        <div className="flex items-center mb-6">
-                            <CheckCircle2 size={16} className="text-red-700 mr-3" />
-                            <h4 className="text-[10px] font-black uppercase tracking-[0.3em]">Integrity Check</h4>
-                        </div>
-                        <ul className="space-y-4">
-                            <li className={`flex items-center text-xs font-bold uppercase tracking-widest ${formData.title ? 'text-white' : 'text-white/30'}`}>
-                                <Plus size={12} className="mr-3" /> Headline Locked
-                            </li>
-                            <li className={`flex items-center text-xs font-bold uppercase tracking-widest ${formData.category ? 'text-white' : 'text-white/30'}`}>
-                                <Plus size={12} className="mr-3" /> Sector Assigned
-                            </li>
-                            <li className={`flex items-center text-xs font-bold uppercase tracking-widest ${formData.author ? 'text-white' : 'text-white/30'}`}>
-                                <Plus size={12} className="mr-3" /> Personnel Assigned
-                            </li>
-                            <li className={`flex items-center text-xs font-bold uppercase tracking-widest ${formData.media.featuredImage ? 'text-white' : 'text-white/30'}`}>
-                                <Plus size={12} className="mr-3" /> Visual Asset Secure
-                            </li>
-                        </ul>
                     </div>
                 </div>
             </div>

@@ -31,5 +31,16 @@ export const commentService = {
       console.error("Error deleting comment:", error.message);
       throw error;
     }
+  },
+
+  // Like / Unlike a comment
+  like: async (commentId) => {
+    try {
+      const { data } = await api.put(`/api/comments/${commentId}/like`);
+      return data;
+    } catch (error) {
+      console.error("Error liking comment:", error.message);
+      throw error;
+    }
   }
 };

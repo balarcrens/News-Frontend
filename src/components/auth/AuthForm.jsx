@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowRight, Loader2, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import useAuth from '../../context/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const GoogleIcon = () => (
@@ -15,16 +15,25 @@ const GoogleIcon = () => (
 );
 
 const AuthForm = () => {
-    const [mode, setMode] = useState('signin'); // 'signin' or 'create'
+    const [mode, setMode] = useState('signin'); // 'signin' or 'signup'
     const [formData, setFormData] = useState({ name: '', email: '', password: '' });
     const [showPassword, setShowPassword] = useState(false);
     const { login, register, loading, error, setError, googleLogin } = useAuth();
     const navigate = useNavigate();
     const googleInitialized = useRef(false);
+    const location = useLocation();
 
     useEffect(() => {
+        const hash = location.hash.replace('#', '');
+
+        if (hash === 'signup') {
+            setMode('signup');
+        } else {
+            setMode('signin');
+        }
+
         setError(null);
-    }, [mode, setError]);
+    }, [location.hash]);
 
     // Initialize Google (NO renderButton)
     useEffect(() => {
@@ -104,18 +113,30 @@ const AuthForm = () => {
 
             <div className="flex space-x-8 border-b border-gray-100">
                 <button
-                    onClick={() => setMode('signin')}
-                    className={`pb-4 cursor-pointer text-[10px] font-bold uppercase tracking-[0.2em] transition-all relative ${mode === 'signin' ? 'text-red-700' : 'text-gray-600 hover:text-gray-600'}`}
+                    onClick={() => {
+                        setMode('signin');
+                        navigate({
+                            pathname: location.pathname,
+                            hash: '#signin',
+                        });
+                    }}
+                    className={`pb-4 cursor-pointer text-[10px] font-bold uppercase tracking-[0.2em] transition-all relative ${mode === 'signin' ? 'text-red-700' : 'text-gray-600 hover:text-gray-600'}`} aria-label='Switch to Signin'
                 >
                     Sign In
                     {mode === 'signin' && <div className="absolute bottom-0 left-0 w-full h-[2px] bg-red-700 shadow-[0_-2px_8px_rgba(185,28,28,0.3)]"></div>}
                 </button>
                 <button
-                    onClick={() => setMode('create')}
-                    className={`pb-4 cursor-pointer text-[10px] font-bold uppercase tracking-[0.2em] transition-all relative ${mode === 'create' ? 'text-red-700' : 'text-gray-600 hover:text-gray-600'}`}
+                    onClick={() => {
+                        setMode('signup');
+                        navigate({
+                            pathname: location.pathname,
+                            hash: '#signup',
+                        });
+                    }}
+                    className={`pb-4 cursor-pointer text-[10px] font-bold uppercase tracking-[0.2em] transition-all relative ${mode === 'signup' ? 'text-red-700' : 'text-gray-600 hover:text-gray-600'}`} aria-label='Switch to Signup'
                 >
                     Create Account
-                    {mode === 'create' && <div className="absolute bottom-0 left-0 w-full h-[2px] bg-red-700 shadow-[0_-2px_8px_rgba(185,28,28,0.3)]"></div>}
+                    {mode === 'signup' && <div className="absolute bottom-0 left-0 w-full h-[2px] bg-red-700 shadow-[0_-2px_8px_rgba(185,28,28,0.3)]"></div>}
                 </button>
             </div>
 
@@ -127,7 +148,7 @@ const AuthForm = () => {
                         window.google.accounts.id.cancel();
                         window.google.accounts.id.prompt();
                     }}
-                    className="flex items-center justify-center space-x-3 cursor-pointer py-4 border border-gray-100 bg-white hover:bg-gray-50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/5 group/g"
+                    className="flex items-center justify-center space-x-3 cursor-pointer py-4 border border-gray-100 bg-white hover:bg-gray-50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/5 group/g" aria-label='Google Auth'
                 >
                     <div className="group-hover/g:scale-110 transition-transform duration-300">
                         <GoogleIcon />
@@ -137,7 +158,7 @@ const AuthForm = () => {
 
                 <button
                     onClick={handleGitHubLogin}
-                    className="flex items-center justify-center space-x-3 cursor-pointer py-4 bg-slate-900 border border-slate-900 hover:bg-black text-white shadow-sm transition-all duration-300 hover:shadow-lg hover:shadow-black/10 group/gh"
+                    className="flex items-center justify-center space-x-3 cursor-pointer py-4 bg-slate-900 border border-slate-900 hover:bg-black text-white shadow-sm transition-all duration-300 hover:shadow-lg hover:shadow-black/10 group/gh" aria-label='Github Auth'
                 >
                     <div className="group-hover/gh:scale-110 transition-transform duration-300">
                         <svg
@@ -165,7 +186,7 @@ const AuthForm = () => {
             </div>
 
             <form className="space-y-6" onSubmit={handleSubmit}>
-                {mode === 'create' && (
+                {mode === 'signup' && (
                     <div className="transition-all duration-300 animate-in fade-in slide-in-from-top-2">
                         <label className="text-xs font-bold uppercase tracking-[0.2em] text-gray-500 mb-3 block">Full Name</label>
                         <input
@@ -197,9 +218,9 @@ const AuthForm = () => {
                     <div className="flex justify-between items-center mb-3">
                         <label className="text-xs font-bold uppercase tracking-[0.2em] text-gray-500">Password</label>
                         {mode === 'signin' && (
-                            <button type="button" className="text-xs cursor-pointer font-bold uppercase tracking-[0.2em] text-red-700 hover:opacity-70 transition-opacity">
+                            <Link to="/forgot-password" title="Recover your password" className="text-xs cursor-pointer font-bold uppercase tracking-[0.2em] text-red-700 hover:opacity-70 transition-opacity">
                                 Forgot?
-                            </button>
+                            </Link>
                         )}
                     </div>
                     <div className="relative group/pass">
@@ -216,7 +237,7 @@ const AuthForm = () => {
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute cursor-pointer right-5 top-1/2 -translate-y-1/2 text-gray-600 hover:text-red-700 transition-colors p-1"
+                            className="absolute cursor-pointer right-5 top-1/2 -translate-y-1/2 text-gray-600 hover:text-red-700 transition-colors p-1" aria-label='Show Password'
                         >
                             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                         </button>
@@ -225,7 +246,7 @@ const AuthForm = () => {
 
                 <button
                     type="submit"
-                    disabled={loading}
+                    disabled={loading} aria-label='Submit Auth'
                     className="w-full bg-red-700 cursor-pointer hover:bg-red-800 text-white py-5 text-[11px] font-bold uppercase tracking-[0.2em] transition-all shadow-xl shadow-red-700/10 active:scale-[0.98] group disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                     <span className="flex items-center justify-center">

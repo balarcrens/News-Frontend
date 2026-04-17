@@ -105,6 +105,36 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const forgotPassword = async (email) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const { data } = await api.post('/api/auth/forgotpassword', { email });
+            return { success: true, message: data.message };
+        } catch (err) {
+            const message = err.response?.data?.message || 'Failed to send reset email.';
+            setError(message);
+            return { success: false, message };
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const resetPassword = async (token, password) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const { data } = await api.put(`/api/auth/resetpassword/${token}`, { password });
+            return { success: true, token: data.token };
+        } catch (err) {
+            const message = err.response?.data?.message || 'Failed to reset password.';
+            setError(message);
+            return { success: false, message };
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const logout = () => {
         localStorage.removeItem('authorization');
         toast.success('Logout successfully');
@@ -114,7 +144,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, loading, error, login, register, logout, setError, googleLogin, githubLogin }}>
+        <AuthContext.Provider value={{ user, loading, error, login, register, logout, setError, googleLogin, githubLogin, forgotPassword, resetPassword }}>
             {children}
         </AuthContext.Provider>
     );

@@ -132,7 +132,7 @@ const FloatingActions = ({
                     aria-label={`View ${commentCount} comments`}
                     onClick={() => document.getElementById('discussion-section')?.scrollIntoView({ behavior: 'smooth' })}
                 >
-                    <div className="p-4 text-gray-700 hover:text-red-700 hover:bg-red-50 transition-all rounded-full">
+                    <div className="p-3 text-gray-700 hover:text-red-700 hover:bg-red-50 transition-all rounded-full">
                         <MessageSquare size={18} />
                     </div>
                     <span className="text-xs font-bold text-gray-700 group-hover:text-red-700 transition-colors uppercase tracking-widest">
@@ -142,10 +142,10 @@ const FloatingActions = ({
 
                 <button
                     onClick={handleLike}
-                    className={`flex flex-col items-center cursor-pointer lg:space-y-2 group transition-all duration-500 focus:outline-none focus:ring-2 focus:ring-red-700 rounded-lg p-1.5`}
+                    className={`flex flex-col items-center cursor-pointer group transition-all duration-500 focus:outline-none focus:ring-2 focus:ring-red-700 rounded-lg p-1.5`}
                     aria-label={isLiked ? "Unlike article" : "Like article"}
                 >
-                    <div className={`p-4 rounded-full transition-all duration-500 ${(isLiked && user) ? 'text-red-700 bg-red-50 shadow-inner' : 'text-gray-700 hover:text-red-700 hover:bg-red-50'}`}>
+                    <div className={`p-3 rounded-full transition-all duration-500 ${(isLiked && user) ? 'text-red-700 bg-red-50 shadow-inner' : 'text-gray-700 hover:text-red-700 hover:bg-red-50'}`}>
                         <Heart size={18} className={isLiked ? 'fill-current' : ''} />
                     </div>
                     <span className={`text-xs font-bold uppercase tracking-widest transition-colors ${(isLiked && user) ? 'text-red-700' : 'text-gray-700 group-hover:text-red-700'}`}>

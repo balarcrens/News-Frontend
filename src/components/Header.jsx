@@ -13,7 +13,7 @@ const TopTicker = ({ headlines = [], isScrolled = false }) => {
                     <span className="w-1.5 h-1.5 bg-red-700 rounded-full mr-2 animate-pulse"></span>
                     Breaking News
                 </span>
-                <div className="ml-6 text-gray-500 marquee whitespace-nowrap overflow-hidden flex-1">
+                <div className="ml-1 sm:ml-6 text-gray-500 marquee whitespace-nowrap overflow-hidden flex-1">
                     <span className="inline-block animate-marquee">
                         {headlines.length > 0 ? (
                             headlines.map((h, index) => (
@@ -29,7 +29,7 @@ const TopTicker = ({ headlines = [], isScrolled = false }) => {
                         )}
                     </span>
                 </div>
-                <div className="ml-auto flex items-center text-gray-600 font-medium whitespace-nowrap pl-4">
+                <div className="ml-auto hidden sm:flex items-center text-gray-600 font-medium whitespace-nowrap pl-4">
                     <span>LIVE UPDATES</span>
                 </div>
             </div>
@@ -54,7 +54,7 @@ const Navbar = ({ isScrolled = false, onMenuOpen, user, logout, categories = [] 
     };
 
     return (
-        <nav className={`bg-white/95 backdrop-blur-md border-b border-gray-100 transition-all duration-500 ${isScrolled ? 'py-2 shadow-sm' : 'py-4 md:py-6'}`}>
+        <nav className={`bg-white/95 backdrop-blur-md border-b border-gray-100 transition-all duration-500 ${isScrolled ? 'py-2 shadow-sm' : 'py-3 md:py-6'}`}>
             <div className="max-w-7xl mx-auto px-4 md:px-6 flex items-center gap-4 justify-between relative">
                 <div className="flex-1 flex items-center">
                     <button
@@ -124,8 +124,8 @@ const Navbar = ({ isScrolled = false, onMenuOpen, user, logout, categories = [] 
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className={`pl-4 pr-12 bg-white border border-gray-100 rounded-none text-[10px] font-bold uppercase tracking-widest focus:ring-1 focus:ring-red-700/20 focus:border-red-700 outline-none transition-all duration-500 ${isScrolled ? 'py-2.5 w-40 focus:w-56' : 'py-3.5 w-48 focus:w-72'}`}
                         />
-                        <button 
-                            type="submit" 
+                        <button
+                            type="submit"
                             className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center text-gray-600 hover:text-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-700 rounded-sm"
                             aria-label="Search"
                         >
@@ -185,10 +185,10 @@ const Navbar = ({ isScrolled = false, onMenuOpen, user, logout, categories = [] 
                             </div>
                         ) : (
                             <>
-                                <Link to="/auth" className="text-[10px] font-bold uppercase tracking-widest text-gray-600 hover:text-red-700 transition-colors px-2 py-1">
+                                <Link to="/auth#signin" className="text-[10px] font-bold uppercase tracking-widest text-gray-600 hover:text-red-700 transition-colors px-2 py-1">
                                     Login
                                 </Link>
-                                <Link to="/auth" className="hidden sm:block text-[10px] font-bold uppercase tracking-widest bg-red-700 text-white px-4 py-2 hover:bg-red-800 transition-colors rounded-none text-center">
+                                <Link to="/auth#signup" className="hidden sm:block text-[10px] font-bold uppercase tracking-widest bg-red-700 text-white px-4 py-2 hover:bg-red-800 transition-colors rounded-none text-center">
                                     Subscribe
                                 </Link>
                             </>
@@ -207,8 +207,8 @@ const Navbar = ({ isScrolled = false, onMenuOpen, user, logout, categories = [] 
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="w-full pl-4 pr-12 py-3 bg-gray-50 border-transparent focus:bg-white focus:border-red-700 rounded-none text-sm outline-none transition-all"
                         />
-                        <button 
-                            type="submit" 
+                        <button
+                            type="submit"
                             className="absolute right-4 top-1/2 -translate-y-1/2 text-red-700 focus:outline-none focus:ring-2 focus:ring-red-700 rounded-sm"
                             aria-label="Search"
                         >
@@ -231,11 +231,11 @@ const MobileDrawer = ({ isOpen, onClose, user, logout, categories = [] }) => {
                 className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-[60] transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
                 onClick={onClose}
             />
-            <div className={`fixed top-0 left-0 h-full w-[80%] max-w-sm bg-white z-[100] overflow-y-auto hidden-scrollbar shadow-2xl transition-transform duration-500 ease-out border-r border-gray-100 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+            <div className={`fixed top-0 left-0 h-full w-[80%] max-w-sm bg-white z-[100] overflow-y-auto pb-5 shadow-2xl transition-transform duration-500 ease-out border-r border-gray-100 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                 <div className="flex items-center justify-between p-6 border-b border-gray-100">
                     <h2 className="text-xl font-black font-serif italic tracking-tighter text-slate-900">Nexora News</h2>
-                    <button 
-                        onClick={onClose} 
+                    <button
+                        onClick={onClose}
                         className="p-2 text-gray-600 hover:text-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2"
                         aria-label="Close menu"
                     >
@@ -259,8 +259,8 @@ const MobileDrawer = ({ isOpen, onClose, user, logout, categories = [] }) => {
                                 placeholder="Search..."
                                 className="w-full pl-4 pr-12 py-4 bg-gray-50 border-none text-sm focus:ring-1 focus:ring-red-700 outline-none transition-all"
                             />
-                            <button 
-                                type="submit" 
+                            <button
+                                type="submit"
                                 className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center text-gray-600 group-focus-within:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-700 rounded-sm"
                                 aria-label="Search"
                             >

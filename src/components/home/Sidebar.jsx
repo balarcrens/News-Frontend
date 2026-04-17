@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Skeleton from '../common/Skeleton';
 
 const Newsletter = () => (
     <div className="bg-[#111111] text-white p-8 rounded-xl mb-12 relative overflow-hidden">
@@ -31,7 +32,7 @@ const Newsletter = () => (
 
 const LatestNews = ({ articles = [], loading = false }) => {
     return (
-        <div className="mb-12">
+        <div className="mb-12 min-h-[580px]">
             <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-700 mb-6 flex items-center">
                 <span className="w-1.5 h-1.5 bg-red-700 mr-2"></span>
                 Latest News
@@ -39,9 +40,9 @@ const LatestNews = ({ articles = [], loading = false }) => {
             <div className="space-y-8">
                 {loading ? (
                     Array(4).fill(0).map((_, i) => (
-                        <div key={i} className="animate-pulse flex flex-col space-y-2">
-                            <div className="h-2 w-20 bg-gray-200"></div>
-                            <div className="h-4 w-full bg-gray-200"></div>
+                        <div key={i} className="flex flex-col space-y-2">
+                            <Skeleton width="40%" height="8px" />
+                            <Skeleton width="100%" height="16px" />
                         </div>
                     ))
                 ) : (
@@ -67,16 +68,19 @@ const LatestNews = ({ articles = [], loading = false }) => {
 
 const PopularNews = ({ articles = [], loading = false }) => {
     return (
-        <div className="bg-gray-50 p-8 rounded-xl">
+        <div className="bg-gray-50 p-8 rounded-xl min-h-[440px]">
             <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-800 mb-8">
                 Most Popular
             </h3>
             <div className="space-y-8">
                 {loading ? (
                     Array(3).fill(0).map((_, i) => (
-                        <div key={i} className="animate-pulse flex gap-4">
-                            <div className="h-8 w-8 bg-gray-200"></div>
-                            <div className="h-10 w-full bg-gray-200"></div>
+                        <div key={i} className="flex gap-4">
+                            <Skeleton width="24px" height="32px" />
+                            <div className="flex-1 space-y-2">
+                                <Skeleton width="100%" height="12px" />
+                                <Skeleton width="60%" height="12px" />
+                            </div>
                         </div>
                     ))
                 ) : (

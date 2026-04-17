@@ -130,6 +130,8 @@ const ArticleCard = ({ article, isFeatured = false }) => {
     );
 };
 
+import CategorySkeleton from '../components/category/CategorySkeleton';
+
 const CategoryPage = () => {
     const { slug } = useParams();
     const [searchParams, setSearchParams] = useSearchParams();
@@ -199,15 +201,7 @@ const CategoryPage = () => {
     };
 
     if (loading && !category) {
-        return (
-            <div className="max-w-7xl mx-auto px-4 py-40 text-center flex flex-col items-center justify-center space-y-6">
-                <div className="relative w-16 h-16">
-                    <div className="absolute inset-0 border-2 border-red-700/10 rounded-full"></div>
-                    <div className="absolute inset-0 border-2 border-t-red-700 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
-                </div>
-                <p className="font-serif italic text-gray-600 animate-pulse">Consulting the archives...</p>
-            </div>
-        );
+        return <CategorySkeleton />;
     }
 
     const featuredArticle = articles[0];

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import OptimizedImage from '../common/OptimizedImage';
+import Skeleton from '../common/Skeleton';
 
 const ArticleCard = ({ category, title, summary, image, slug, type }) => (
     <Link to={`/article/${slug}`} className="group cursor-pointer block">
@@ -36,8 +37,22 @@ const CategoryRow = ({ title, articles = [], loading = false }) => (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
             {loading ? (
                 <>
-                    <div className="animate-pulse h-72 md:h-80 bg-gray-100 rounded-xl"></div>
-                    <div className="animate-pulse h-72 md:h-80 bg-gray-100 rounded-xl"></div>
+                    <div className="space-y-6">
+                        <Skeleton width="100%" className="h-52 md:h-64 rounded-xl" />
+                        <div className="space-y-3">
+                            <Skeleton width="100px" height="10px" />
+                            <Skeleton width="100%" height="24px" />
+                            <Skeleton width="90%" height="16px" />
+                        </div>
+                    </div>
+                    <div className="space-y-6">
+                        <Skeleton width="100%" className="h-52 md:h-64 rounded-xl" />
+                        <div className="space-y-3">
+                            <Skeleton width="100px" height="10px" />
+                            <Skeleton width="100%" height="24px" />
+                            <Skeleton width="90%" height="16px" />
+                        </div>
+                    </div>
                 </>
             ) : (
                 articles.length > 0 ? (

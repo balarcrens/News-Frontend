@@ -17,12 +17,18 @@ const Breadcrumbs = ({ items }) => {
                 {items.map((item, index) => (
                     <li key={index} className="flex items-center gap-2">
                         <ChevronRight size={10} className='text-black' />
+
                         {item.link ? (
-                            <Link to={item.link} className="hover:text-red-700 transition-colors">
+                            <Link
+                                to={item.link}
+                                className="hover:text-red-700 transition-colors line-clamp-1 max-w-[180px]"
+                            >
                                 {item.label}
                             </Link>
                         ) : (
-                            <span className="text-slate-900">{item.label}</span>
+                            <span className="text-slate-900 line-clamp-1 max-w-[180px]">
+                                {item.label}
+                            </span>
                         )}
                     </li>
                 ))}

@@ -27,6 +27,8 @@ const PrivacyPolicy = lazy(() => import('./pages/legal/PrivacyPolicy'));
 const TermsConditions = lazy(() => import('./pages/legal/TermsConditions'));
 const CookiePolicy = lazy(() => import('./pages/legal/CookiePolicy'));
 const GitHubCallback = lazy(() => import('./pages/callback/GitHubCallback'));
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
+const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 import { ToastContainer } from 'react-toastify';
@@ -91,6 +93,8 @@ function App() {
                             <Route path="terms-conditions" element={<TermsConditions />} />
                             <Route path="cookie-policy" element={<CookiePolicy />} />
                             <Route path="auth/github/callback" element={<GitHubCallback />} />
+                            <Route path="forgot-password" element={<ForgotPassword />} />
+                            <Route path="reset-password/:token" element={<ResetPassword />} />
                         </Route>
 
                         {/* 404 Not Found Catch-all */}

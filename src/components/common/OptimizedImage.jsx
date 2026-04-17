@@ -9,8 +9,7 @@ const OptimizedImage = ({
     height,
     aspectRatio = "aspect-video",
     priority = false, // if true, use loading="eager" and fetchPriority="high"
-    quality = 80,
-    blur = 30
+    quality = 80
 }) => {
     const [isLoaded, setIsLoaded] = useState(false);
 
@@ -34,7 +33,7 @@ const OptimizedImage = ({
 
             return {
                 main: `${baseUrl}?tr=${trs.join(',')}`,
-                placeholder: `${baseUrl}?tr=bl-${blur},q-20,f-auto${width ? `,w-${Math.round(width / 10)}` : ''}`
+                placeholder: `${baseUrl}?q-20,f-auto${width ? `,w-${Math.round(width / 10)}` : ''}`
             };
         } else {
             return {
@@ -42,15 +41,17 @@ const OptimizedImage = ({
                 placeholder: currentSrc || null
             };
         }
-    }, [src, width, height, quality, blur]);
+    }, [src, width, height, quality]);
 
     return (
         <div className={`relative overflow-hidden bg-gray-100 ${aspectRatio} ${className}`}>
             {urls.placeholder && (
                 <img
                     src={urls.placeholder}
-                    alt=""
-                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${isLoaded ? 'opacity-0' : 'opacity-100'} blur-lg scale-110`}
+                    alt={alt}
+                    loading={priority ? 'eager' : 'lazy'}
+                    fetchPriority={priority ? 'high' : 'auto'}
+                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${isLoaded ? 'opacity-0' : 'opacity-100'} scale-110`}
                     aria-hidden="true"
                 />
             )}
@@ -62,7 +63,7 @@ const OptimizedImage = ({
                     loading={priority ? 'eager' : 'lazy'}
                     fetchPriority={priority ? 'high' : 'auto'}
                     onLoad={() => setIsLoaded(true)}
-                    className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out will-change-transform ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'} group-hover:scale-110 transition-transform duration-1000`}
+                    className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'} group-hover:scale-110 transition-transform duration-1000`}
                 />
             )}
         </div>

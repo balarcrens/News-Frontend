@@ -105,7 +105,7 @@ const AdminArticles = () => {
                 <div className="flex flex-col sm:flex-row items-center gap-4">
                     <button
                         onClick={() => setIsAIModalOpen(true)}
-                        className="flex items-center justify-center bg-white border border-red-700 text-red-700 px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] hover:bg-red-700 hover:text-white transition-all duration-500 shadow-xl shadow-red-700/10 order-2 sm:order-1 w-full sm:w-auto"
+                        className="flex items-center justify-center cursor-pointer bg-white border border-red-700 text-red-700 px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] hover:bg-red-700 hover:text-white transition-all duration-500 shadow-xl shadow-red-700/10 order-2 sm:order-1 w-full sm:w-auto"
                     >
                         <Sparkles size={16} className="mr-2" /> AI Discover
                     </button>
@@ -136,7 +136,7 @@ const AdminArticles = () => {
                     />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full xl:flex-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full xl:flex-1">
                     <div className="bg-slate-50 px-4 py-2 flex items-center focus-within:ring-1 focus-within:ring-red-100 transition-all">
                         <Filter size={14} className="text-slate-500 mr-3" />
                         <select

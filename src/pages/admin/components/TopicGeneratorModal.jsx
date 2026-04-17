@@ -65,14 +65,14 @@ const TopicGeneratorModal = ({ isOpen, onClose }) => {
                         <button
                             onClick={generateTopics}
                             disabled={loading}
-                            className="text-[10px] font-black text-slate-600 hover:text-red-700 uppercase tracking-widest flex items-center transition-colors disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-red-700 rounded-sm"
+                            className="text-[10px] font-black cursor-pointer text-slate-600 hover:text-red-700 uppercase tracking-widest flex items-center transition-colors disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-red-700 rounded-sm"
                             aria-label="Refresh trends"
                         >
                             <TrendingUp size={14} className="mr-2" /> Refresh Scan
                         </button>
                         <button 
                             onClick={onClose} 
-                            className="p-2 text-slate-500 hover:text-slate-900 transition-colors focus:outline-none focus:ring-2 focus:ring-red-700 rounded-lg"
+                            className="p-2 text-slate-500 hover:text-slate-900 cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-red-700 rounded-lg"
                             aria-label="Close modal"
                         >
                             <X size={20} />
@@ -80,7 +80,6 @@ const TopicGeneratorModal = ({ isOpen, onClose }) => {
                     </div>
                 </div>
 
-                {/* Content */}
                 <div className="flex-1 overflow-y-auto p-0 hidden-scrollbar">
                     {loading ? (
                         <div className="h-96 flex flex-col items-center justify-center space-y-6">
@@ -137,7 +136,6 @@ const TopicGeneratorModal = ({ isOpen, onClose }) => {
                     )}
                 </div>
 
-                {/* Footer */}
                 <div className="px-8 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
                     <div className="flex items-center text-xs font-bold text-slate-600 uppercase tracking-widest invisible">
                         <Sparkles size={12} className="mr-2 text-red-700" />
@@ -145,7 +143,7 @@ const TopicGeneratorModal = ({ isOpen, onClose }) => {
                     </div>
                     <button
                         onClick={onClose}
-                        className="text-[10px] font-black text-slate-600 hover:text-slate-900 uppercase tracking-widest transition-colors focus:outline-none focus:ring-2 focus:ring-red-700 rounded-sm"
+                        className="text-[10px] cursor-pointer font-black text-slate-600 hover:text-slate-900 uppercase tracking-widest transition-colors focus:outline-none focus:ring-2 focus:ring-red-700 rounded-sm"
                         aria-label="Close terminal and back to editor"
                     >
                         Close Terminal
