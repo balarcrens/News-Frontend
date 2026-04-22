@@ -5,7 +5,7 @@ import { AuthProvider } from './context/AuthProvider';
 import ScrollToTop from './components/ScrollToTop';
 import PageLoader from './components/common/PageLoader';
 import ReactGA from "react-ga4";
-import usePageTracking from "./hooks/usePageTracking";
+import AnalyticsTracker from './hooks/usePageTracking';
 
 // Admin Imports (Lazy Loaded)
 const AdminRoute = lazy(() => import('./components/admin/AdminRoute'));
@@ -43,10 +43,10 @@ function App() {
         ReactGA.initialize("G-BTT49TG757");
     }, []);
 
-    usePageTracking();
-
+    
     return (
         <Router>
+            <AnalyticsTracker />
             <ScrollToTop />
             <AuthProvider>
                 <ToastContainer
