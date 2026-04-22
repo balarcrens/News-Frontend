@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { articleService } from '../api/articleService';
@@ -12,6 +13,8 @@ import OptimizedImage from '../components/common/OptimizedImage';
 
 import ArticleSkeleton from '../components/article/ArticleSkeleton';
 import ArticleNotFound from '../components/article/ArticleNotFound';
+
+import ReactGA from "react-ga4";
 
 const RelatedArticleCard = ({ article }) => {
     return (
@@ -79,6 +82,11 @@ const ArticlePage = () => {
                 );
 
                 if (viewRecordedRef.current !== data._id) {
+                    ReactGA.event({
+                        category: "Article",
+                        action: "View Article",
+                        label: article.title,
+                    });
                     viewRecordedRef.current = data._id;
                     await articleService.recordView(data._id);
                 }

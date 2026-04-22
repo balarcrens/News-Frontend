@@ -7,17 +7,24 @@ import { toast } from 'react-toastify';
 
 const TopicGeneratorModal = ({ isOpen, onClose }) => {
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
     const [topics, setTopics] = useState([]);
     const navigate = useNavigate();
 
     const generateTopics = async () => {
         setLoading(true);
+        setError(null);
         try {
             const data = await aiService.generateTopics();
-            setTopics(data);
+            setTopics(data || []);
+            if (!data || data.length === 0) {
+                setError('No intelligence trends found at this moment. The network might be quiet.');
+            }
         } catch (err) {
             console.error(err);
-            toast.error('Failed to generate intelligence topics: ' + (err.message || 'Unknown error'));
+            const message = err.message || 'Failed to connect to the intelligence network.';
+            setError(message);
+            toast.error('Discovery Failed: ' + message);
         } finally {
             setLoading(false);
         }
@@ -88,6 +95,22 @@ const TopicGeneratorModal = ({ isOpen, onClose }) => {
                                 <Sparkles size={24} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-red-700 animate-pulse" />
                             </div>
                             <p className="text-[11px] font-black text-slate-600 uppercase tracking-[0.3em] animate-pulse">Initializing neural scan protocol...</p>
+                        </div>
+                    ) : error ? (
+                        <div className="h-96 flex flex-col items-center justify-center space-y-6 px-8 text-center">
+                            <div className="w-16 h-16 bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400">
+                                <TrendingUp size={24} />
+                            </div>
+                            <div>
+                                <p className="text-[11px] font-black text-slate-900 uppercase tracking-[0.2em] mb-2">Protocol Interrupted</p>
+                                <p className="text-[11px] font-medium text-slate-500 max-w-md mx-auto leading-relaxed">{error}</p>
+                            </div>
+                            <button
+                                onClick={generateTopics}
+                                className="px-8 py-3 bg-red-700 text-white text-[10px] font-black uppercase tracking-[0.2em] hover:bg-slate-950 transition-all duration-500"
+                            >
+                                Re-initiate Scan
+                            </button>
                         </div>
                     ) : (
                         <table className="w-full text-left border-collapse">
