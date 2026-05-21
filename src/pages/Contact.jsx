@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send, MessageSquare, Globe, Shield, Instagram, Twitter, Linkedin } from 'lucide-react';
 import contactHero from "/assets/nexoranews_contact_hero.png";
 import SEO from '../components/common/SEO';
+import Adsense from '../components/common/Adsense';
 
 const InquiryCard = ({ icon: Icon, title, description, email }) => (
     <div className="group border-b border-gray-100 py-10 hover:bg-gray-50/50 transition-all duration-500 px-6">
@@ -73,7 +74,7 @@ const Contact = () => {
 
             <section className="py-20 md:py-32">
                 <div className="max-w-7xl mx-auto px-4 md:px-6">
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-20">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-20 mb-6">
                         <div className="lg:col-span-5">
                             <div className="mb-12">
                                 <p className="text-red-700 text-[10px] font-bold uppercase tracking-[0.4em] mb-6">Inquiry Matrix</p>
@@ -176,9 +177,10 @@ const Contact = () => {
                         </div>
                     </div>
                 </div>
+                <Adsense />
             </section>
 
-            <section className="py-20 md:py-32 bg-slate-900 text-white overflow-hidden relative">
+            <section className="py-20 md:py-32 mb-6 bg-slate-900 text-white overflow-hidden relative">
                 <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
                     <div className="text-center mb-20 md:mb-32">
                         <p className="text-red-700 text-[10px] font-bold uppercase tracking-[0.4em] mb-8 italic">Global Reach</p>
@@ -237,6 +239,8 @@ const Contact = () => {
 
                 <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-red-700/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2"></div>
             </section>
+
+            <Adsense />
         </div>
     );
 };

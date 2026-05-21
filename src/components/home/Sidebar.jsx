@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Skeleton from '../common/Skeleton';
+import Adsense from '../common/Adsense';
 
 const Newsletter = () => (
     <div className="bg-[#111111] text-white p-8 rounded-xl mb-12 relative overflow-hidden">
@@ -30,7 +31,7 @@ const Newsletter = () => (
     </div>
 );
 
-const LatestNews = ({ articles = [], loading = false }) => {
+const LatestNews = ({ articles = [], loading }) => {
     return (
         <div className="mb-12 min-h-[580px]">
             <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-700 mb-6 flex items-center">
@@ -66,49 +67,53 @@ const LatestNews = ({ articles = [], loading = false }) => {
     );
 };
 
-const PopularNews = ({ articles = [], loading = false }) => {
+const PopularNews = ({ articles = [], loading }) => {
     return (
-        <div className="bg-gray-50 p-8 rounded-xl min-h-[440px]">
-            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-800 mb-8">
-                Most Popular
-            </h3>
-            <div className="space-y-8">
-                {loading ? (
-                    Array(3).fill(0).map((_, i) => (
-                        <div key={i} className="flex gap-4">
-                            <Skeleton width="24px" height="32px" />
-                            <div className="flex-1 space-y-2">
-                                <Skeleton width="100%" height="12px" />
-                                <Skeleton width="60%" height="12px" />
+        <>
+            <div className="bg-gray-50 p-8 rounded-xl min-h-[440px]">
+                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-800 mb-8">
+                    Most Popular
+                </h3>
+                <div className="space-y-8">
+                    {loading ? (
+                        Array(3).fill(0).map((_, i) => (
+                            <div key={i} className="flex gap-4">
+                                <Skeleton width="24px" height="32px" />
+                                <div className="flex-1 space-y-2">
+                                    <Skeleton width="100%" height="12px" />
+                                    <Skeleton width="60%" height="12px" />
+                                </div>
                             </div>
-                        </div>
-                    ))
-                ) : (
-                    articles.length > 0 ? (
-                        articles.map((item, i) => (
-                            <Link to={`/article/${item.slug}`} key={item._id || i} className="flex gap-4 group cursor-pointer">
-                                <span className="text-3xl font-black font-serif italic text-gray-500 group-hover:text-red-700 transition-colors leading-none">
-                                    {String(i + 1).padStart(2, '0')}
-                                </span>
-                                <p className="text-xs font-bold text-slate-800 leading-normal pt-1 group-hover:text-red-700 transition-colors line-clamp-2">
-                                    {item.title}
-                                </p>
-                            </Link>
                         ))
                     ) : (
-                        <div className="text-xs text-gray-600 italic">No trending items</div>
-                    )
-                )}
+                        articles.length > 0 ? (
+                            articles.map((item, i) => (
+                                <Link to={`/article/${item.slug}`} key={item._id || i} className="flex gap-4 group cursor-pointer">
+                                    <span className="text-3xl font-black font-serif italic text-gray-500 group-hover:text-red-700 transition-colors leading-none">
+                                        {String(i + 1).padStart(2, '0')}
+                                    </span>
+                                    <p className="text-xs font-bold text-slate-800 leading-normal pt-1 group-hover:text-red-700 transition-colors line-clamp-2">
+                                        {item.title}
+                                    </p>
+                                </Link>
+                            ))
+                        ) : (
+                            <div className="text-xs text-gray-600 italic">No trending items</div>
+                        )
+                    )}
+                </div>
             </div>
-        </div>
+            {!loading && <Adsense />}
+        </>
     );
 };
 
-const Sidebar = ({ latestArticles = [], popularArticles = [], loading = false }) => (
+const Sidebar = ({ latestArticles = [], popularArticles = [], loading }) => (
     <aside>
         <LatestNews articles={latestArticles} loading={loading} />
         <PopularNews articles={popularArticles} loading={loading} />
         <Newsletter />
+        {!loading && <Adsense />}
     </aside>
 );
 

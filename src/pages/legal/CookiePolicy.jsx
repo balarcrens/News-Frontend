@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '../../components/common/SEO';
+import Adsense from '../../components/common/Adsense';
 
 const SidebarLink = ({ href, children }) => (
     <li>
@@ -81,7 +82,7 @@ const CookiePolicy = () => {
 
     return (
         <div className="bg-white min-h-screen pt-14 md:pt-32 pb-20">
-            <SEO 
+            <SEO
                 title="Cookie Policy"
                 description="Information about how we use cookies and tracking technologies to enhance your experience."
             />
@@ -153,13 +154,15 @@ const CookiePolicy = () => {
                             </div>
                         </header>
 
-                        <section id="what-are-cookies" className="mb-32 scroll-mt-40">
+                        <section id="what-are-cookies" className="mb-16 scroll-mt-40">
                             <p className="text-lg text-gray-500 font-medium leading-relaxed mb-8">
                                 When you visit our digital property, we and certain third parties may use cookies and related technologies to store or retrieve information on your browser. This information might be about you, your preferences, or your device and is mostly used to make the site work as you expect it to.
                             </p>
                         </section>
 
-                        <section id="how-we-use" className="mb-32 scroll-mt-40">
+                        <Adsense />
+
+                        <section id="how-we-use" className="my-16 scroll-mt-40">
                             <div className="mb-16">
                                 <h2 className="text-4xl font-serif italic font-black text-slate-900 tracking-tight uppercase mb-8">
                                     Classification of Technologies
@@ -191,7 +194,7 @@ const CookiePolicy = () => {
                             </div>
                         </section>
 
-                        <section id="choices" className="mb-32 scroll-mt-40">
+                        <section id="choices" className="mb-16 scroll-mt-40">
                             <div className="bg-slate-950 p-12 md:p-16 relative overflow-hidden text-center group">
                                 <div className="absolute top-0 right-0 w-96 h-96 bg-red-700/10 rounded-full translate-x-1/2 -translate-y-1/2 blur-3xl group-hover:bg-red-700/20 transition-all duration-1000"></div>
                                 <h3 className="text-3xl md:text-5xl font-black font-serif italic text-white mb-6 relative z-10">Take Control of Your Data</h3>
@@ -209,7 +212,9 @@ const CookiePolicy = () => {
                             </div>
                         </section>
 
-                        <section id="list" className="scroll-mt-40">
+                        <Adsense />
+
+                        <section id="list" className="my-16 scroll-mt-40">
                             <div className="mb-16">
                                 <h2 className="text-4xl font-serif italic font-black text-slate-900 tracking-tight uppercase mb-8">
                                     Detailed Cookie List
@@ -245,6 +250,8 @@ const CookiePolicy = () => {
                                 </table>
                             </div>
                         </section>
+
+                        <Adsense />
                     </main>
                 </div>
             </div>

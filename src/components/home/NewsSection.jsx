@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import OptimizedImage from '../common/OptimizedImage';
 import Skeleton from '../common/Skeleton';
+import Adsense from '../common/Adsense';
 
 const ArticleCard = ({ category, title, summary, image, slug, type }) => (
     <Link to={`/article/${slug}`} className="group cursor-pointer block">
@@ -28,56 +29,62 @@ const ArticleCard = ({ category, title, summary, image, slug, type }) => (
     </Link>
 );
 
-const CategoryRow = ({ title, articles = [], loading = false }) => (
-    <div className="mb-16 md:mb-20">
-        <div className="flex items-center justify-between mb-6 md:mb-8 pb-3 md:pb-4 border-b-2 border-slate-900">
-            <h2 className="text-xl md:text-2xl font-black font-serif uppercase tracking-tight">{title}</h2>
-            <Link to={`/category/${title.toLowerCase().replace(/\s+/g, '-')}`} className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-700 hover:opacity-70 transition-opacity">View All</Link>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
-            {loading ? (
-                <>
-                    <div className="space-y-6">
-                        <Skeleton width="100%" className="h-52 md:h-64 rounded-xl" />
-                        <div className="space-y-3">
-                            <Skeleton width="100px" height="10px" />
-                            <Skeleton width="100%" height="24px" />
-                            <Skeleton width="90%" height="16px" />
+const CategoryRow = ({ title, articles = [], loading }) => {
+    return (
+        <div className="mb-10 md:mb-20">
+            <div className="flex items-center justify-between mb-6 md:mb-8 pb-3 md:pb-4 border-b-2 border-slate-900">
+                <h2 className="text-xl md:text-2xl font-black font-serif uppercase tracking-tight">{title}</h2>
+                <Link to={`/category/${title.toLowerCase().replace(/\s+/g, '-')}`} className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-700 hover:opacity-70 transition-opacity">View All</Link>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 mb-6">
+                {loading ? (
+                    <>
+                        <div className="space-y-6">
+                            <Skeleton width="100%" className="h-52 md:h-64 rounded-xl" />
+                            <div className="space-y-3">
+                                <Skeleton width="100px" height="10px" />
+                                <Skeleton width="100%" height="24px" />
+                                <Skeleton width="90%" height="16px" />
+                            </div>
                         </div>
-                    </div>
-                    <div className="space-y-6">
-                        <Skeleton width="100%" className="h-52 md:h-64 rounded-xl" />
-                        <div className="space-y-3">
-                            <Skeleton width="100px" height="10px" />
-                            <Skeleton width="100%" height="24px" />
-                            <Skeleton width="90%" height="16px" />
+                        <div className="space-y-6">
+                            <Skeleton width="100%" className="h-52 md:h-64 rounded-xl" />
+                            <div className="space-y-3">
+                                <Skeleton width="100px" height="10px" />
+                                <Skeleton width="100%" height="24px" />
+                                <Skeleton width="90%" height="16px" />
+                            </div>
                         </div>
-                    </div>
-                </>
-            ) : (
-                articles.length > 0 ? (
-                    articles.map((article, i) => (
-                        <ArticleCard
-                            key={article._id || i}
-                            category={article.category?.name || title}
-                            title={article.title}
-                            summary={article.summary}
-                            image={article.media?.featuredImage}
-                            slug={article.slug}
-                            type={article.type}
-                        />
-                    ))
+                    </>
                 ) : (
-                    <div className="col-span-2 py-10 md:py-20 text-center border-2 border-dashed border-gray-100 rounded-xl text-[10px] font-bold uppercase tracking-widest text-gray-600">
-                        Initial content coming soon to {title}
-                    </div>
-                )
-            )}
-        </div>
-    </div>
-);
+                    articles.length > 0 ? (
+                        articles.map((article, i) => (
+                            <ArticleCard
+                                key={article._id || i}
+                                category={article.category?.name || title}
+                                title={article.title}
+                                summary={article.summary}
+                                image={article.media?.featuredImage}
+                                slug={article.slug}
+                                type={article.type}
+                            />
+                        ))
+                    ) : (
+                        <div className="col-span-2 py-10 md:py-20 text-center border-2 border-dashed border-gray-100 rounded-xl text-[10px] font-bold uppercase tracking-widest text-gray-600">
+                            Initial content coming soon to {title}
+                        </div>
+                    )
+                )}
+            </div>
 
-const NewsSection = ({ categoriesData = [], loading = false }) => (
+            {(!loading && articles.length > 0) &&
+                <Adsense />
+            }
+        </div>
+    )
+};
+
+const NewsSection = ({ categoriesData = [], loading }) => (
     <div>
         {categoriesData.map((section, idx) => (
             <CategoryRow

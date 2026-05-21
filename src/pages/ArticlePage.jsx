@@ -15,6 +15,7 @@ import ArticleSkeleton from '../components/article/ArticleSkeleton';
 import ArticleNotFound from '../components/article/ArticleNotFound';
 
 import ReactGA from "react-ga4";
+import Adsense from '../components/common/Adsense';
 
 const RelatedArticleCard = ({ article }) => {
     return (
@@ -160,7 +161,8 @@ const ArticlePage = () => {
                 />
 
                 <div className="flex-1 max-w-2xl mx-auto lg:mx-0 article-content">
-                    <div className="prose prose-slate max-w-none">
+                    {(!loading && article.content) && <Adsense />}
+                    <div className="prose prose-slate max-w-none pt-4">
                         {article.content && Array.isArray(article.content) ? (
                             article.content.map((block, index) => {
                                 const firstTextBlockIndex = article.content.findIndex(b => b.type === 'text');
@@ -207,12 +209,15 @@ const ArticlePage = () => {
 
                                 if (block.type === 'quote') {
                                     return (
-                                        <blockquote key={index} className="my-16 border-l-4 border-red-700 pl-8 relative">
-                                            <span className="absolute -left-3 -top-10 text-8xl text-red-700/10 font-serif leading-none select-none">“</span>
-                                            <p className="text-3xl md:text-4xl font-black font-serif italic text-slate-900 tracking-tight leading-[1.15]">
-                                                {block.value}
-                                            </p>
-                                        </blockquote>
+                                        <>
+                                            <Adsense />
+                                            <blockquote key={index} className="my-16 border-l-4 border-red-700 pl-8 relative">
+                                                <span className="absolute -left-3 -top-10 text-8xl text-red-700/10 font-serif leading-none select-none">“</span>
+                                                <p className="text-3xl md:text-4xl font-black font-serif italic text-slate-900 tracking-tight leading-[1.15]">
+                                                    {block.value}
+                                                </p>
+                                            </blockquote>
+                                        </>
                                     );
                                 }
 
@@ -245,6 +250,8 @@ const ArticlePage = () => {
                             </div>
                         )}
                     </div>
+
+                    {(!loading && article.content) && <Adsense />}
                 </div>
 
                 {/* Right - Insights Sidebar */}

@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import OptimizedImage from '../common/OptimizedImage';
 import Skeleton from '../common/Skeleton';
+import Adsense from '../common/Adsense';
 
 const CardLarge = ({ category, title, summary, image, slug }) => (
     <Link to={`/article/${slug}`} className="relative group cursor-pointer block overflow-hidden rounded-xl h-[450px] md:h-[600px] bg-gray-100">
@@ -52,7 +53,7 @@ const CardSmall = ({ category, title, image, slug }) => (
     </Link>
 );
 
-const HeroSection = ({ articles = [], loading = false }) => {
+const HeroSection = ({ articles = [], loading }) => {
     if (loading) return (
         <div className="mb-12">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -71,47 +72,51 @@ const HeroSection = ({ articles = [], loading = false }) => {
     const sideArticles = articles.slice(1, 3);
 
     return (
-        <section className="mb-12">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2">
-                    {mainArticle ? (
-                        <CardLarge
-                            category={mainArticle.category?.name || "Featured"}
-                            title={mainArticle.title}
-                            summary={mainArticle.summary}
-                            image={mainArticle.media?.featuredImage}
-                            slug={mainArticle.slug}
-                        />
-                    ) : (
-                        <div className="h-[450px] md:h-[600px] bg-gray-50 flex items-center justify-center rounded-xl border-2 border-dashed border-gray-200 uppercase text-xs font-bold tracking-widest text-gray-600">
-                            Featured Spotlight
-                        </div>
-                    )}
-                </div>
-                <div className="flex flex-col gap-6">
-                    {sideArticles.length > 0 ? (
-                        sideArticles.map((article, i) => (
-                            <CardSmall
-                                key={article._id || i}
-                                category={article.category?.name || "Hot Topic"}
-                                title={article.title}
-                                image={article.media?.featuredImage}
-                                slug={article.slug}
+        <>
+            <section className="mb-12">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div className="lg:col-span-2">
+                        {mainArticle ? (
+                            <CardLarge
+                                category={mainArticle.category?.name || "Featured"}
+                                title={mainArticle.title}
+                                summary={mainArticle.summary}
+                                image={mainArticle.media?.featuredImage}
+                                slug={mainArticle.slug}
                             />
-                        ))
-                    ) : (
-                        <>
-                            <div className="h-[215px] md:h-[290px] bg-gray-50 flex items-center justify-center rounded-xl border-2 border-dashed border-gray-200 uppercase text-xs font-bold tracking-widest text-gray-600">
-                                Trending Topic
+                        ) : (
+                            <div className="h-[450px] md:h-[600px] bg-gray-50 flex items-center justify-center rounded-xl border-2 border-dashed border-gray-200 uppercase text-xs font-bold tracking-widest text-gray-600">
+                                Featured Spotlight
                             </div>
-                            <div className="h-[215px] md:h-[290px] bg-gray-50 flex items-center justify-center rounded-xl border-2 border-dashed border-gray-200 uppercase text-xs font-bold tracking-widest text-gray-600">
-                                Trending Topic
-                            </div>
-                        </>
-                    )}
+                        )}
+                    </div>
+                    <div className="flex flex-col gap-6">
+                        {sideArticles.length > 0 ? (
+                            sideArticles.map((article, i) => (
+                                <CardSmall
+                                    key={article._id || i}
+                                    category={article.category?.name || "Hot Topic"}
+                                    title={article.title}
+                                    image={article.media?.featuredImage}
+                                    slug={article.slug}
+                                />
+                            ))
+                        ) : (
+                            <>
+                                <div className="h-[215px] md:h-[290px] bg-gray-50 flex items-center justify-center rounded-xl border-2 border-dashed border-gray-200 uppercase text-xs font-bold tracking-widest text-gray-600">
+                                    Trending Topic
+                                </div>
+                                <div className="h-[215px] md:h-[290px] bg-gray-50 flex items-center justify-center rounded-xl border-2 border-dashed border-gray-200 uppercase text-xs font-bold tracking-widest text-gray-600">
+                                    Trending Topic
+                                </div>
+                            </>
+                        )}
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
+            
+            <Adsense />
+        </>
     );
 };
 

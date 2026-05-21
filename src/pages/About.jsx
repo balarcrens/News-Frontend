@@ -4,6 +4,7 @@ import { Globe, Shield, Zap, Target, BookOpen, Users } from 'lucide-react';
 import SEO from '../components/common/SEO';
 import intelligenceMap from "/assets/nexoranews_intelligence_map.png";
 import nexoraNewsAboutHero from "/assets/nexoranews_about_hero.png";
+import Adsense from '../components/common/Adsense';
 
 const ValueCard = ({ icon: Icon, title, description }) => (
     <div className="group border border-gray-100 p-8 md:p-10 hover:border-red-700 transition-all duration-700 bg-white shadow-sm hover:shadow-2xl">
@@ -140,6 +141,8 @@ const About = () => {
                 </div>
             </section>
 
+            <Adsense />
+
             <section className="py-12 md:py-20 overflow-hidden">
                 <div className="max-w-7xl mx-auto px-4 md:px-6">
                     <div className="bg-slate-950 p-12 md:p-24 relative overflow-hidden">
@@ -191,6 +194,8 @@ const About = () => {
                     </div>
                 </div>
             </section>
+
+            <Adsense />
 
             <style>{`
                 .vertical-text {

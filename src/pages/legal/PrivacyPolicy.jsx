@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '../../components/common/SEO';
+import Adsense from '../../components/common/Adsense';
 
 const SidebarLink = ({ href, children }) => (
     <li>
@@ -148,7 +149,7 @@ const PrivacyPolicy = () => {
                             </div>
                         </header>
 
-                        <section id="introduction" className="mb-32 scroll-mt-40">
+                        <section id="introduction" className="mb-16 scroll-mt-40">
                             <p className="text-2xl md:text-3xl font-serif text-slate-700 italic leading-relaxed mb-12">
                                 At Nexora News, your privacy is a cornerstone of our editorial integrity. This policy outlines how we handle your digital footprint with the same care we apply to our journalism.
                             </p>
@@ -157,7 +158,9 @@ const PrivacyPolicy = () => {
                             </p>
                         </section>
 
-                        <section id="collection" className="mb-32 scroll-mt-40">
+                        <Adsense />
+
+                        <section id="collection" className="my-16 scroll-mt-40">
                             <SectionHeader
                                 badge="Data Sources"
                                 title="Information We Collect"
@@ -179,7 +182,7 @@ const PrivacyPolicy = () => {
                                 />
                             </div>
 
-                            <div className="bg-slate-900 p-8 md:p-12 relative overflow-hidden group">
+                            <div className="bg-slate-100 p-8 md:p-12 relative overflow-hidden group">
                                 <div className="absolute top-0 right-0 w-64 h-64 bg-red-700/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl group-hover:bg-red-700/20 transition-colors duration-1000"></div>
                                 <div className="relative z-10">
                                     <p className="text-xl font-serif text-gray-500 leading-relaxed text-center italic">
@@ -212,7 +215,7 @@ const PrivacyPolicy = () => {
                                 ))}
                             </div>
 
-                            <div className="mt-20 relative h-[400px] overflow-hidden group cursor-default">
+                            <div className="mt-20 mb-16 relative h-[400px] overflow-hidden group cursor-default">
                                 <div className="absolute inset-0 bg-slate-950">
                                     <img
                                         src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop"
@@ -246,7 +249,9 @@ const PrivacyPolicy = () => {
                             </div>
                         </section>
 
-                        <section id="cookies" className="mb-32 scroll-mt-40">
+                        <Adsense />
+
+                        <section id="cookies" className="my-16 scroll-mt-40">
                             <SectionHeader
                                 badge="Tracking"
                                 title="Cookies Policy"
@@ -273,7 +278,7 @@ const PrivacyPolicy = () => {
                             </div>
                         </section>
 
-                        <section id="rights" className="mb-32 scroll-mt-40">
+                        <section id="rights" className="mb-16 scroll-mt-40">
                             <SectionHeader
                                 badge="Governance"
                                 title="Your Rights"
@@ -299,7 +304,9 @@ const PrivacyPolicy = () => {
                             </div>
                         </section>
 
-                        <section id="contact" className="scroll-mt-40">
+                        <Adsense />
+
+                        <section id="contact" className="mt-16 scroll-mt-40">
                             <div className="bg-red-700 p-12 md:p-20 relative overflow-hidden text-white flex flex-col md:flex-row items-center justify-between text-center md:text-left">
                                 <div className="absolute top-0 right-0 w-96 h-96 bg-black/10 rounded-full translate-x-1/3 -translate-y-1/3 blur-3xl"></div>
                                 <div className="relative z-10 max-w-xl mb-10 md:mb-0">

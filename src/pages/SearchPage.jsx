@@ -16,6 +16,7 @@ import { categoryService } from '../api/categoryService';
 import { format } from 'date-fns';
 import SEO from '../components/common/SEO';
 import OptimizedImage from '../components/common/OptimizedImage';
+import Adsense from '../components/common/Adsense';
 
 const SearchPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -107,7 +108,7 @@ const SearchPage = () => {
 
     return (
         <div className="min-h-screen bg-white">
-            <SEO 
+            <SEO
                 title={query ? `Search: ${query}` : 'Search News'}
                 description={`Explore search results for "${query}" on Nexora News.`}
             />
@@ -252,6 +253,7 @@ const SearchPage = () => {
                             </div>
                         ) : articles.length > 0 ? (
                             <div className="space-y-12">
+                                <Adsense />
                                 {articles.map((article, idx) => (
                                     <article key={article._id} className="group flex flex-col md:flex-row gap-8 items-start relative pb-12">
                                         {idx !== articles.length - 1 && <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gray-50"></div>}
@@ -357,6 +359,8 @@ const SearchPage = () => {
                                         </button>
                                     </div>
                                 )}
+
+                                <Adsense />
                             </div>
                         ) : (
                             <div className="py-20 text-center space-y-6 bg-gray-50/50 rounded-2xl border border-dashed border-gray-100">

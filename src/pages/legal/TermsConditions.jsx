@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import { 
-    Gavel, 
-    ShieldAlert, 
-    FileSignature, 
+import {
+    Gavel,
+    ShieldAlert,
+    FileSignature,
     Scale,
-    AlertTriangle, 
+    AlertTriangle,
     Clock,
     ArrowRight,
     ChevronRight,
@@ -14,11 +14,12 @@ import {
 } from 'lucide-react';
 import SEO from '../../components/common/SEO';
 import { useNavigate } from 'react-router-dom';
+import Adsense from '../../components/common/Adsense';
 
 const SidebarLink = ({ href, children }) => (
     <li>
-        <a 
-            href={href} 
+        <a
+            href={href}
             className="group flex items-center text-[10px] font-bold uppercase tracking-[0.2em] text-gray-600 hover:text-red-700 transition-all duration-300 py-3 border-b border-gray-50 last:border-0"
         >
             <span className="w-0 group-hover:w-4 overflow-hidden transition-all duration-300 text-red-700">
@@ -66,7 +67,7 @@ const TermsConditions = () => {
     const navigate = useNavigate();
     return (
         <div className="bg-white min-h-screen pt-32 pb-20">
-            <SEO 
+            <SEO
                 title="Terms & Conditions"
                 description="The legal framework and terms governing your use of the Nexora News platform."
             />
@@ -78,7 +79,7 @@ const TermsConditions = () => {
 
             <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-                    
+
                     {/* Sticky Sidebar Navigation */}
                     <aside className="hidden lg:block lg:col-span-3">
                         <div className="sticky top-40">
@@ -95,11 +96,11 @@ const TermsConditions = () => {
                                     <SidebarLink href="#governing-law">Governing Law</SidebarLink>
                                 </ul>
                             </nav>
-                            
+
                             <div className="mt-16 p-8 bg-slate-900 text-white relative overflow-hidden group">
                                 <div className="absolute inset-0 bg-red-700/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
                                 <h4 className="text-xs font-serif font-black italic uppercase tracking-widest mb-4">Legal Notice</h4>
-                                <p className="text-[11px] text-gray-600 leading-relaxed mb-6">
+                                <p className="text-[11px] text-gray-300 leading-relaxed mb-6">
                                     Nexora News operates under strict global editorial and legal frameworks.
                                 </p>
                                 <div className="w-10 h-1 bg-red-700"></div>
@@ -109,7 +110,7 @@ const TermsConditions = () => {
 
                     {/* Main Content Area */}
                     <main className="lg:col-span-9">
-                        
+
                         {/* Header Section */}
                         <header className="mb-20">
                             <span className="inline-block px-4 py-1.5 bg-red-700 text-white text-xs font-bold uppercase tracking-[0.4em] mb-10 animate-in fade-in slide-in-from-left-4 duration-1000">
@@ -131,7 +132,7 @@ const TermsConditions = () => {
                         </header>
 
                         {/* Agreement to Terms */}
-                        <section id="agreement" className="mb-32 scroll-mt-40">
+                        <section id="agreement" className="mb-16 scroll-mt-40">
                             <p className="text-2xl md:text-3xl font-serif text-slate-700 italic leading-relaxed mb-12">
                                 By accessing Nexora News, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions. These terms govern your interaction with our intelligence platform.
                             </p>
@@ -151,21 +152,23 @@ const TermsConditions = () => {
                             </div>
                         </section>
 
+                        <Adsense />
+
                         {/* Usage License */}
-                        <section id="usage" className="mb-32 scroll-mt-40">
-                            <SectionHeader 
+                        <section id="usage" className="my-16 scroll-mt-40">
+                            <SectionHeader
                                 badge="Intellectual Property"
-                                title="Usage License" 
+                                title="Usage License"
                                 subtitle="The architectural framework and investigative content of Nexora News are protected by international copyright laws."
                             />
-                            
+
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                                <TermsCard 
+                                <TermsCard
                                     icon={Globe}
                                     title="Personal Use"
                                     description="Permission is granted to temporarily download one copy of the materials on Nexora News for personal, non-commercial transitory viewing only."
                                 />
-                                <TermsCard 
+                                <TermsCard
                                     icon={Cpu}
                                     title="Prohibited Acts"
                                     description="Automation of data extraction (scraping), reverse engineering of our algorithms, or unauthorized redistribution of premium reports is strictly forbidden."
@@ -189,10 +192,10 @@ const TermsConditions = () => {
                         </section>
 
                         {/* Disclaimer */}
-                        <section id="disclaimer" className="mb-32 scroll-mt-40">
-                            <SectionHeader 
+                        <section id="disclaimer" className="mb-16 scroll-mt-40">
+                            <SectionHeader
                                 badge="Advisory"
-                                title="Disclaimer" 
+                                title="Disclaimer"
                                 subtitle="The content provided by Nexora News is for informational purposes only and does not constitute financial, legal, or professional advice."
                             />
 
@@ -214,17 +217,19 @@ const TermsConditions = () => {
                             </div>
                         </section>
 
+                        <Adsense />
+
                         {/* Limitations */}
-                        <section id="limitations" className="mb-32 scroll-mt-40">
-                            <SectionHeader 
+                        <section id="limitations" className="my-16 scroll-mt-40">
+                            <SectionHeader
                                 badge="Liability"
-                                title="Limitations" 
+                                title="Limitations"
                                 subtitle="Nexora News and its contributors shall not be held liable for any damages arising out of the use or inability to use the materials."
                             />
 
                             <div className="bg-slate-900 p-8 md:p-12 relative overflow-hidden">
                                 <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-red-700/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
-                                <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 text-gray-600 text-sm italic font-serif leading-relaxed">
+                                <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 text-gray-300 text-sm italic font-serif leading-relaxed">
                                     <p>
                                         In no event shall Nexora News or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) even if Nexora News or a Nexora News authorized representative has been notified orally or in writing of the possibility of such damage.
                                     </p>
@@ -236,10 +241,10 @@ const TermsConditions = () => {
                         </section>
 
                         {/* Governance */}
-                        <section id="governing-law" className="scroll-mt-40">
-                            <SectionHeader 
+                        <section id="governing-law" className="scroll-mt-40 mb-6">
+                            <SectionHeader
                                 badge="Compliance"
-                                title="Governing Law" 
+                                title="Governing Law"
                                 subtitle="These terms and conditions are governed by and construed in accordance with the laws of international editorial standards."
                             />
 
@@ -276,6 +281,7 @@ const TermsConditions = () => {
                             </div>
                         </section>
 
+                        <Adsense />
                     </main>
                 </div>
             </div>

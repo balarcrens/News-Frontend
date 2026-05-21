@@ -7,7 +7,9 @@ import CategorySidebar from '../components/category/CategorySidebar';
 import { ChevronLeft, ChevronRight, Bookmark, Filter, X } from 'lucide-react';
 import SEO from '../components/common/SEO';
 import { format } from 'date-fns';
+import CategorySkeleton from '../components/category/CategorySkeleton';
 import OptimizedImage from '../components/common/OptimizedImage';
+import Adsense from '../components/common/Adsense';
 
 const Pagination = ({ pagination, onPageChange }) => {
     if (!pagination || pagination.totalPages < 1) return null;
@@ -16,7 +18,7 @@ const Pagination = ({ pagination, onPageChange }) => {
     const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
     return (
-        <div className="flex items-center justify-center space-x-2 pt-12 border-t border-gray-100 mt-16">
+        <div className="flex items-center justify-center space-x-2 pt-6 border-t border-gray-100 mt-8">
             <button
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1}
@@ -54,7 +56,7 @@ const ArticleCard = ({ article, isFeatured = false }) => {
     const navigate = useNavigate();
     if (isFeatured) {
         return (
-            <div className="relative group mb-15 md:mb-20 cursor-pointer" onClick={() => navigate(`/article/${article.slug}`)}>
+            <div className="relative group mb-15 md:mb-15 cursor-pointer" onClick={() => navigate(`/article/${article.slug}`)}>
                 <div className="relative aspect-[10/9] sm:aspect-[21/9] overflow-hidden mb-5 md:mb-10 shadow-lg bg-gray-50 border border-gray-100">
                     <OptimizedImage
                         src={article.media?.featuredImage}
@@ -129,8 +131,6 @@ const ArticleCard = ({ article, isFeatured = false }) => {
         </div>
     );
 };
-
-import CategorySkeleton from '../components/category/CategorySkeleton';
 
 const CategoryPage = () => {
     const { slug } = useParams();
@@ -262,11 +262,15 @@ const CategoryPage = () => {
                                 <ArticleCard article={featuredArticle} isFeatured={true} />
                             )}
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
+                            {(!loading && articles.length > 0) && <Adsense />}
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16 my-6">
                                 {(filters.page === 1 ? gridArticles : articles).map(article => (
                                     <ArticleCard key={article._id} article={article} />
                                 ))}
                             </div>
+
+                            {(!loading && articles.length > 0) && <Adsense />}
 
                             <Pagination
                                 pagination={pagination}
