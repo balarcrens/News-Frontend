@@ -1,9 +1,16 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 const Adsense = () => {
+    const adRef = useRef(null);
+
     useEffect(() => {
         try {
-            (window.adsbygoogle = window.adsbygoogle || []).push({});
+            if (
+                adRef.current &&
+                !adRef.current.getAttribute('data-adsbygoogle-status')
+            ) {
+                (window.adsbygoogle = window.adsbygoogle || []).push({});
+            }
         } catch (err) {
             console.log(err);
         }
@@ -11,8 +18,9 @@ const Adsense = () => {
 
     return (
         <ins
+            ref={adRef}
             className="adsbygoogle"
-            style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+            style={{ display: 'block' }}
             data-ad-client="ca-pub-2183588307448884"
             data-ad-slot="3745545172"
             data-ad-format="auto"

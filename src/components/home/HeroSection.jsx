@@ -114,8 +114,8 @@ const HeroSection = ({ articles = [], loading }) => {
                     </div>
                 </div>
             </section>
-            
-            <Adsense />
+
+            {(mainArticle && sideArticles.length > 0) && <Adsense />}
         </>
     );
 };
